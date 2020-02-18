@@ -1,0 +1,39 @@
+.DS_Store
+
+# Virtual environment directory
+venv/
+
+# Cache directories and byte-code files
+*.py[cod]
+__pycache__/
+.pytest_cache/
+.ipynb_checkpoints
+
+# Environment variables
+.env
+
+# Distribution directories and files
+dist/
+build/
+*.egg-info
+*.spec
+
+# Static files collected with "manage.py collectstatic"
+static/
+staticfiles/
+
+# JS modules
+node_modules/
+
+# Editor directories and files
+.idea
+.vscode
+.vs
+
+# Coverage reports
+htmlcov
+
+# Docs
+docs/_build/
+docs/_static/
+docs/_templates/
