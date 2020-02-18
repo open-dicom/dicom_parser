@@ -11,6 +11,9 @@ Welcome to dicom_parser's documentation!
    :caption: Contents:
 
    overview
+   installation
+   quickstart
+   modules
 
 
 Indices and tables

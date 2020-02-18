@@ -1,3 +1,5 @@
+.. _quickstart: quickstart.html
+
 Overview
 ========
 
@@ -8,3 +10,5 @@ Overview
 Essentially, this means that it uses the :class:`~dicom_parser.parser.Parser`
 class in order to transform raw DICOM header values to pythonic types according
 to their `value-represenation (VR) <http://northstar-www.dartmouth.edu/doc/idl/html_6.2/Value_Representations.html>`_.
+These parsed values are easily accessible using the
+:class:`~dicom_parser.header.Header` class (see the quickstart_ guide).

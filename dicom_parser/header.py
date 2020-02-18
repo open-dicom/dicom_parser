@@ -200,7 +200,7 @@ class Header:
             return self.parser.parse(element)
         return None
 
-    def get_value(self, tag_or_keyword, parsed: bool = True):
+    def get(self, tag_or_keyword, default=None, parsed: bool = True):
         """
         Returns the value of a pydicom data element, selected by tag (`tuple`) or 
         keyword (`str`). 
@@ -219,6 +219,13 @@ class Header:
         """
 
         if parsed:
-            return self.get_parsed_value(tag_or_keyword)
-        return self.get_raw_value(tag_or_keyword)
+            value = self.get_parsed_value(tag_or_keyword)
+        else:
+            value = self.get_raw_value(tag_or_keyword)
+        return value or default
 
+    def __getitem__(self, key: str):
+        value = self.get(key)
+        if value:
+            return value
+        raise KeyError(f'Key {key} does not exist in this DICOM header information!')

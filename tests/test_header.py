@@ -107,26 +107,26 @@ class HeaderTestCase(TestCase):
         self.assertEqual(study_date, expected_study_date)
         self.assertEqual(pixel_spacing, expected_pixel_spacing)
 
-    def test_get_value(self):
+    def test_get(self):
         keys = list(self.TAGS.keys()) + list(self.KEYWORDS.keys())
         for key in keys:
             raw = self.header.get_raw_value(key)
             parsed = self.header.get_parsed_value(key)
-            raw_result = self.header.get_value(key, parsed=False)
-            parsed_result = self.header.get_value(key, parsed=True)
+            raw_result = self.header.get(key, parsed=False)
+            parsed_result = self.header.get(key, parsed=True)
             self.assertEqual(raw_result, raw)
             self.assertEqual(parsed_result, parsed)
 
-    def test_get_value_with_invalid_key_returns_none(self):
+    def test_get_with_invalid_key_returns_none(self):
         invalid_keys = self.NON_KEYWORDS + self.NON_TAGS
         for invalid_key in invalid_keys:
-            result = self.header.get_value(invalid_key)
+            result = self.header.get(invalid_key)
             self.assertIsNone(result)
 
-    def test_get_value_default_configuration(self):
+    def test_get_default_configuration(self):
         raw = self.KEYWORDS["StudyDate"]
         parsed = TEST_STUDY_FIELDS["date"]
-        result = self.header.get_value("StudyDate")
+        result = self.header.get("StudyDate")
         self.assertEqual(result, parsed)
         self.assertNotEqual(result, raw)
 
