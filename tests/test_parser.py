@@ -8,8 +8,8 @@ from unittest import TestCase
 
 class ParserTestCase(TestCase):
     def setUp(self):
-        self.header = pydicom.read_file(TEST_DWI_IMAGE_PATH, stop_before_pixels=True)
-        self.header_with_gradient_mode = pydicom.read_file(
+        self.header = pydicom.dcmread(TEST_DWI_IMAGE_PATH, stop_before_pixels=True)
+        self.header_with_gradient_mode = pydicom.dcmread(
             TEST_IMAGE_PATH, stop_before_pixels=True
         )
         self.parser = Parser()

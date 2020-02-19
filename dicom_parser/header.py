@@ -1,9 +1,6 @@
-import pydicom
-
 from dicom_parser.parser import Parser
-from pathlib import Path
+from dicom_parser.utils.read_file import read_file
 from pydicom.dataelem import DataElement
-from pydicom.dataset import FileDataset
 
 
 class Header:
@@ -20,7 +17,7 @@ class Header:
         """
         Header is meant to be initialized with a pydicom_ FileDataset_
         representing a single image's header, or a string representing
-        the path to a dicom image file.
+        the path to a dicom image file, or a :class:`~pathlib.Path` instance.
         
         Parameters
         ----------
@@ -37,45 +34,7 @@ class Header:
         """
 
         self.parser = parser()
-        self.raw = self.read_raw_header(raw)
-
-    def read_raw_header(self, raw_input) -> FileDataset:
-        """
-        Return [pydicom](https://pypi.org/project/pydicom/)'s :class:`~pydicom.FileDataset`
-        instance based on the provided input.
-
-        
-        Parameters
-        ----------
-        raw_input : FileDataset, str, or Path
-            The DICOM image to be parsed.
-        
-        Returns
-        -------
-        FileDataset
-            A pydicom.FileDataset instance.
-        """
-
-        if isinstance(raw_input, FileDataset):
-            return raw_input
-        elif isinstance(raw_input, (str, Path)):
-            return pydicom.read_file(str(raw_input), stop_before_pixels=True)
-        else:
-            self.raise_wrong_input_error()
-
-    def raise_wrong_input_error(self):
-        """
-        If the provided input is not an instance of one the supported types,
-        raise an exception.
-        
-        Raises
-        ------
-        TypeError
-            Provided input is not of a supported type.
-        """
-        raise TypeError(
-            "Raw input to header class my be either a pydicom FileDataset instance or the path of a DICOM file as string or pathlib.Path value!"  # noqa E501
-        )
+        self.raw = read_file(raw)
 
     def get_element_by_keyword(self, keyword: str) -> DataElement:
         """
@@ -97,7 +56,10 @@ class Header:
             The requested data element.
         """
 
-        return self.raw.data_element(keyword)
+        value = self.raw.data_element(keyword)
+        if isinstance(value, DataElement):
+            return value
+        raise KeyError(f"The keyword: '{keyword}' does not exist in the header!")
 
     def get_element_by_tag(self, tag: tuple) -> DataElement:
         """
@@ -118,7 +80,11 @@ class Header:
         DataElement
             The requested data element.
         """
-        return self.raw.get(tag)
+
+        value = self.raw.get(tag)
+        if isinstance(value, DataElement):
+            return value
+        raise KeyError(f"The tag: {tag} does not exist in the header!")
 
     def get_element(self, tag_or_keyword) -> DataElement:
         """
@@ -141,16 +107,19 @@ class Header:
             The requested data element.
         """
 
-        # By keyword:
+        # By keyword
         if type(tag_or_keyword) is str:
             return self.get_element_by_keyword(tag_or_keyword)
 
-        # By tag:
+        # By tag
         elif type(tag_or_keyword) is tuple:
             return self.get_element_by_tag(tag_or_keyword)
 
-        # else:
-        return None
+        # If not a keyword or a tag, raise a TypeError
+        else:
+            raise TypeError(
+                f"Invalid data element identifier: {tag_or_keyword} of type {type(tag_or_keyword)}!\nData elements may only be queried using a string represeting a keyword or a tuple of two strings representing a tag!"  # noqa
+            )
 
     def get_raw_value(self, tag_or_keyword):
         """
@@ -171,10 +140,7 @@ class Header:
         """
 
         element = self.get_element(tag_or_keyword)
-        try:
-            return element.value
-        except AttributeError:
-            return None
+        return element.value
 
     def get_parsed_value(self, tag_or_keyword):
         """
@@ -196,11 +162,11 @@ class Header:
         """
 
         element = self.get_element(tag_or_keyword)
-        if element:
-            return self.parser.parse(element)
-        return None
+        return self.parser.parse(element)
 
-    def get(self, tag_or_keyword, default=None, parsed: bool = True):
+    def get(
+        self, tag_or_keyword, default=None, parsed: bool = True, missing_ok: bool = True
+    ):
         """
         Returns the value of a pydicom data element, selected by tag (`tuple`) or 
         keyword (`str`). 
@@ -218,14 +184,16 @@ class Header:
             The requested data element value.
         """
 
-        if parsed:
-            value = self.get_parsed_value(tag_or_keyword)
-        else:
-            value = self.get_raw_value(tag_or_keyword)
+        value = None
+        try:
+            if parsed:
+                value = self.get_parsed_value(tag_or_keyword)
+            else:
+                value = self.get_raw_value(tag_or_keyword)
+        except (KeyError, TypeError):
+            if not missing_ok:
+                raise
         return value or default
 
     def __getitem__(self, key: str):
-        value = self.get(key)
-        if value:
-            return value
-        raise KeyError(f'Key {key} does not exist in this DICOM header information!')
+        return self.get(key, missing_ok=False)

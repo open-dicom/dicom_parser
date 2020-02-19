@@ -9,7 +9,7 @@ from unittest import TestCase
 
 class HeaderTestCase(TestCase):
     KEYWORDS = {
-        "PatientID": "304848286",
+        "PatientID": "012345678",
         "SeriesInstanceUID": "1.3.12.2.1107.5.2.43.66024.2018050112250992296484473.0.0.0",
         "SOPInstanceUID": "1.3.12.2.1107.5.2.43.66024.2018050112252318571884482",
         "StudyInstanceUID": "1.3.12.2.1107.5.2.43.66024.30000018050107081466900000007",
@@ -25,10 +25,11 @@ class HeaderTestCase(TestCase):
         ),
     }
     NON_TAGS = [("1111", "0000"), ("0000", "1111"), ("2222", "3333"), ("3333", "4444")]
+    BAD_DATA_ELEMENT_QUERY_VALUES = 0, ["1"], 1.1, False
 
     @classmethod
     def setUpClass(cls):
-        cls.raw = pydicom.read_file(TEST_IMAGE_PATH, stop_before_pixels=True)
+        cls.raw = pydicom.dcmread(TEST_IMAGE_PATH, stop_before_pixels=True)
         cls.header = Header(cls.raw)
 
     def test_instantiation_with_filedataset(self):
@@ -57,10 +58,10 @@ class HeaderTestCase(TestCase):
             result = self.header.get_element_by_keyword(keyword)
             self.assertIsInstance(result, pydicom.DataElement)
 
-    def test_get_element_by_keyword_invalid_key_returns_none(self):
+    def test_get_element_by_keyword_with_invalid_key_raises_key_error(self):
         for keyword in self.NON_KEYWORDS:
-            result = self.header.get_element_by_keyword(keyword)
-            self.assertIsNone(result)
+            with self.assertRaises(KeyError):
+                self.header.get_element_by_keyword(keyword)
 
     def test_get_element_by_tag(self):
         for tag in self.TAGS.keys():
@@ -69,8 +70,8 @@ class HeaderTestCase(TestCase):
 
     def test_get_element_by_tag_invalid_tag_returns_none(self):
         for invalid_tag in self.NON_TAGS:
-            result = self.header.get_element_by_tag(invalid_tag)
-            self.assertIsNone(result)
+            with self.assertRaises(KeyError):
+                self.header.get_element_by_tag(invalid_tag)
 
     def test_get_element(self):
         keys = list(self.TAGS.keys()) + list(self.KEYWORDS.keys())
@@ -78,10 +79,15 @@ class HeaderTestCase(TestCase):
             result = self.header.get_element(key)
             self.assertIsInstance(result, pydicom.DataElement)
 
-    def test_get_element_with_invalid_key_or_tag_return_none(self):
-        for key in self.NON_TAGS + self.NON_KEYWORDS + [1]:
-            result = self.header.get_element(key)
-            self.assertIsNone(result)
+    def test_get_element_with_invalid_key_or_tag_raises_key_error(self):
+        for key in self.NON_TAGS + self.NON_KEYWORDS:
+            with self.assertRaises(KeyError):
+                self.header.get_element(key)
+
+    def test_get_element_with_non_string_or_tuple_raises_type_error(self):
+        for key in self.BAD_DATA_ELEMENT_QUERY_VALUES:
+            with self.assertRaises(TypeError):
+                self.header.get_element(key)
 
     def test_get_raw_value(self):
         keys = list(self.TAGS.keys()) + list(self.KEYWORDS.keys())
@@ -91,11 +97,11 @@ class HeaderTestCase(TestCase):
             expected = self.TAGS.get(key) or self.KEYWORDS.get(key)
             self.assertEqual(result, expected)
 
-    def test_get_raw_value_with_invalid_key_returns_none(self):
+    def test_get_raw_value_with_invalid_key_raises_key_error(self):
         invalid_keys = self.NON_KEYWORDS + self.NON_TAGS
         for invalid_key in invalid_keys:
-            result = self.header.get_raw_value(invalid_key)
-            self.assertIsNone(result)
+            with self.assertRaises(KeyError):
+                self.header.get_raw_value(invalid_key)
 
     def test_get_parsed_value(self):
         expected_study_date = TEST_STUDY_FIELDS["date"]
@@ -123,10 +129,43 @@ class HeaderTestCase(TestCase):
             result = self.header.get(invalid_key)
             self.assertIsNone(result)
 
-    def test_get_default_configuration(self):
+    def test_get_default_parsed_configuration_is_true(self):
         raw = self.KEYWORDS["StudyDate"]
         parsed = TEST_STUDY_FIELDS["date"]
         result = self.header.get("StudyDate")
         self.assertEqual(result, parsed)
         self.assertNotEqual(result, raw)
 
+    def test_indexing_operator_with_invalid_key_raises_key_error(self):
+        with self.assertRaises(KeyError):
+            self.header["invalid_key"]
+
+    def test_get_with_default_and_existing_key_return_key_value(self):
+        expected = TEST_STUDY_FIELDS["date"]
+        result = self.header.get("StudyDate", "default value")
+        self.assertEqual(result, expected)
+
+    def test_get_with_default_and_missing_key_returns_default(self):
+        default = "default value"
+        result = self.header.get("invalid_key", default)
+        self.assertEqual(result, default)
+
+    def test_default_value_with_verbose_parse_true_and_existing_key(self):
+        expected = TEST_STUDY_FIELDS["date"]
+        result = self.header.get("StudyDate", 0, parsed=True)
+        self.assertEqual(result, expected)
+
+    def test_default_value_with_verbose_parse_false_and_existing_key(self):
+        expected = self.KEYWORDS["StudyDate"]
+        result = self.header.get("StudyDate", 0, parsed=False)
+        self.assertEqual(result, expected)
+
+    def test_default_value_with_verbose_parse_true_and_missing_key(self):
+        default = "default value"
+        result = self.header.get("invalid_key", default, parsed=True)
+        self.assertEqual(result, default)
+
+    def test_default_value_with_verbose_parse_false_and_missing_key(self):
+        default = "default value"
+        result = self.header.get("invalid_key", default, parsed=False)
+        self.assertEqual(result, default)

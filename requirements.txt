@@ -1,1 +1,2 @@
 pydicom~=1.4
+numpy~=1.18

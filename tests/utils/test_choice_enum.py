@@ -1,15 +1,9 @@
-from dicom_parser.utils.choice_enum import ChoiceEnum
+from tests.fixtures import ChoiceEnumDefinition
 from unittest import TestCase
-
-
-class TestEnum(ChoiceEnum):
-    A = "A"
-    B = "B"
-    C = "C"
 
 
 class ChoiceEnumTestCase(TestCase):
     def test_choices_method(self):
         expected = ("A", "A"), ("B", "B"), ("C", "C")
-        value = TestEnum.choices()
+        value = ChoiceEnumDefinition.choices()
         self.assertTupleEqual(value, expected)
