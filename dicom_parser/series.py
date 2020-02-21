@@ -1,3 +1,9 @@
+"""
+Definition of the Series class, representing a collection of Image instances
+ordered by the header's InstanceNumber data element.
+
+"""
+
 import numpy as np
 
 from dicom_parser.image import Image
@@ -7,26 +13,43 @@ from types import GeneratorType
 
 
 class Series:
+    """
+    This class represents a complete collection of Image instances originating from
+    a single directory and ordered by InstanceNumber.
+
+    """
+
     def __init__(self, path: Path):
+        """
+        The Series class should be initialized with a string or a :class:`~pathlib.Path`
+        instance representing the path of single
+        `DICOM series <https://dcm4che.atlassian.net/wiki/spaces/d2/pages/1835038/A+Very+Basic+DICOM+Introduction>`_.
+
+        Parameters
+        ----------
+        path : :class:`~pathlib.Path` or str
+            Directory containing .dcm files.
+        """
+
         self.path = self.check_path(path)
         self.images = self.get_images()
         self._data = None
 
     def check_path(self, path) -> Path:
         """
-        Checks that the path if a :class:`~pathlib.Path` instance and that
-        it represents an existing directory.
-        
+        Converts to a :class:`~pathlib.Path` instance if required and checks that it
+        represents an existing directory.
+
         Parameters
         ----------
         path : str or Path
             The provided path.
-        
+
         Returns
         -------
         Path
             A pathlib.Path instance representing an existing directory.
-        
+
         Raises
         ------
         ValueError
@@ -43,12 +66,12 @@ class Series:
     def get_dcm_paths(self) -> GeneratorType:
         """
         Returns a generator of .dcm files within the provided directory path.
-        
+
         Returns
         -------
         GeneratorType
             DICOM images (.dcm files) generator.
-        
+
         Raises
         ------
         FileNotFoundError
@@ -66,7 +89,7 @@ class Series:
         """
         Returns a tuple of :class:`~dicom_parser.image.Image` instances
         ordered by instance number.
-        
+
         Returns
         -------
         tuple
@@ -82,7 +105,8 @@ class Series:
     def data(self) -> np.ndarray:
         """
         Caches the stacked 3D array containing the entire series' data.
-        
+        # TODO: Add support for fMRI data.
+
         Returns
         -------
         np.ndarray
