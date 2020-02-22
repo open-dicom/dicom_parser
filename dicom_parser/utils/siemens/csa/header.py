@@ -5,8 +5,8 @@ class CsaHeader:
     ENCODING = "ISO-8859-1"
     HEADER_INFORMATION_PATTERN = r"### ASCCONV BEGIN(.*)### ASCCONV END ###"
     ELEMENT_PATTERN = r"([A-Z][^\n]*)"
-    KEY_PATTERN = r"([A-Z][\w]*[^\.\t\[])"
-    GROUP_PATTERN = r"[a-z]??({key}[.]*)"
+    KEY_PATTERN = r"[A-Z].*"
+    LIST_KEY_PATTERN = r"\[\d+\]"
 
     def __init__(self, header: bytes):
         self.raw = header
@@ -25,62 +25,134 @@ class CsaHeader:
     def get_raw_data_elements(self) -> list:
         return re.findall(self.ELEMENT_PATTERN, self.header)[1:]
 
-    def get_raw_group(self, key: str, from_group: list = None) -> list:
-        from_group = from_group or self.raw_elements
+    def key_to_list(self, key: str) -> list:
         return [
-            re.search(self.ELEMENT_PATTERN, ".".join(element.split(".")[1:])).group()
-            for element in from_group
-            if re.search(self.GROUP_PATTERN.format(key=key), element)
+            re.search(self.KEY_PATTERN, part).group()
+            if re.search(self.KEY_PATTERN, part)
+            else part
+            for part in key.split(".")
         ]
 
-    def get_raw_group_keys(self, raw_group: list) -> set:
-        return set(
-            [re.search(self.KEY_PATTERN, element).group() for element in raw_group]
-        )
+    def split_raw_element(self, raw_element: str) -> tuple:
+        tab_split = raw_element.split("\t")
+        return tab_split[0], tab_split[-1]
 
-    def parse_raw_element(self, key: list, value: str):
-        parsed_destination = self._parsed
-        for part in key[:-1]:
-            list_element = re.search(r"\[\d+\]", part)
-            if list_element:
-                index = int(list_element.group()[1:-1])
-                list_key = part.split("[")[0]
-                if isinstance(parsed_destination.get(list_key), list):
-                    try:
-                        parsed_destination = parsed_destination[list_key][index]
-                    except IndexError:
-                        parsed_destination[list_key].append({})
-                        parsed_destination = parsed_destination[list_key][-1]
-                else:
-                    parsed_destination[list_key] = [{}]
-                    parsed_destination = parsed_destination[list_key][0]
-            else:
-                if isinstance(parsed_destination.get(part), dict):
-                    parsed_destination = parsed_destination[part]
-                else:
-                    parsed_destination[part] = {}
-                    parsed_destination = parsed_destination[part]
-        part = key[-1]
-        list_element = re.search(r"\[\d+\]", part)
-        if list_element:
-            list_key = part.split("[")[0]
-            try:
-                parsed_destination[list_key].append(value)
-            except (KeyError, AttributeError):
-                parsed_destination[list_key] = [value]
+    def parse_raw_key_and_value(self, raw_element: str) -> tuple:
+        raw_key, value = self.split_raw_element(raw_element)
+        key = self.key_to_list(raw_key)
+        return key, value
+
+    def search_list_pattern(self, key_part: str) -> bool:
+        return re.search(self.LIST_KEY_PATTERN, key_part)
+
+    def extract_index_from_list_match(self, list_match: re.Match) -> int:
+        return int(list_match.group()[1:-1])
+
+    def add_to_existing_element_list(
+        self, part_name: str, index: int, existing_dict: list
+    ) -> dict:
+        try:
+            existing_dict = existing_dict[part_name][index]
+        except IndexError:
+            existing_dict[part_name].append({})
+            existing_dict = existing_dict[part_name][-1]
+        return existing_dict
+
+    def create_new_element_list(self, part_name: str, existing_dict: dict) -> dict:
+        existing_dict[part_name] = [{}]
+        existing_dict = existing_dict[part_name][0]
+        return existing_dict
+
+    def add_element_list_item(self):
+        pass
+
+    def scaffold_list_part(
+        self, part: str, list_match: re.Match = None, existing_dict: dict = None
+    ) -> dict:
+        part_name = part.split("[")[0]
+        list_match = list_match or self.search_list_pattern(part)
+        existing_dict = existing_dict if existing_dict is not None else {}
+        index = self.extract_index_from_list_match(list_match)
+        existing_list = isinstance(existing_dict.get(part_name), list)
+        if existing_list:
+            return self.add_to_existing_element_list(part_name, index, existing_dict)
         else:
-            parsed_destination[part] = value
+            return self.create_new_element_list(part_name, existing_dict)
 
-    def parse(self):
-        for element in self.raw_elements:
-            tab_split = element.split("\t")
-            key, value = tab_split[0], tab_split[-1]
-            if "__" not in key:
-                key = key.split(".")
-                key = [
-                    re.search(r"[A-Z].*", part).group()
-                    if re.search(r"[A-Z].*", part)
-                    else part
-                    for part in key
-                ]
-                self.parse_raw_element(key, value)
+    def scaffold_dict_part(self, part: str, existing_dict: dict = None) -> dict:
+        existing_dict = existing_dict if existing_dict is not None else {}
+        if isinstance(existing_dict.get(part), dict):
+            return existing_dict[part]
+        else:
+            existing_dict[part] = {}
+            return existing_dict[part]
+
+    def scaffold_part(self, part: str, existing_dict: dict = None) -> dict:
+        existing_dict = existing_dict if existing_dict is not None else {}
+        list_match = self.search_list_pattern(part)
+        if list_match:
+            return self.scaffold_list_part(
+                part, list_match=list_match, existing_dict=existing_dict
+            )
+        else:
+            return self.scaffold_dict_part(part, existing_dict=existing_dict)
+
+    def scaffold_listed_key(self, key: list, existing_dict: dict = None) -> dict:
+        existing_dict = existing_dict if existing_dict is not None else {}
+        for part in key[:-1]:
+            existing_dict = self.scaffold_part(part, existing_dict=existing_dict)
+        return existing_dict
+
+    def assign_list_element(self, destination: dict, part: str, value):
+        part_name = part.split("[")[0]
+        try:
+            destination[part_name].append(value)
+        except (KeyError, AttributeError):
+            destination[part_name] = [value]
+
+    def assign_listed_element(self, key: list, value, destination: dict):
+        part = key[-1]
+        list_match = self.search_list_pattern(part)
+        if list_match:
+            self.assign_list_element(destination, part, value)
+        else:
+            destination[part] = value
+
+    def assign_listed_key(self, key: list, value, existing_dict: dict = None):
+        existing_dict = existing_dict if existing_dict is not None else {}
+        destination = self.scaffold_listed_key(key, existing_dict=existing_dict)
+        self.assign_listed_element(key, value, destination)
+
+    def parse_raw_element(self, raw_element: str, existing_dict: dict = None):
+        """
+        Parses a raw CSA header element into the provided dictionary or creates
+        a new one.
+
+        Parameters
+        ----------
+        raw_element : str
+            A line representing a single data element.
+        existing_dict : dict
+            An existing dictionary storing organized header parts.
+        """
+
+        existing_dict = existing_dict if existing_dict is not None else {}
+        key, value = self.parse_raw_key_and_value(raw_element)
+        return self.assign_listed_key(key, value, existing_dict=existing_dict)
+
+    def fix_parser_elements_arg(self, raw_elements) -> list:
+        elements = raw_elements or self.raw_elements
+        if isinstance(elements, str):
+            return [elements]
+        elif not isinstance(elements, list):
+            raise TypeError(
+                f"The elements attribute accepts str or list values only, not {type(elements)}"  # noqa
+            )
+        return elements
+
+    def parse(self, raw_elements=None):
+        elements = self.fix_parser_elements_arg(raw_elements)
+        parsed = {}
+        for element in elements:
+            self.parse_raw_element(element, existing_dict=parsed)
+        return parsed
