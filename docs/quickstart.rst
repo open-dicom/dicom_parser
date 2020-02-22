@@ -1,91 +1,94 @@
 Quickstart
 ==========
 
-Header Instantiation
---------------------
 
-To read a DICOM image (`.dcm` file), simply instantiate the
-:class:`~dicom_parser.header.Header` class with either a
-:class:`~pydicom.FileDataset` instance, a string representing the path of
-the `.dcm` file, or a :class:`~pathlib.Path` instance.
+Coversion to Python's native types
+----------------------------------
 
-String or Path Instantiation Example
-....................................
+The most basic usage case is reading a single DICOM image (*.dcm* file).
 
 .. code:: python
 
-    from dicom_parser import Header
-    from pathlib import Path
+    from dicom_parser import Image
 
-    path = "/path/to/some/dicom/image.dcm"
-    # or
-    path = Path("/path/to/some/dicom/image.dcm")
+    # Create a DICOM Image object
 
-    header = Header(path)
-    
-    type(header)
-    >> dicom_parser.header.Header
-
-FileDataset Instantiation Example
-.................................
+Integer String (IS) to *int*:
 
 .. code:: python
 
-    import pydicom
-    from dicom_parser import Header
+    raw_value = image.header.raw['InstanceNumber'].value
+    raw_value
+    >> "1"
+    type(raw_value)
+    >> str
 
-    path = "/path/to/some/dicom/image.dcm"
-    dataset = pydicom.read_file(path)
-    header = Header(dataset)
-    
-    type(header)
-    >> dicom_parser.header.Header    
+    fixed_value = image.header['InstanceNumber']
+    fixed_value
+    >> 1
+    type(fixed_value)
+    >> int
 
+Decimal String (DS) to *float*:
 
-Reading Parsed Values
----------------------
+.. code:: python
 
-Now, the created :class:`~dicom_parser.header.Header` instance exposes
-a :meth:`~dicom_parser.header.Header.get` method that may be used
-to retrieve parsed DICOM header values, as well as simply using the
-`indexing operator ([]) <https://docs.python.org/3.4/library/operator.html#operator.__getitem__>`_::
+    # Decimal String (DS) to float
+    raw_value = image.header.raw['ImagingFrequency'].value
+    raw_value
+    >> "123.25993"
+    type(raw_value)
+    >> str
 
-    patient_age = header.get('PatientAge')
-    # or
-    patient_age = header['PatientAge']
-
-    print(patient_age)
-    >> 27.0
-    type(patient_age)
+    fixed_value = image.header['ImagingFrequency']
+    fixed_value
+    >> 123.25993
+    type(fixed_value)
     >> float
 
-The parsed result may easily be compared with the raw value, as returned
-by `pydicom <https://github.com/pydicom/pydicom>`_::
+Et cetera.
 
-    raw_patient_age = header.get('PatientAge', parsed=False)
-    # or
-    raw_patient_age = header.get_raw_value('PatientAge')
+Read DICOM series directory as a :class:`~dicom_parser.series.Series`
+---------------------------------------------------------------------
 
-    print(raw_patient_age)
-    >> 027Y
-    type(raw_patient_age)
-    >> str
+Another useful class this package offers is the
+:class:`~dicom_parser.series.Series` class:
+
+.. code:: python
+
+    from dicom_parser import Series
+
+    series = Series('/path/to/dicom/series/')
+    series.data.shape
+    >> (224, 224, 208)
+    series.images[6].header.get('InstanceNumber')
+    >> 7    # Images are 1-indexed
+
+
+Supports for Siemens' CSA headers
+---------------------------------
+Siemens' CSA headers may easily be parsed using the
+:class:`~dicom_parser.utils.siemens.csa.header.CsaHeader` class:
+
+.. code:: python
+
+    from dicom_parser import Image
+    from dicom_parser.utils.siemens.csa.header import CsaHeader
+
+    image = Image('/path/to/siemens/csa.dcm')
+
+    raw_csa = image.get(('0029', '1020'))
+    type(raw_csa)
+    >> bytes
+    raw_csa[:35]
+    >> b"SV10\x04\x03\x02\x01O\x00\x00\x00M\x00\x00\x00UsedPatientWeight\x00\x00\x00\xdc\xf7"
+
+    csa_header = CsaHeader(raw_csa)
+    type(csa_header)
+    >> dict
+    csa_header['SliceArray']['Size']
+    >> "11"
 
 .. note::
 
-    Values may also be accessed using a tuple of strings containing the DICOM's
-    `data element <https://northstar-www.dartmouth.edu/doc/idl/html_6.2/DICOM_Attributes.html>`_
-    tag. In example, to retrieve the
-    "`PatientID <https://dicom.innolitics.com/ciods/mr-image/patient/00100020>`_"
-    element's value, we may also use::
-
-        header["0010", "0020"]
-        >> '012345678'
-
-        # Same as:
-        header.get("PatientID")
-        >> '012345678'
-
-.. warning::
-
-    Missing keys or tags will return None without raising an error.
+    Type conversion for CSA header values is still not implemented.

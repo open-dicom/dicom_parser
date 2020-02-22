@@ -1,12 +1,13 @@
 Welcome to dicom_parser's documentation!
 ========================================
 
+.. include:: overview.rst
+.. include:: installation.rst
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
-   overview
-   installation
    quickstart
    modules/modules
 
