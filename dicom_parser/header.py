@@ -1,3 +1,9 @@
+"""
+Definition of the Header class, which extends the functionality of
+`pydicom <https://github.com/pydicom/pydicom>`_.
+
+"""
+
 from dicom_parser.parser import Parser
 from dicom_parser.utils.siemens.private_tags import SIEMENS_PRIVATE_TAGS
 from dicom_parser.utils.read_file import read_file
@@ -50,7 +56,7 @@ class Header:
         Returns
         -------
         str
-            Imaging sequence name.
+            Imaging sequence name
         """
 
         modality = self.get("Modality").lower()
@@ -70,12 +76,12 @@ class Header:
         Parameters
         ----------
         keyword : str
-            The keyword representing the DICOM data element in pydicom.
+            The keyword representing the DICOM data element in pydicom
 
         Returns
         -------
         DataElement
-            The requested data element.
+            The requested data element
         """
 
         value = self.raw.data_element(keyword)
@@ -95,12 +101,12 @@ class Header:
         Parameters
         ----------
         tag : tuple
-            The DICOM tag of the desired data element.
+            The DICOM tag of the desired data element
 
         Returns
         -------
         DataElement
-            The requested data element.
+            The requested data element
         """
 
         value = self.raw.get(tag)
@@ -121,12 +127,12 @@ class Header:
         Parameters
         ----------
         tag_or_keyword : tuple or str
-            Tag or keyword representing the requested data element.
+            Tag or keyword representing the requested data element
 
         Returns
         -------
         DataElement
-            The requested data element.
+            The requested data element
         """
 
         # By keyword
@@ -158,7 +164,7 @@ class Header:
         Returns
         -------
         type
-            The raw value of the data element.
+            The raw value of the data element
         """
 
         element = self.get_element(tag_or_keyword)
@@ -175,12 +181,12 @@ class Header:
         Parameters
         ----------
         tag_or_keyword : tuple or str
-            Tag or keyword representing the requested data element.
+            Tag or keyword representing the requested data element
 
         Returns
         -------
         type
-            Parsed data element value.
+            Parsed data element value
         """
 
         element = self.get_element(tag_or_keyword)
@@ -206,7 +212,7 @@ class Header:
         Returns
         -------
         type
-            The requested data element value (or a dict for multiple values).
+            The requested data element value (or a dict for multiple values)
         """
 
         get_method = self.get_parsed_value if parsed else self.get_raw_value
@@ -228,12 +234,12 @@ class Header:
         Parameters
         ----------
         key : str or tuple or list
-            The key or list of keys for which to retrieve header information.
+            The key or list of keys for which to retrieve header information
 
         Returns
         -------
         [type]
-            Parsed header information of the given key or keys.
+            Parsed header information of the given key or keys
         """
 
         return self.get(key, missing_ok=False)

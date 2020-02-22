@@ -57,13 +57,10 @@ class SequenceDetector:
         """
 
         if isinstance(definition, dict):
-            return True if values == definition else False
+            return values == definition
         elif isinstance(definition, (list, tuple)):
-            return True if values in definition else False
-        else:
-            raise TypeError(
-                WRONG_DEFINITION_TYPE.format(definition_type=type(definition))
-            )
+            return values in definition
+        raise TypeError(WRONG_DEFINITION_TYPE.format(definition_type=type(definition)))
 
     def detect(self, modality: str, values: dict) -> str:
         """
@@ -85,5 +82,9 @@ class SequenceDetector:
 
         known_sequences = self.get_known_modality_sequences(modality)
         for sequence_name, sequence_definition in known_sequences.items():
-            if self.check_definition(sequence_definition, values):
-                return sequence_name
+            match = self.check_definition(sequence_definition, values)
+            if match:
+                break
+        else:
+            return None
+        return sequence_name

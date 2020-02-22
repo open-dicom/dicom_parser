@@ -1,5 +1,6 @@
 """
-Vendor specific private tags they may not be accessible by keyword using pydicom.
+Siemens specific private tags they may not be accessible by keyword using
+`pydicom <https://github.com/pydicom/pydicom>`_.
 
 """
 

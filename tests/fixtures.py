@@ -6,7 +6,8 @@ from dicom_parser.utils.choice_enum import ChoiceEnum
 TESTS_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
 TEST_FILES_PATH = os.path.join(TESTS_DIRECTORY, "files")
 TEST_IMAGE_PATH = os.path.join(TEST_FILES_PATH, "001.dcm")
-TEST_DWI_IMAGE_PATH = os.path.join(TEST_FILES_PATH, "dwi_image.dcm")
+TEST_EP2D_IMAGE_PATH = os.path.join(TEST_FILES_PATH, "ep2d_image.dcm")
+TEST_RSFMRI_IMAGE_PATH = os.path.join(TEST_FILES_PATH, "rsfmri_image.dcm")
 TEST_SERIES_PATH = os.path.join(TEST_FILES_PATH, "series")
 TEST_UTILS_DIRECTORY = os.path.join(TESTS_DIRECTORY, "utils")
 

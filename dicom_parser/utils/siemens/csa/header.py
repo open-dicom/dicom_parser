@@ -1,158 +1,181 @@
+"""
+Definition of the CsaHeader class which handles the parsing of CSA header values
+returned by `pydicom <https://github.com/pydicom/pydicom>`_.'s as bytes.
+
+"""
+
+
 import re
+
+from dicom_parser.utils.siemens.csa.data_element import CsaDataElement
+from dicom_parser.utils.siemens.csa.parser import CsaParser
 
 
 class CsaHeader:
+    """
+    Represents a full CSA header data element, i.e. either
+    (0029, 1010)/`"CSA Image Header Info"` or (0029, 1020)/`"CSA Series Header Info"`
+    and provides access to the header as a parsed dictionary.
+    This implementation is heavily based on
+    `dicom2nifti <https://github.com/icometrix/dicom2nifti>`_'s
+    code (particularly
+    `this module <https://github.com/icometrix/dicom2nifti/blob/6722420a7673d36437e4358ce3cb2a7c77c91820/dicom2nifti/convert_siemens.py#L342>`_). # no qa
+
+    """
+
+    # The header's ASCII-based character encoding.
     ENCODING = "ISO-8859-1"
+
+    # A pattern used to the extract the header information from the raw element.
     HEADER_INFORMATION_PATTERN = r"### ASCCONV BEGIN(.*)### ASCCONV END ###"
+
+    # A pattern used to slice the entire header into single raw (string) elements.
     ELEMENT_PATTERN = r"([A-Z][^\n]*)"
-    KEY_PATTERN = r"[A-Z].*"
-    LIST_KEY_PATTERN = r"\[\d+\]"
 
     def __init__(self, header: bytes):
+        """
+        Decodes the header and sets empty property caches to be overriden on request.
+
+        Parameters
+        ----------
+        header : bytes
+            Raw CSA header information as returned by pydicom
+        """
+
         self.raw = header
-        self.header = self.get_header_information()
-        self.raw_elements = self.get_raw_data_elements()
+        self.decoded = self.get_header_information()
+
+        # Property cache
+        self._raw_elements = []
         self._parsed = {}
+        self._csa_data_elements = []
 
     def decode(self) -> str:
+        """
+        Decodes the raw (ASCII) information to string.
+
+        Returns
+        -------
+        str
+            Decoded information
+        """
+
         return self.raw.decode(self.ENCODING)
 
     def get_header_information(self) -> str:
+        """
+        Returns the decoded and extracted header information from the full
+        data element's value.
+
+        Returns
+        -------
+        str
+            Decoded clean header information
+        """
+
         return re.findall(
             self.HEADER_INFORMATION_PATTERN, self.decode(), flags=re.DOTALL
         )[0]
 
     def get_raw_data_elements(self) -> list:
-        return re.findall(self.ELEMENT_PATTERN, self.header)[1:]
-
-    def key_to_list(self, key: str) -> list:
-        return [
-            re.search(self.KEY_PATTERN, part).group()
-            if re.search(self.KEY_PATTERN, part)
-            else part
-            for part in key.split(".")
-        ]
-
-    def split_raw_element(self, raw_element: str) -> tuple:
-        tab_split = raw_element.split("\t")
-        return tab_split[0], tab_split[-1]
-
-    def parse_raw_key_and_value(self, raw_element: str) -> tuple:
-        raw_key, value = self.split_raw_element(raw_element)
-        key = self.key_to_list(raw_key)
-        return key, value
-
-    def search_list_pattern(self, key_part: str) -> bool:
-        return re.search(self.LIST_KEY_PATTERN, key_part)
-
-    def extract_index_from_list_match(self, list_match: re.Match) -> int:
-        return int(list_match.group()[1:-1])
-
-    def add_to_existing_element_list(
-        self, part_name: str, index: int, existing_dict: list
-    ) -> dict:
-        try:
-            existing_dict = existing_dict[part_name][index]
-        except IndexError:
-            existing_dict[part_name].append({})
-            existing_dict = existing_dict[part_name][-1]
-        return existing_dict
-
-    def create_new_element_list(self, part_name: str, existing_dict: dict) -> dict:
-        existing_dict[part_name] = [{}]
-        existing_dict = existing_dict[part_name][0]
-        return existing_dict
-
-    def add_element_list_item(self):
-        pass
-
-    def scaffold_list_part(
-        self, part: str, list_match: re.Match = None, existing_dict: dict = None
-    ) -> dict:
-        part_name = part.split("[")[0]
-        list_match = list_match or self.search_list_pattern(part)
-        existing_dict = existing_dict if existing_dict is not None else {}
-        index = self.extract_index_from_list_match(list_match)
-        existing_list = isinstance(existing_dict.get(part_name), list)
-        if existing_list:
-            return self.add_to_existing_element_list(part_name, index, existing_dict)
-        else:
-            return self.create_new_element_list(part_name, existing_dict)
-
-    def scaffold_dict_part(self, part: str, existing_dict: dict = None) -> dict:
-        existing_dict = existing_dict if existing_dict is not None else {}
-        if isinstance(existing_dict.get(part), dict):
-            return existing_dict[part]
-        else:
-            existing_dict[part] = {}
-            return existing_dict[part]
-
-    def scaffold_part(self, part: str, existing_dict: dict = None) -> dict:
-        existing_dict = existing_dict if existing_dict is not None else {}
-        list_match = self.search_list_pattern(part)
-        if list_match:
-            return self.scaffold_list_part(
-                part, list_match=list_match, existing_dict=existing_dict
-            )
-        else:
-            return self.scaffold_dict_part(part, existing_dict=existing_dict)
-
-    def scaffold_listed_key(self, key: list, existing_dict: dict = None) -> dict:
-        existing_dict = existing_dict if existing_dict is not None else {}
-        for part in key[:-1]:
-            existing_dict = self.scaffold_part(part, existing_dict=existing_dict)
-        return existing_dict
-
-    def assign_list_element(self, destination: dict, part: str, value):
-        part_name = part.split("[")[0]
-        try:
-            destination[part_name].append(value)
-        except (KeyError, AttributeError):
-            destination[part_name] = [value]
-
-    def assign_listed_element(self, key: list, value, destination: dict):
-        part = key[-1]
-        list_match = self.search_list_pattern(part)
-        if list_match:
-            self.assign_list_element(destination, part, value)
-        else:
-            destination[part] = value
-
-    def assign_listed_key(self, key: list, value, existing_dict: dict = None):
-        existing_dict = existing_dict if existing_dict is not None else {}
-        destination = self.scaffold_listed_key(key, existing_dict=existing_dict)
-        self.assign_listed_element(key, value, destination)
-
-    def parse_raw_element(self, raw_element: str, existing_dict: dict = None):
         """
-        Parses a raw CSA header element into the provided dictionary or creates
-        a new one.
+        Splits the decoded header information into a list of raw (string) data
+        elements, each containing a key-value pair.
+        The first item is skipped because it is an unrequired heading.
+
+        Returns
+        -------
+        list
+            CSA data elements in raw string format
+        """
+
+        return re.findall(self.ELEMENT_PATTERN, self.decoded)[1:]
+
+    def create_csa_data_elements(self, raw_elements: list = None) -> list:
+        """
+        Creates :class:`~dicom_parser.utils.siemens.csa.data_element.CsaDataElement`
+        instances that parse the key and the value
 
         Parameters
         ----------
-        raw_element : str
-            A line representing a single data element.
-        existing_dict : dict
-            An existing dictionary storing organized header parts.
+        raw_elements : list
+            Raw (string) CSA header elements
+
+        Returns
+        -------
+        list
+            :class:`~dicom_parser.utils.siemens.csa.data_element.CsaDataElement`
+            instances.
         """
 
-        existing_dict = existing_dict if existing_dict is not None else {}
-        key, value = self.parse_raw_key_and_value(raw_element)
-        return self.assign_listed_key(key, value, existing_dict=existing_dict)
+        raw_elements = raw_elements or self.raw_elements
+        return [CsaDataElement(raw_element) for raw_element in raw_elements]
 
-    def fix_parser_elements_arg(self, raw_elements) -> list:
-        elements = raw_elements or self.raw_elements
-        if isinstance(elements, str):
-            return [elements]
-        elif not isinstance(elements, list):
-            raise TypeError(
-                f"The elements attribute accepts str or list values only, not {type(elements)}"  # noqa
-            )
-        return elements
+    def parse(self, csa_data_elements: list = None) -> dict:
+        """
+        Parses a list of :class:`~dicom_parser.utils.siemens.csa.data_element.CsaDataElement`
+        instances (or all if left None) as a dictionary.
 
-    def parse(self, raw_elements=None):
-        elements = self.fix_parser_elements_arg(raw_elements)
-        parsed = {}
-        for element in elements:
-            self.parse_raw_element(element, existing_dict=parsed)
-        return parsed
+        Parameters
+        ----------
+        csa_data_elements : list, optional
+            :class:`~dicom_parser.utils.siemens.csa.data_element.CsaDataElement`
+            instances, by default None
+
+        Returns
+        -------
+        dict
+            Header information as a dictionary
+        """
+
+        csa_data_elements = csa_data_elements or self.csa_data_elements
+        parser = CsaParser()
+        for element in csa_data_elements:
+            parser.parse(element)
+        return parser.parsed
+
+    @property
+    def raw_elements(self) -> list:
+        """
+        Caches the raw (sting) CSA data elements as a private attribute.
+
+        Returns
+        -------
+        list
+            Raw CSA header data elements
+        """
+
+        if not self._raw_elements:
+            self._raw_elements = self.get_raw_data_elements()
+        return self._raw_elements
+
+    @property
+    def csa_data_elements(self) -> list:
+        """
+        Caches the :class:`~dicom_parser.utils.siemens.csa.data_element.CsaDataElement`
+        instances representing the entire header information.
+
+        Returns
+        -------
+        list
+            :class:`~dicom_parser.utils.siemens.csa.data_element.CsaDataElement` instances
+        """
+
+        if not self._csa_data_elements:
+            self._csa_data_elements = self.create_csa_data_elements()
+        return self._csa_data_elements
+
+    @property
+    def parsed(self) -> dict:
+        """
+        Caches the parsed dictionary as a private attribute.
+
+        Returns
+        -------
+        dict
+            Header information as dictionary
+        """
+
+        if not self._parsed:
+            self._parsed = self.parse()
+        return self._parsed

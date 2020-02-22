@@ -11,6 +11,14 @@ Subpackages
 Submodules
 ----------
 
+dicom\_parser.data module
+-------------------------
+
+.. automodule:: dicom_parser.data
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 dicom\_parser.header module
 ---------------------------
 
@@ -19,10 +27,26 @@ dicom\_parser.header module
    :undoc-members:
    :show-inheritance:
 
+dicom\_parser.image module
+--------------------------
+
+.. automodule:: dicom_parser.image
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 dicom\_parser.parser module
 ---------------------------
 
 .. automodule:: dicom_parser.parser
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+dicom\_parser.series module
+---------------------------
+
+.. automodule:: dicom_parser.series
    :members:
    :undoc-members:
    :show-inheritance:

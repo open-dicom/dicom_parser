@@ -1,5 +1,5 @@
-Modules
-=======
+dicom_parser
+============
 
 .. toctree::
    :maxdepth: 4

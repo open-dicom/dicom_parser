@@ -57,9 +57,6 @@ class Image:
 
         return self.header.detected_sequence == "fmri"
 
-    def unpack_siemens_mosaic(self) -> np.ndarray:
-        pass
-
     @property
     def data(self) -> np.ndarray:
         """
@@ -72,9 +69,8 @@ class Image:
             Pixel data array.
         """
 
-        if self.header.get(self.SIEMENS_MOSAIC_FLAG_TAG):
-            n_images_in_mosaic = self.header.get(self.NUMBER_OF_IMAGES_IN_MOSAIC_TAG)
-            image_orientation_patient = self.header.get("ImageOrientationPatient")
-
-            return self._data.fix_siemens_fmri(n_images_in_mosaic)
+        # TODO: Figure out how to fix Siemens' mosaic and return it as a volume.
+        # if self.header.get(self.SIEMENS_MOSAIC_FLAG_TAG):
+        #     n_images_in_mosaic = self.header.get(self.NUMBER_OF_IMAGES_IN_MOSAIC_TAG)
+        #     return self._data.fix_siemens_fmri(n_images_in_mosaic)
         return self._data.raw

@@ -1,13 +1,19 @@
+import numpy as np
 import pydicom
 
 from dicom_parser.header import Header
 from dicom_parser.image import Image
 from pathlib import Path
-from tests.fixtures import TEST_IMAGE_PATH
+from tests.fixtures import TEST_IMAGE_PATH, TEST_RSFMRI_IMAGE_PATH
 from unittest import TestCase
 
 
 class ImageTestCase(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.image = Image(TEST_IMAGE_PATH)
+        cls.rsfmri_image = Image(TEST_RSFMRI_IMAGE_PATH)
+
     def test_initialization_with_string_path(self):
         image = Image(TEST_IMAGE_PATH)
         self.assertIsInstance(image, Image)
@@ -28,3 +34,16 @@ class ImageTestCase(TestCase):
         dataset = pydicom.dcmread(TEST_IMAGE_PATH, stop_before_pixels=True)
         with self.assertRaises(AttributeError):
             Image(dataset)
+
+    def test_is_rsfmri_property(self):
+        self.assertFalse(self.image.is_fmri)
+        self.assertTrue(self.rsfmri_image.is_fmri)
+
+    def test_regular_2d_image_returns_raw_pixel_array(self):
+        expected = self.image._data.raw
+        self.assertTrue(np.array_equal(self.image.data, expected))
+
+    # def test_siemens_mosaic_returns_as_volume(self):
+    #     n_dimensions = self.rsfmri_image.data.ndim
+    #     expected = 3
+    #     self.assertEqual(n_dimensions, expected)

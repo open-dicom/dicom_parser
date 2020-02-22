@@ -1,8 +1,3 @@
-.. dicom_parser documentation master file, created by
-   sphinx-quickstart on Tue Feb 18 16:46:34 2020.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
 Welcome to dicom_parser's documentation!
 ========================================
 
@@ -13,7 +8,7 @@ Welcome to dicom_parser's documentation!
    overview
    installation
    quickstart
-   modules
+   modules/modules
 
 
 Indices and tables

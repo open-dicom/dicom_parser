@@ -50,12 +50,12 @@ class Parser:
         """
         Parses Age String (AS) data elements into a float representation of the
         age in years.
-        
+
         Parameters
         ----------
         element : DataElement
             DICOM Age String (AS) data element.
-        
+
         Returns
         -------
         float
@@ -70,14 +70,14 @@ class Parser:
         """
         Parses Decimal String (DS) data elements to floats. In case the
         `Value Multiplicity`_ (VM) is greater than one, returns a list of floats.
-        
+
         .. _Value Multiplicity: http://dicom.nema.org/dicom/2013/output/chtml/part05/sect_6.4.html
 
         Parameters
         ----------
         element : DataElement
             DICOM Decimal String (DS) data element.
-        
+
         Returns
         -------
         float or list
@@ -94,12 +94,12 @@ class Parser:
     def parse_integer_string(self, element: DataElement) -> int:
         """
         Parses DICOM Integer String (IS) data elements to integers.
-        
+
         Parameters
         ----------
         element : DataElement
             DICOM Integer String (IS) data element.
-        
+
         Returns
         -------
         int
@@ -111,12 +111,12 @@ class Parser:
     def parse_date(self, element: DataElement) -> datetime.date:
         """
         Parses Date (DA) data elements to date objects.
-        
+
         Parameters
         ----------
         element : DataElement
             DICOM Date (DA) data element.
-        
+
         Returns
         -------
         datetime.date
@@ -140,12 +140,12 @@ class Parser:
     def parse_time(self, element: DataElement) -> datetime.time:
         """
         Parses Time (TM) data elements to time objects.
-        
+
         Parameters
         ----------
         element : DataElement
             DICOM Time (TM) data element.
-        
+
         Returns
         -------
         datetime.time
@@ -170,22 +170,23 @@ class Parser:
             if element.value:
                 raise
 
-    def parse_datetime(self, element: DataElement) -> datetime:
-        """
-        Parses Date Time (DT) data elements to datetime objects.
-        
-        Parameters
-        ----------
-        element : DataElement
-            DICOM Date Time (DT) data element.
-        
-        Returns
-        -------
-        datetime.time
-            Native python datetime object.
-        """
+    # TODO: Find a DICOM with a DT element so this method can be tested and uncommented.
+    # def parse_datetime(self, element: DataElement) -> datetime:
+    #     """
+    #     Parses Date Time (DT) data elements to datetime objects.
 
-        return datetime.strptime(element.value, "%Y%m%d%H%M%S.%f")
+    #     Parameters
+    #     ----------
+    #     element : DataElement
+    #         DICOM Date Time (DT) data element.
+
+    #     Returns
+    #     -------
+    #     datetime.time
+    #         Native python datetime object.
+    #     """
+
+    #     return datetime.strptime(element.value, "%Y%m%d%H%M%S.%f")
 
     def parse_code_string(self, element: DataElement):
         """
@@ -193,12 +194,12 @@ class Parser:
         of strings. This method relies on an Enum representation of the data element's
         possible values to be registered in the Parser's CODE_STRINGS_DICT by tag.
         If no Enum is registered, will return `None`.
-        
+
         Parameters
         ----------
         element : DataElement
             DICOM Code String (CS) data element.
-        
+
         Returns
         -------
         str or list
@@ -229,17 +230,17 @@ class Parser:
     # Custom parsing methods (tag dependent rather than value-representation dependant)
     def parse_siemens_slice_timing(self, value: bytes) -> list:
         """
-        Parses a SIEMENS MR image's slice timing as saved in the private 
+        Parses a SIEMENS MR image's slice timing as saved in the private
         (0019, 1029) `MosaicRefAcqTimes`_ tag to a list of floats representing
         slice times in milliseconds.
 
         .. _MosaicRefAcqTimes: https://en.wikibooks.org/wiki/SPM/Slice_Timing#Siemens_scanners
-        
+
         Parameters
         ----------
         value : bytes
             SIEMENS private MosaicRefAcqTimes data element.
-        
+
         Returns
         -------
         list
@@ -254,12 +255,12 @@ class Parser:
         (0019, 100E) `DiffusionGradientDirection`_ DICOM tag.
 
         .. _DiffusionGradientDirection: https://na-mic.org/wiki/NAMIC_Wiki:DTI:DICOM_for_DWI_and_DTI#Private_vendor:_Siemens
-        
+
         Parameters
         ----------
         value : bytes
             SIEMENS private DiffusionGradientDirection data element.
-        
+
         Returns
         -------
         list
@@ -271,12 +272,12 @@ class Parser:
     def parse_unknown(self, element: DataElement):
         """
         Parses private tags and other Unknown (UN) data elememts.
-        
+
         Parameters
         ----------
         element : DataElement
             DICOM Unknown (UN) data element.
-        
+
         """
 
         #
@@ -316,16 +317,16 @@ class Parser:
     def parse(self, element: DataElement):
         """
         Tries to parse a pydicom_ DICOM data element using its value-representation
-        (VR) attribute. If no parser method is registered for the VR under the 
+        (VR) attribute. If no parser method is registered for the VR under the
         PARSING_METHOD dictionary, will simply return the raw value.
 
         .. _pydicom: https://github.com/pydicom/pydicom
-        
+
         Parameters
         ----------
         element : DataElement
             DICOM data element as represented by pydicom.
-        
+
         Returns
         -------
         type

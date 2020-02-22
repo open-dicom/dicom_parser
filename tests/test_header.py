@@ -169,3 +169,19 @@ class HeaderTestCase(TestCase):
         default = "default value"
         result = self.header.get("invalid_key", default, parsed=False)
         self.assertEqual(result, default)
+
+    def test_get_with_a_list_of_keywords(self):
+        keywords = list(self.KEYWORDS)
+        result = self.header.get(keywords, parsed=False)
+        self.assertDictEqual(self.KEYWORDS, result)
+
+    def test_get_with_a_list_of_tags(self):
+        tags = list(self.TAGS)
+        result = self.header.get(tags, parsed=False)
+        self.assertDictEqual(self.TAGS, result)
+
+    def test_get_with_a_mixed_list_of_tags_and_keywords(self):
+        tags_and_keywords = list(self.TAGS) + list(self.KEYWORDS)
+        expected = {**self.TAGS, **self.KEYWORDS}
+        result = self.header.get(tags_and_keywords, parsed=False)
+        self.assertDictEqual(result, expected)

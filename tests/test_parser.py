@@ -2,13 +2,13 @@ import datetime
 import pydicom
 
 from dicom_parser.parser import Parser
-from tests.fixtures import TEST_DWI_IMAGE_PATH, TEST_IMAGE_PATH
+from tests.fixtures import TEST_EP2D_IMAGE_PATH, TEST_IMAGE_PATH
 from unittest import TestCase
 
 
 class ParserTestCase(TestCase):
     def setUp(self):
-        self.header = pydicom.dcmread(TEST_DWI_IMAGE_PATH, stop_before_pixels=True)
+        self.header = pydicom.dcmread(TEST_EP2D_IMAGE_PATH, stop_before_pixels=True)
         self.header_with_gradient_mode = pydicom.dcmread(
             TEST_IMAGE_PATH, stop_before_pixels=True
         )
