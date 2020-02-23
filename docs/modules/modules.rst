@@ -1,5 +1,5 @@
-dicom_parser
-============
+Reference
+=========
 
 .. toctree::
    :maxdepth: 4
