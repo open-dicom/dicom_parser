@@ -65,3 +65,7 @@ html_theme = "sphinx_rtd_theme"
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ["_static"]
 
+
+# Solve ReadTheDocs build error (expects master file to be contents.rst)
+master_doc = "index"
+

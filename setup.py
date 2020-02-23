@@ -15,7 +15,7 @@ with open("requirements-dev.txt") as fh:
 
 setup(
     name="dicom_parser",
-    version="0.0.1",
+    version="0.1.0",
     packages=find_packages(),
     include_package_data=True,
     license="AGPLv3",
