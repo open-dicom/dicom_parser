@@ -14,3 +14,6 @@ SIEMENS_PRIVATE_TAGS = {
     "CSASeriesHeaderVersion": ("0029", "1019"),
     "CSASeriesHeaderInfo": ("0029", "1020"),
 }
+
+MOSAIC_FLAG_TAG = "0029", "1009"
+NUMBER_OF_IMAGES_IN_MOSAIC_TAG = "0019", "100a"

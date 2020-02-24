@@ -227,11 +227,41 @@ class CsaParser:
         """
 
         last_part = csa_data_element.key[-1]
+        value = self.fix_value(csa_data_element.value)
         list_match = csa_data_element.search_array_pattern(last_part)
         if list_match:
-            self.assign_list_element(last_part, csa_data_element.value, destination)
+            self.assign_list_element(last_part, value, destination)
         else:
-            destination[last_part] = csa_data_element.value
+            destination[last_part] = value
+
+    def fix_value(self, value):
+        """
+        Covert a CSA header element's value to float or int if possible.
+        Also cleans up redundant quotation marks and decodes hexadecimal values.
+
+        Parameters
+        ----------
+        value : [type]
+            Some CSA header element value
+
+        Returns
+        -------
+        str, int, or float
+            Fixed (converted) value
+        """
+
+        try:
+            return (
+                int(value.split(".")[0]) if float(value).is_integer() else float(value)
+            )
+        except ValueError:
+            # Decode hexadecimal string
+            try:
+                return int(value, 16)
+            except ValueError:
+                # Remove extra quotes from strings
+                # e.g. '""Siemens""' -> 'Siemens'
+                return value.strip('"')
 
     def parse(self, csa_data_element: CsaDataElement):
         """

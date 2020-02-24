@@ -10,6 +10,7 @@ from dicom_parser.data import Data
 from dicom_parser.header import Header
 from dicom_parser.parser import Parser
 from dicom_parser.utils.read_file import read_file
+from dicom_parser.utils.siemens.private_tags import MOSAIC_FLAG_TAG
 
 
 class Image:
@@ -18,9 +19,6 @@ class Image:
     unified access to it's header information and data.
 
     """
-
-    SIEMENS_MOSAIC_FLAG_TAG = "0029", "1009"
-    NUMBER_OF_IMAGES_IN_MOSAIC_TAG = "0019", "100a"
 
     def __init__(self, raw, parser=Parser):
         """
@@ -43,6 +41,10 @@ class Image:
         self.raw = read_file(raw, read_data=True)
         self.header = Header(self.raw, parser=parser)
         self._data = Data(self.raw.pixel_array)
+
+    @property
+    def mosaic_pixel_array(self) -> bool:
+        return bool(self.header.get(MOSAIC_FLAG_TAG))
 
     @property
     def is_fmri(self) -> bool:

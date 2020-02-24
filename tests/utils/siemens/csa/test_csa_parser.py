@@ -1,6 +1,9 @@
-from dicom_parser.utils.siemens.csa.data_element import CsaDataElement
+from dicom_parser.header import Header
+from dicom_parser.utils.siemens.csa.header import CsaHeader
 from dicom_parser.utils.siemens.csa.parser import CsaParser
-from tests.utils.siemens.csa.fixtures import ELEMENT_LIST, LISTED_KEYS, RAW_ELEMENTS
+from dicom_parser.utils.siemens.private_tags import SIEMENS_PRIVATE_TAGS
+from tests.fixtures import TEST_EP2D_IMAGE_PATH
+from tests.utils.siemens.csa.fixtures import ELEMENT_LIST
 from unittest import TestCase
 
 
@@ -8,6 +11,13 @@ class CsaParserTestCase(TestCase):
     @classmethod
     def setUpClass(cls):
         cls.csa_parser = CsaParser()
+
+        # Read a sample header
+        cls.header = Header(TEST_EP2D_IMAGE_PATH)
+        csa_series_info_tag = SIEMENS_PRIVATE_TAGS["CSASeriesHeaderInfo"]
+        raw_csa_header = cls.header.get(csa_series_info_tag)
+        csa_header = CsaHeader(raw_csa_header)
+        cls.parsed = csa_header.parse()
 
     def test_parsed_attribute_set_to_dict_on_init(self):
         fresh_parser = CsaParser()
@@ -74,5 +84,34 @@ class CsaParserTestCase(TestCase):
         result = self.csa_parser.scaffold_dict_part(part_name, destination)
         self.assertIs(result, destination[part_name])
         self.assertDictEqual(result, {"ExistingSubpart": "value"})
+
+    def test_parse_return_type(self):
+        self.assertIsInstance(self.parsed, dict)
+        self.assertEqual(self.parsed["SliceArray"]["Size"], 60)
+
+    def test_parse_int_conversion(self):
+        slice_array_size = self.parsed["SliceArray"]["Size"]
+        expected = 60
+        self.assertEqual(slice_array_size, expected)
+
+    def test_parse_int_conversion_for_floating_point_int(self):
+        value = self.parsed["KSpace"]["SliceResolution"]
+        expected = 1  # Instead of 1.0
+        self.assertEqual(value, expected)
+
+    def test_parse_float_conversion(self):
+        instance_number = self.header.get("InstanceNumber")
+        slice_position = self.parsed["SliceArray"]["Slice"][instance_number][
+            "Position"
+        ]["Tra"]
+        expected = -58.1979682425
+        self.assertEqual(slice_position, expected)
+
+    def test_parse_cleans_extra_quotes(self):
+        value = self.parsed["CoilSelectMeas"]["RxCoilSelectData"][0]["List"][0][
+            "CoilElementID"
+        ]["CoilID"]
+        expected = "HeadNeck_64"
+        self.assertEqual(value, expected)
 
     # TODO: Complete tests

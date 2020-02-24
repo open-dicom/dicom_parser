@@ -53,10 +53,10 @@ class CsaHeaderTestCase(TestCase):
 
     def test_parse_results_for_nested_dict_value(self):
         parsed = self.csa_header.parse()
-        slice_array_size = "64"
+        slice_array_size = 64
         value = parsed["SliceArray"]["Size"]
         self.assertEqual(slice_array_size, value)
-        k_space_slice_resolution = "1.0"
+        k_space_slice_resolution = 1
         value = parsed["KSpace"]["SliceResolution"]
         self.assertEqual(k_space_slice_resolution, value)
 
