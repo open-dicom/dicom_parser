@@ -8,6 +8,7 @@ from dicom_parser.parser import Parser
 from dicom_parser.utils.siemens.private_tags import SIEMENS_PRIVATE_TAGS
 from dicom_parser.utils.read_file import read_file
 from dicom_parser.utils.sequence_detector.sequence_detector import SequenceDetector
+from dicom_parser.utils.siemens.csa.header import CsaHeader
 from pydicom.dataelem import DataElement
 
 
@@ -244,11 +245,27 @@ class Header:
 
         return self.get(key, missing_ok=False)
 
-    def get_csa_element_by_keyword(self, keyword: str):
+    def get_mosaic_volume_shape(self):
         """
-        Returns the `CSA header <https://nipy.org/nibabel/dicom/siemens_csa.html>`_
-        for Siemens scans.
+        Returns the dimensions of a Siemens mosaic image.
 
         """
 
-        return self.get_element(SIEMENS_PRIVATE_TAGS.get(keyword))
+        acquisition_matrix = self.get("AcquisitionMatrix")
+        x, y = acquisition_matrix[0], acquisition_matrix[-1]
+        z = self.csa_series_header_info.n_slices
+        return x, y, z
+
+    def get_siemens_csa_series_header_info(self) -> dict:
+        csa_series_info_tag = SIEMENS_PRIVATE_TAGS["CSASeriesHeaderInfo"]
+        return CsaHeader(self.get(csa_series_info_tag))
+
+    def get_mosaic_dimensions(self) -> tuple:
+        volume_shape = self.get_mosaic_volume_shape()
+        n_rows = self.get("Rows") // volume_shape[0]
+        n_columns = self.get("Columns") // volume_shape[1]
+        return n_rows, n_columns
+
+    @property
+    def csa_series_header_info(self) -> dict:
+        return self.get_siemens_csa_series_header_info()

@@ -10,7 +10,11 @@ from dicom_parser.data import Data
 from dicom_parser.header import Header
 from dicom_parser.parser import Parser
 from dicom_parser.utils.read_file import read_file
-from dicom_parser.utils.siemens.private_tags import MOSAIC_FLAG_TAG
+from dicom_parser.utils.siemens.csa.header import CsaHeader
+from dicom_parser.utils.siemens.private_tags import (
+    MOSAIC_FLAG_TAG,
+    SIEMENS_PRIVATE_TAGS,
+)
 
 
 class Image:
@@ -71,8 +75,6 @@ class Image:
             Pixel data array.
         """
 
-        # TODO: Figure out how to fix Siemens' mosaic and return it as a volume.
-        # if self.header.get(self.SIEMENS_MOSAIC_FLAG_TAG):
-        #     n_images_in_mosaic = self.header.get(self.NUMBER_OF_IMAGES_IN_MOSAIC_TAG)
-        #     return self._data.fix_siemens_fmri(n_images_in_mosaic)
+        if self.mosaic_pixel_array:
+            dimensions = self.header.get_mosaic_volume_shape()
         return self._data.raw

@@ -134,6 +134,21 @@ class CsaHeader:
             parser.parse(element)
         return parser.parsed
 
+    def get_transverse_slice_positions(self) -> list:
+        slices_info = self.parsed["SliceArray"]["Slice"]
+        return [slice_["Position"]["Tra"] for slice_ in slices_info]
+
+    def check_if_slices_are_ascending(self) -> bool:
+        return "Asc" in self.parsed["SliceArray"]
+
+    @property
+    def transverse_slice_positions(self) -> list:
+        return self.get_transverse_slice_positions()
+
+    @property
+    def ascending_slices(self) -> bool:
+        return self.check_if_slices_are_ascending()
+
     @property
     def raw_elements(self) -> list:
         """
@@ -179,3 +194,7 @@ class CsaHeader:
         if not self._parsed:
             self._parsed = self.parse()
         return self._parsed
+
+    @property
+    def n_slices(self) -> int:
+        return self.parsed["SliceArray"]["Size"]
