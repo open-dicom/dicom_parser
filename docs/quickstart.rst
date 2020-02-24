@@ -18,7 +18,7 @@ an :class:`~dicom_parser.image.Image` instance.
 Coversion to Python's native types
 ----------------------------------
 
-`dicom_parser` provides *dict*-like access to the
+`dicom_parser` provides *dict*-like access to the parsed values of the
 `header <https://dcm4che.atlassian.net/wiki/spaces/d2/pages/1835038/A+Very+Basic+DICOM+Introduction>`_'s
 data-elements. The raw values as read by `pydicom <https://pydicom.github.io/>`_
 remain accessible through the *raw* attribute.
@@ -60,8 +60,8 @@ Age String (AS) to *float*:
     >> float
 
 
-Date String (DA) to *datetime.date* using the
-:class:`~dicom_parser.header.Header` class's indexing operator/subscript notation:
+Date String (DA) to `datetime.date <https://docs.python.org/3/library/datetime.html#available-types>`_
+using the :class:`~dicom_parser.header.Header` class's indexing operator/subscript notation:
 
 .. code:: python
 
@@ -115,7 +115,13 @@ Another useful class this package offers is the
     from dicom_parser import Series
 
     series = Series('/path/to/dicom/series/')
+
+    # Read stacked pixel arrays as a 3D volume
+    type(series.data)
+    >>> numpy.ndarray
     series.data.shape
     >> (224, 224, 208)
+
+    # Access the underlying Image instances
     series.images[6].header.get('InstanceNumber')
-    >> 7    # Images are 1-indexed
+    >> 7    # instance numbers are 1-indexed
