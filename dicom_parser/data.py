@@ -1,5 +1,3 @@
-from dicom_parser.utils.siemens.csa.header import CsaHeader
-
 import numpy as np
 
 

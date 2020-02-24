@@ -10,11 +10,8 @@ from dicom_parser.data import Data
 from dicom_parser.header import Header
 from dicom_parser.parser import Parser
 from dicom_parser.utils.read_file import read_file
-from dicom_parser.utils.siemens.csa.header import CsaHeader
-from dicom_parser.utils.siemens.private_tags import (
-    MOSAIC_FLAG_TAG,
-    SIEMENS_PRIVATE_TAGS,
-)
+from dicom_parser.utils.siemens.mosaic import Mosaic
+from dicom_parser.utils.siemens.private_tags import MOSAIC_FLAG_TAG
 
 
 class Image:
@@ -76,5 +73,6 @@ class Image:
         """
 
         if self.mosaic_pixel_array:
-            dimensions = self.header.get_mosaic_volume_shape()
+            mosaic = Mosaic(self._data.raw, self.header)
+            return mosaic.fold()
         return self._data.raw
