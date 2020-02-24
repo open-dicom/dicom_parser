@@ -15,8 +15,7 @@ Essentially, *dicom_parser* uses [DICOM](https://www.dicomstandard.org/)'s
 as well as prior knowledge on vendor-specific private tags or encoding schemes,
 in order to transform them to more "pythonic" data structures when possible.
 
-For more information, please see
-[the documentation](http://dicom-parser.readthedocs.io/?badge=latest).
+For more information, please see [the documentation].
 
 ---
 
@@ -145,7 +144,11 @@ Another useful class this package offers is the [Series] class:
     >> 7    # instance numbers are 1-indexed
 ```
 
+For more information, please see [the documentation].
+
+
 [datetime.date]: https://docs.python.org/3/library/datetime.html#available-types
 [Header]: https://dicom-parser.readthedocs.io/en/latest/modules/dicom_parser.html#dicom_parser.header.Header
 [pydicom]: https://pydicom.github.io/
 [Series]: https://dicom-parser.readthedocs.io/en/latest/modules/dicom_parser.html#dicom_parser.series.Series
+[the documentation]: http://dicom-parser.readthedocs.io/?badge=latest
