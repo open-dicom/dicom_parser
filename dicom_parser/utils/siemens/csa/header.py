@@ -136,14 +136,6 @@ class CsaHeader:
             parser.parse(element)
         return parser.parsed
 
-    def get_transverse_slice_positions(self) -> list:
-        slices_info = self.parsed["SliceArray"]["Slice"]
-        return [slice_["Position"]["Tra"] for slice_ in slices_info]
-
-    @property
-    def transverse_slice_positions(self) -> list:
-        return self.get_transverse_slice_positions()
-
     @property
     def raw_elements(self) -> list:
         """

@@ -114,14 +114,24 @@ Another useful class this package offers is the
 
     from dicom_parser import Series
 
-    series = Series('/path/to/dicom/series/')
+    anatomical_series = Series('/path/to/dicom/series/')
 
     # Read stacked pixel arrays as a 3D volume
-    type(series.data)
+    type(anatomical_series.data)
     >>> numpy.ndarray
-    series.data.shape
+    anatomical_series.data.shape
     >> (224, 224, 208)
 
     # Access the underlying Image instances
-    series.images[6].header.get('InstanceNumber')
+    anatomical_series.images[6].header.get('InstanceNumber')
     >> 7    # instance numbers are 1-indexed
+
+Reading Siemens 4D data
+`encoded as mosaics <https://nipy.org/nibabel/dicom/dicom_mosaic.html>`_
+is also supported:
+
+.. code:: python
+
+    fmri_series = Series('/path/to/dicom/fmri/')
+    fmri_series.data.shape
+    >> (96, 96, 64, 200)

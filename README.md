@@ -144,6 +144,16 @@ Another useful class this package offers is the [Series] class:
     >> 7    # instance numbers are 1-indexed
 ```
 
+Reading Siemens 4D data
+[encoded as mosaics](https://nipy.org/nibabel/dicom/dicom_mosaic.html)
+is also supported:
+
+```python
+    fmri_series = Series('/path/to/dicom/fmri/')
+    fmri_series.data.shape
+    >> (96, 96, 64, 200)
+```
+
 For more information, please see [the documentation].
 
 

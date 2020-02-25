@@ -2,8 +2,9 @@ import pydicom
 
 from dicom_parser.parser import Parser
 from dicom_parser.header import Header
+from dicom_parser.utils.siemens.csa.header import CsaHeader
 from pathlib import Path
-from tests.fixtures import TEST_IMAGE_PATH, TEST_STUDY_FIELDS
+from tests.fixtures import TEST_IMAGE_PATH, TEST_STUDY_FIELDS, TEST_GE_LOCALIZER_PATH
 from unittest import TestCase
 
 
@@ -185,3 +186,18 @@ class HeaderTestCase(TestCase):
         expected = {**self.TAGS, **self.KEYWORDS}
         result = self.header.get(tags_and_keywords, parsed=False)
         self.assertDictEqual(result, expected)
+
+    def test_get_csa_with_existing_csa_and_correct_key_returns_csa_header(self):
+        header = Header(TEST_IMAGE_PATH)
+        result = header.get_csa("CSASeriesHeaderInfo")
+        self.assertIsInstance(result, CsaHeader)
+
+    def test_get_csa_with_existing_csa_and_incorrect_key_raises_key_error(self):
+        header = Header(TEST_IMAGE_PATH)
+        with self.assertRaises(KeyError):
+            header.get_csa("InvalidHeader")
+
+    def test_get_csa_with_missing_csa_returns_none(self):
+        header = Header(TEST_GE_LOCALIZER_PATH)
+        result = header.get_csa("CSASeriesHeaderInfo")
+        self.assertIsNone(result)

@@ -11,6 +11,7 @@ Welcome to dicom_parser's documentation!
    quickstart
    vendors
    modules/modules
+   release_notes
 
 
 Indices and tables

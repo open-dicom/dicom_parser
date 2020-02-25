@@ -6,12 +6,10 @@ Definition of the Image class, representing a single pair of
 
 import numpy as np
 
-from dicom_parser.data import Data
 from dicom_parser.header import Header
 from dicom_parser.parser import Parser
 from dicom_parser.utils.read_file import read_file
 from dicom_parser.utils.siemens.mosaic import Mosaic
-from dicom_parser.utils.siemens.private_tags import CSA_FLAG_TAG
 
 
 class Image:
@@ -41,7 +39,7 @@ class Image:
 
         self.raw = read_file(raw, read_data=True)
         self.header = Header(self.raw, parser=parser)
-        self._data = Data(self.raw.pixel_array)
+        self._data = self.raw.pixel_array
 
     def fix_data(self) -> np.ndarray:
         """
@@ -54,10 +52,9 @@ class Image:
         """
 
         if self.is_mosaic:
-            mosaic_array = self._data.raw
-            mosaic = Mosaic(mosaic_array, self.header)
+            mosaic = Mosaic(self._data, self.header)
             return mosaic.fold()
-        return self._data.raw
+        return self._data
 
     @property
     def is_mosaic(self) -> bool:
