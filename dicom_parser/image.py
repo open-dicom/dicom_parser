@@ -11,7 +11,7 @@ from dicom_parser.header import Header
 from dicom_parser.parser import Parser
 from dicom_parser.utils.read_file import read_file
 from dicom_parser.utils.siemens.mosaic import Mosaic
-from dicom_parser.utils.siemens.private_tags import MOSAIC_FLAG_TAG
+from dicom_parser.utils.siemens.private_tags import CSA_FLAG_TAG
 
 
 class Image:
@@ -43,9 +43,37 @@ class Image:
         self.header = Header(self.raw, parser=parser)
         self._data = Data(self.raw.pixel_array)
 
+    def fix_data(self) -> np.ndarray:
+        """
+        Applies any required transformation to the data.
+
+        Returns
+        -------
+        np.ndarray
+            Pixel array data
+        """
+
+        if self.is_mosaic:
+            mosaic_array = self._data.raw
+            mosaic = Mosaic(mosaic_array, self.header)
+            return mosaic.fold()
+        return self._data.raw
+
     @property
-    def mosaic_pixel_array(self) -> bool:
-        return bool(self.header.get(MOSAIC_FLAG_TAG))
+    def is_mosaic(self) -> bool:
+        """
+        Checks whether a 3D volume is encoded as a 2D Mosaic.
+        For more information, see the
+        :class:`~dicom_parser.utils.siemens.mosaic.Mosaic`
+        class.
+
+        Returns
+        -------
+        bool
+            Whether the image is a mosaic encoded volume
+        """
+
+        return "MOSAIC" in self.header.get("ImageType")
 
     @property
     def is_fmri(self) -> bool:
@@ -72,7 +100,4 @@ class Image:
             Pixel data array.
         """
 
-        if self.mosaic_pixel_array:
-            mosaic = Mosaic(self._data.raw, self.header)
-            return mosaic.fold()
-        return self._data.raw
+        return self.fix_data()

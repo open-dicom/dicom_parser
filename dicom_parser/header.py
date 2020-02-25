@@ -252,4 +252,4 @@ class Header:
             else SIEMENS_PRIVATE_TAGS[key_or_tuple]
         )
         raw_csa = self.get(tag)
-        return CsaHeader(raw_csa)
+        return CsaHeader(raw_csa) if raw_csa else None
