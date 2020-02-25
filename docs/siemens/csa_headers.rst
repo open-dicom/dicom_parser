@@ -58,3 +58,14 @@ raw header:
     instance_number = image.header.get('InstanceNumber')
     parsed_csa["SliceArray"]["Slice"][instance_number]["Position"]["Tra"]
     >> -58.1979682425
+
+Another option is to simply use the
+:class:`~dicom_parser.header.Header` instance's
+:meth:`~dicom_parser.header.Header.get_csa` method:
+
+.. code:: python
+
+    csa = image.header.get_csa('CSASeriesHeaderInfo')
+
+    csa.parsed['SliceAcceleration']['MultiBandFactor']
+    >> 3

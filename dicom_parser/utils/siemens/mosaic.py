@@ -126,7 +126,7 @@ class Mosaic:
         if not self.ascending:
             tiles = tiles[::-1]
         volume = np.stack(tiles, axis=-1).transpose((1, 0, 2))
-        return np.flip(volume, axis=(0, 1))
+        return np.flip(volume, axis=1)
 
     def fold(self) -> np.ndarray:
         """
