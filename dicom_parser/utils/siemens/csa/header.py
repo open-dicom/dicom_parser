@@ -1,6 +1,8 @@
 """
-Definition of the CsaHeader class which handles the parsing of CSA header values
-returned by `pydicom <https://github.com/pydicom/pydicom>`_.'s as bytes.
+Definition of the :class:`~dicom_parser.utils.siemens.csa.header.CsaHeader`
+class which handles the parsing of
+`CSA header <https://nipy.org/nibabel/dicom/siemens_csa.html>`_ values
+returned by `pydicom <https://github.com/pydicom/pydicom>`_ as bytes.
 
 """
 
@@ -14,12 +16,12 @@ from dicom_parser.utils.siemens.csa.parser import CsaParser
 class CsaHeader:
     """
     Represents a full CSA header data element, i.e. either
-    (0029, 1010)/`"CSA Image Header Info"` or (0029, 1020)/`"CSA Series Header Info"`
+    (0029, 1010)/`"CSA Image Header Info"` or (0029, 1020)/`"CSA Series Header Info"`,
     and provides access to the header as a parsed dictionary.
     This implementation is heavily based on
     `dicom2nifti <https://github.com/icometrix/dicom2nifti>`_'s
     code (particularly
-    `this module <https://github.com/icometrix/dicom2nifti/blob/6722420a7673d36437e4358ce3cb2a7c77c91820/dicom2nifti/convert_siemens.py#L342>`_). # no qa
+    `this module <https://github.com/icometrix/dicom2nifti/blob/6722420a7673d36437e4358ce3cb2a7c77c91820/dicom2nifti/convert_siemens.py#L342>`_).
 
     """
 
@@ -190,4 +192,13 @@ class CsaHeader:
 
     @property
     def n_slices(self) -> int:
+        """
+        Returns the number of slices (tiles) in a mosaic.
+
+        Returns
+        -------
+        int
+            Number of slices encoded as a 2D mosaic.
+        """
+
         return self.parsed["SliceArray"]["Size"]

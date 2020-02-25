@@ -245,11 +245,30 @@ class Header:
                 raise
         return value or default
 
-    def get_csa(self, key_or_tuple) -> CsaHeader:
+    def get_csa(self, key_or_tag) -> CsaHeader:
+        """
+        Creates a
+        :class:`~dicom_parser.utils.siemens.csa.header.CsaHeader`
+        instance that may be used to parse Siemens' CSA header information
+        as a dictionary and provides other utility methods.
+        If no CSA header found, returns None.
+
+        Parameters
+        ----------
+        key_or_tag : str or tuple
+            The CSA header's keyword or tag
+
+        Returns
+        -------
+        :class:`~dicom_parser.utils.siemens.csa.header.CsaHeader`
+            CSA header information
+        """
+
         tag = (
-            key_or_tuple
-            if isinstance(key_or_tuple, tuple)
-            else SIEMENS_PRIVATE_TAGS[key_or_tuple]
+            key_or_tag
+            if isinstance(key_or_tag, tuple)
+            else SIEMENS_PRIVATE_TAGS[key_or_tag]
         )
         raw_csa = self.get(tag)
-        return CsaHeader(raw_csa) if raw_csa else None
+        if raw_csa:
+            return CsaHeader(raw_csa)
