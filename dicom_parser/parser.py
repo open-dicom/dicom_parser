@@ -8,6 +8,7 @@ from dicom_parser.utils.code_strings import (
     ScanningSequence,
     SequenceVariant,
 )
+from dicom_parser.utils.siemens.csa.header import CsaHeader
 from dicom_parser.utils.value_representation import ValueRepresentation
 from pydicom.dataelem import DataElement
 
@@ -281,7 +282,9 @@ class Parser:
         """
 
         #
-        #   Siemens DWI tags
+        # Siemens private tags
+        #
+        # DTI
         # https://na-mic.org/wiki/NAMIC_Wiki:DTI:DICOM_for_DWI_and_DTI
         # Number of Images in Mosaic
         if element.tag == ("0019", "100a"):
@@ -305,10 +308,15 @@ class Parser:
         # Bandwidth per Pixel Phase Encode
         elif element.tag == ("0019", "1028"):
             return array.array("d", element.value)[0]
-        # Siemens slice timing
+        # Slice Timing
         # https://en.wikibooks.org/wiki/SPM/Slice_Timing#Siemens_scanners
         elif element.tag == ("0019", "1029"):
             return self.parse_siemens_slice_timing(element.value)
+        #
+        # CSA Headers
+        # https://nipy.org/nibabel/dicom/siemens_csa.html
+        elif element.tag in (("0029", "1010"), ("0029", "1020")):
+            return CsaHeader(element.value).parsed
 
         # If no parsing method exists for this DICOM attribute, simply return
         # the raw value.

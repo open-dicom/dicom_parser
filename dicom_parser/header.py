@@ -5,10 +5,9 @@ Definition of the Header class, which extends the functionality of
 """
 
 from dicom_parser.parser import Parser
+from dicom_parser.utils.private_tags import PRIVATE_TAGS
 from dicom_parser.utils.read_file import read_file
 from dicom_parser.utils.sequence_detector.sequence_detector import SequenceDetector
-from dicom_parser.utils.siemens.csa.header import CsaHeader
-from dicom_parser.utils.siemens.private_tags import SIEMENS_PRIVATE_TAGS
 from pydicom.dataelem import DataElement
 
 
@@ -47,6 +46,7 @@ class Header:
         self.parser = parser()
         self.sequence_detector = sequence_detector()
         self.raw = read_file(raw)
+        self.manufacturer = self.get("Manufacturer")
         self.detected_sequence = self.detect_sequence()
 
     def __getitem__(self, key):
@@ -210,6 +210,27 @@ class Header:
         element = self.get_element(tag_or_keyword)
         return self.parser.parse(element)
 
+    def get_private_tag(self, keyword: str) -> tuple:
+        """
+        Returns a vendor-specific private tag corresponding to the provided keyword,
+        if the tag is registered (see the :mod:`~dicom_parser.utils.private_tags` module).
+        This is required because pydicom does not offer keyword access to private tags.
+
+        Parameters
+        ----------
+        keyword : str
+            Private data element keyword
+
+        Returns
+        -------
+        tuple
+            Private data element tag
+        """
+
+        if keyword != "Manufacturer":
+            manufacturer_private_tags = PRIVATE_TAGS.get(self.manufacturer, {})
+            return manufacturer_private_tags.get(keyword)
+
     def get(
         self, tag_or_keyword, default=None, parsed: bool = True, missing_ok: bool = True
     ):
@@ -235,40 +256,14 @@ class Header:
 
         get_method = self.get_parsed_value if parsed else self.get_raw_value
         value = None
+        if isinstance(tag_or_keyword, str):
+            tag_or_keyword = self.get_private_tag(tag_or_keyword) or tag_or_keyword
         try:
             if isinstance(tag_or_keyword, (str, tuple)):
-                return get_method(tag_or_keyword)
+                value = get_method(tag_or_keyword)
             elif isinstance(tag_or_keyword, list):
-                return {item: get_method(item) for item in tag_or_keyword}
+                value = {item: get_method(item) for item in tag_or_keyword}
         except (KeyError, TypeError):
             if not missing_ok:
                 raise
         return value or default
-
-    def get_csa(self, key_or_tag) -> CsaHeader:
-        """
-        Creates a
-        :class:`~dicom_parser.utils.siemens.csa.header.CsaHeader`
-        instance that may be used to parse Siemens' CSA header information
-        as a dictionary and provides other utility methods.
-        If no CSA header found, returns None.
-
-        Parameters
-        ----------
-        key_or_tag : str or tuple
-            The CSA header's keyword or tag
-
-        Returns
-        -------
-        :class:`~dicom_parser.utils.siemens.csa.header.CsaHeader`
-            CSA header information
-        """
-
-        tag = (
-            key_or_tag
-            if isinstance(key_or_tag, tuple)
-            else SIEMENS_PRIVATE_TAGS[key_or_tag]
-        )
-        raw_csa = self.get(tag)
-        if raw_csa:
-            return CsaHeader(raw_csa)
