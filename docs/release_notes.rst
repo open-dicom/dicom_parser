@@ -8,6 +8,10 @@ Release Notes
 
     * Added support for calling len() over a :class:`~dicom_parser.series.Series` instance to return the number of images in it.
 
+    * Added support for querying header information from a :class:`~dicom_parser.series.Series` instance using the :meth:`~dicom_parser.series.Series.get` method or the indexing operator ([]) using a `str` or a `tuple`.
+
+    * Added support for indexing the :class:`~dicom_parser.image.Image` instances  from a :class:`~dicom_parser.series.Series` using an `int` or `slice`.
+
 
 0.1.1
 -----

@@ -36,7 +36,43 @@ class Series:
         self._data = None
 
     def __len__(self) -> int:
+        """
+        Returns the number of images this Series instance is composed of.
+
+        Returns
+        -------
+        int
+            Number of DICOM images in this series.
+        """
+
         return len(self.images)
+
+    def __getitem__(self, key):
+        """
+        Provide dictionary-like indexing-operator functionality for querying header
+        information using a str or a tuple, and list-like functionality for int,
+        returning the image at the given index.
+
+        Parameters
+        ----------
+        key : str or tuple or int
+            The key or tag for which to retrieve header information,
+            or the index for the required :class:`~dicom_parser.image.Image` instance.
+
+        Returns
+        -------
+        type
+            Parsed header information of the given key or the image at the given index.
+        """
+
+        if isinstance(key, (str, tuple)):
+            return self.get(key, missing_ok=False)
+        elif isinstance(key, (int, slice)) and not isinstance(key, bool):
+            return self.images[key]
+        else:
+            raise TypeError(
+                f"Invalid indexing operator value ({key})! Must be of type str, tuple, int, or slice."
+            )
 
     def check_path(self, path) -> Path:
         """
@@ -103,6 +139,36 @@ class Series:
         return tuple(
             sorted(images, key=lambda image: image.header.get("InstanceNumber"))
         )
+
+    def get(
+        self, tag_or_keyword, default=None, parsed: bool = True, missing_ok: bool = True
+    ):
+        """
+        Returns header information from the
+        :class:`~dicom_parser.image.Image` that compose this series.
+        If one distinct value is returned from all the images' headers,
+        returns that value. Otherwise, returns a list of the values
+        (ordered the same as the `images` attribute, by instance number).
+
+        Parameters
+        ----------
+        tag_or_keyword : tuple or str, or list
+            Tag or keyword representing the requested data element, or a list of such.
+
+        Returns
+        -------
+        type
+            The requested data element value for the entire series
+        """
+
+        values = [
+            image.header.get(
+                tag_or_keyword, default=default, parsed=parsed, missing_ok=missing_ok
+            )
+            for image in self.images
+        ]
+        unique_values = set(values)
+        return values if len(unique_values) > 1 else unique_values.pop()
 
     @property
     def data(self) -> np.ndarray:
