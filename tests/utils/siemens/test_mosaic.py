@@ -2,7 +2,6 @@ import nibabel as nib
 import numpy as np
 
 from dicom_parser.image import Image
-from dicom_parser.utils.siemens.csa.header import CsaHeader
 from dicom_parser.utils.siemens.mosaic import Mosaic
 from tests.fixtures import (
     TEST_RSFMRI_IMAGE_PATH,
@@ -12,7 +11,7 @@ from tests.fixtures import (
 from unittest import TestCase
 
 
-class HeaderTestCase(TestCase):
+class MosaicTestCase(TestCase):
     @classmethod
     def setUpClass(cls):
         cls.image = Image(TEST_RSFMRI_IMAGE_PATH)
@@ -20,7 +19,7 @@ class HeaderTestCase(TestCase):
 
     def test_init_read_series_header_info(self):
         csa_header = self.mosaic.series_header_info
-        self.assertIsInstance(csa_header, CsaHeader)
+        self.assertIsInstance(csa_header, dict)
 
     def test_init_read_volume_shape(self):
         value = self.mosaic.volume_shape

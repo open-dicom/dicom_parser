@@ -15,7 +15,7 @@ class CsaParserTestCase(TestCase):
         # Read a sample header
         cls.header = Header(TEST_EP2D_IMAGE_PATH)
         csa_series_info_tag = SIEMENS_PRIVATE_TAGS["CSASeriesHeaderInfo"]
-        raw_csa_header = cls.header.get(csa_series_info_tag)
+        raw_csa_header = cls.header.get(csa_series_info_tag, parsed=False)
         csa_header = CsaHeader(raw_csa_header)
         cls.parsed = csa_header.parse()
 

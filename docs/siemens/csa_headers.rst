@@ -10,22 +10,35 @@ regarding the acquisition and storage of the data (for more information see
     * (0029, 1010) - CSA Image Header Info
     * (0029, 1020) - CSA Series Header Info
 
-Siemens' CSA headers may easily be parsed using the
-:class:`~dicom_parser.utils.siemens.csa.header.CsaHeader` class.
-
-First, let's have a look at the raw value returned by
-`pydicom <https://github.com/pydicom/pydicom>`_:
+By default, the :class:`~dicom_parser.header.Header` instance's
+:meth:`~dicom_parser.header.Header.get` method will parsed the CSA header
+information as a `dict`:
 
 .. code:: python
 
     from dicom_parser import Image
-    from dicom_parser.utils.siemens.csa.header import CsaHeader
-    from dicom_parser.utils.siemens.private_tags import SIEMENS_PRIVATE_TAGS
 
     image = Image('/path/to/siemens/csa.dcm')
 
-    series_header_info_tag = SIEMENS_PRIVATE_TAGS['CSASeriesHeaderInfo'] # == ('0029', '1020')
-    raw_csa = image.get(series_header_info_tag)
+    csa = image.header.get('CSASeriesHeaderInfo')
+    csa['SliceAcceleration']['MultiBandFactor']
+    >> 3
+
+
+`dicom_parser` uses the
+:class:`~dicom_parser.utils.siemens.csa.header.CsaHeader`
+class in order to created the parsed dictionary.
+
+To learn more about the
+:class:`~dicom_parser.utils.siemens.csa.header.CsaHeader` class,
+let's have a look at the raw CSA header value returned by
+`pydicom <https://github.com/pydicom/pydicom>`_:
+
+.. code:: python
+
+    from dicom_parser.utils.siemens.csa.header import CsaHeader
+
+    raw_csa = image.header.get('CSASeriesHeaderInfo', parsed=False)
 
     # The raw data is returned as bytes
     type(raw_csa)
@@ -58,14 +71,3 @@ raw header:
     instance_number = image.header.get('InstanceNumber')
     parsed_csa["SliceArray"]["Slice"][instance_number]["Position"]["Tra"]
     >> -58.1979682425
-
-Another option is to simply use the
-:class:`~dicom_parser.header.Header` instance's
-:meth:`~dicom_parser.header.Header.get_csa` method:
-
-.. code:: python
-
-    csa = image.header.get_csa('CSASeriesHeaderInfo')
-
-    csa.parsed['SliceAcceleration']['MultiBandFactor']
-    >> 3

@@ -33,10 +33,10 @@ class Mosaic:
 
         self.mosaic_array = mosaic_array
         self.header = header
-        self.series_header_info = self.header.get_csa("CSASeriesHeaderInfo")
+        self.series_header_info = self.header.get("CSASeriesHeaderInfo")
         self.volume_shape = self.get_volume_shape()
         self.mosaic_dimensions = self.get_mosaic_dimensions()
-        self.ascending = "Asc" in self.series_header_info.parsed["SliceArray"]
+        self.ascending = "Asc" in self.series_header_info["SliceArray"]
 
     def get_volume_shape(self) -> tuple:
         """
@@ -50,7 +50,7 @@ class Mosaic:
 
         acquisition_matrix = self.header.get("AcquisitionMatrix")
         x, y = acquisition_matrix[0], acquisition_matrix[-1]
-        z = self.series_header_info.n_slices
+        z = self.series_header_info["SliceArray"]["Size"]
         return x, y, z
 
     def get_mosaic_dimensions(self) -> tuple:

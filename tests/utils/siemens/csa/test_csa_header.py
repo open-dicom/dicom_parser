@@ -80,3 +80,8 @@ class CsaHeaderTestCase(TestCase):
         self.assertIsInstance(self.csa_header.parsed, dict)
         self.assertIs(self.csa_header.parsed, self.csa_header.parsed)
 
+    def test_n_slices_property(self):
+        result = self.csa_header.n_slices
+        expected = self.csa_header.parsed["SliceArray"]["Size"]
+        self.assertEqual(result, expected)
+

@@ -65,3 +65,9 @@ class SeriesTestCase(TestCase):
         series = Series(TEST_RSFMRI_SERIES_PATH)
         nii_data = np.asanyarray(nib.load(TEST_RSFMRI_SERIES_NIFTI).dataobj)
         self.assertTrue(np.array_equal(series.data, nii_data))
+
+    def test_len(self):
+        localizer = Series(TEST_SERIES_PATH)
+        rsfmri = Series(TEST_RSFMRI_SERIES_PATH)
+        self.assertEqual(len(localizer), 11)
+        self.assertEqual(len(rsfmri), 3)
