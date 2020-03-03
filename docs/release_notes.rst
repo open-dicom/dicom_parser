@@ -1,6 +1,14 @@
 Release Notes
 =============
 
+0.1.2
+-----
+
+    * Improved private tags definition so that the :class:`~dicom_parser.header.Header` model's :meth:`~dicom_parser.header.Header.get` method will work using the private tag's keyword.
+
+    * Added support for calling len() over a :class:`~dicom_parser.series.Series` instance to return the number of images in it.
+
+
 0.1.1
 -----
 

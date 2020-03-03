@@ -35,6 +35,9 @@ class Series:
         self.images = self.get_images()
         self._data = None
 
+    def __len__(self) -> int:
+        return len(self.images)
+
     def check_path(self, path) -> Path:
         """
         Converts to a :class:`~pathlib.Path` instance if required and checks that it
@@ -105,7 +108,6 @@ class Series:
     def data(self) -> np.ndarray:
         """
         Caches the stacked 3D array containing the entire series' data.
-        # TODO: Add support for fMRI data.
 
         Returns
         -------

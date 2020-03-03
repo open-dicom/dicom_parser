@@ -254,10 +254,16 @@ class Header:
             The requested data element value (or a dict for multiple values)
         """
 
+        # Assignes the required method based on the `parsed` parameter's value
         get_method = self.get_parsed_value if parsed else self.get_raw_value
-        value = None
+
+        # Tries to find a private tags tuple if the given tag_or_keyword is a
+        # keyword that has been registered in the private_tags module
         if isinstance(tag_or_keyword, str):
             tag_or_keyword = self.get_private_tag(tag_or_keyword) or tag_or_keyword
+
+        # Get the requested value
+        value = None
         try:
             if isinstance(tag_or_keyword, (str, tuple)):
                 value = get_method(tag_or_keyword)
