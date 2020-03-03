@@ -123,26 +123,76 @@ Et cetera.
 >   ```
 
 
-### Read DICOM series directory as a [Series]
+### Read DICOM series directory as a `Series`
 
-
-Another useful class this package offers is the [Series] class:
+Another useful class this package offers is the `Series` class:
 
 ```python
     from dicom_parser import Series
 
-    series = Series('/path/to/dicom/series/')
+    series = Series('/some/dicom/series/')
+```
 
-    # Read stacked pixel arrays as a 3D volume
+The `Series` instance allows us to easily
+query the underlying images' headers using its `get` method:
+
+```python
+    # Single value
+    series.get('EchoTime')
+    >> 3.04
+
+    # Multiple values
+    series.get('InstanceNumber')
+    >> [1, 2, 3]
+
+    # No value
+    series.get('MissingKey')
+    >> None
+
+    # Default value
+    series.get('MissingKey', 'default_value')
+    >> 'default_value'
+```
+
+Similarly to the `Image` class, we can also use the indexing operator:
+
+```python
+    # Single value
+    series['RepetitionTime']
+    >> 7.6
+
+    # Multiple values
+    series['SOPInstanceUID']
+    >> ["1.123.1241.123124124.12.1",
+        "1.123.1241.123124124.12.2",
+        "1.123.1241.123124124.12.3"]
+
+    # No value
+    series['MissingKey']
+    ...
+    KeyError: "The keyword: 'MissingKey' does not exist in the header!"
+```
+
+Another useful feature of the indexing operator is for querying an `Image` instance based on its index in the series:
+
+```python
+    series[6]
+    >> dicom_parser.image.Image
+    series[6].header['InstanceNumber]
+    >> 7   # InstanceNumber is 1-indexed
+```
+
+The `data` property returns a stacked volume of the images' data:
+
+```python
     type(series.data)
     >>> numpy.ndarray
     series.data.shape
     >> (224, 224, 208)
-
-    # Access the underlying Image instances
-    series.images[6].header.get('InstanceNumber')
-    >> 7    # instance numbers are 1-indexed
 ```
+
+
+#### Siemens 4D data
 
 Reading Siemens 4D data
 [encoded as mosaics](https://nipy.org/nibabel/dicom/dicom_mosaic.html)
@@ -153,8 +203,6 @@ is also supported:
     fmri_series.data.shape
     >> (96, 96, 64, 200)
 ```
-
-For more information, please see [the documentation].
 
 
 [datetime.date]: https://docs.python.org/3/library/datetime.html#available-types
