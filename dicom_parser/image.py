@@ -5,11 +5,13 @@ Definition of the Image class, representing a single pair of
 """
 
 import numpy as np
+import warnings
 
 from dicom_parser.header import Header
 from dicom_parser.parser import Parser
 from dicom_parser.utils.read_file import read_file
 from dicom_parser.utils.siemens.mosaic import Mosaic
+from pathlib import Path
 
 
 class Image:
@@ -39,7 +41,22 @@ class Image:
 
         self.raw = read_file(raw, read_data=True)
         self.header = Header(self.raw, parser=parser)
-        self._data = self.raw.pixel_array
+        self._data = self.read_raw_data()
+
+    def read_raw_data(self) -> np.ndarray:
+        """
+        Reads the pixel array data as returned by pydicom.
+
+        Returns
+        -------
+        np.ndarray
+            Pixel array data
+        """
+
+        try:
+            return self.raw.pixel_array
+        except (AttributeError, ValueError) as exception:
+            warnings.warn(f"Failed to read image data!\n{exception}")
 
     def fix_data(self) -> np.ndarray:
         """
@@ -55,6 +72,12 @@ class Image:
             mosaic = Mosaic(self._data, self.header)
             return mosaic.fold()
         return self._data
+
+    def get_default_relative_path(self) -> Path:
+        patient_uid = self.header.get("PatientID")
+        series_uid = self.header.get("SeriesInstanceUID")
+        name = str(self.header.get("InstanceNumber", 0)) + ".dcm"
+        return Path(patient_uid, series_uid, name)
 
     @property
     def is_mosaic(self) -> bool:
@@ -83,7 +106,7 @@ class Image:
             Whether this image represents fMRI data.
         """
 
-        return self.header.detected_sequence == "fmri"
+        return self.header.detected_sequence == "fMRI"
 
     @property
     def data(self) -> np.ndarray:
@@ -98,3 +121,7 @@ class Image:
         """
 
         return self.fix_data()
+
+    @property
+    def default_relative_path(self) -> Path:
+        return self.get_default_relative_path()

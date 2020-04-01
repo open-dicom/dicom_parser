@@ -29,7 +29,7 @@ class CsaHeader:
     ENCODING = "ISO-8859-1"
 
     # A pattern used to the extract the header information from the raw element.
-    HEADER_INFORMATION_PATTERN = r"### ASCCONV BEGIN(.*)### ASCCONV END ###"
+    CSA_HEADER_PATTERN = r"### ASCCONV BEGIN(.*?)### ASCCONV END ###"
 
     # A pattern used to slice the entire header into single raw (string) elements.
     ELEMENT_PATTERN = r"([A-Z][^\n]*)"
@@ -75,9 +75,9 @@ class CsaHeader:
             Decoded clean header information
         """
 
-        return re.findall(
-            self.HEADER_INFORMATION_PATTERN, self.decode(), flags=re.DOTALL
-        )[0]
+        decoded = self.decode()
+        matches = re.findall(self.CSA_HEADER_PATTERN, decoded, flags=re.DOTALL)
+        return matches[0] if matches else ""
 
     def get_raw_data_elements(self) -> list:
         """
@@ -115,7 +115,8 @@ class CsaHeader:
 
     def parse(self, csa_data_elements: list = None) -> dict:
         """
-        Parses a list of :class:`~dicom_parser.utils.siemens.csa.data_element.CsaDataElement`
+        Parses a list of
+        :class:`~dicom_parser.utils.siemens.csa.data_element.CsaDataElement`
         instances (or all if left None) as a dictionary.
 
         Parameters

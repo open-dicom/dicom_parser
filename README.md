@@ -89,7 +89,6 @@ Date String (DA) to *[datetime.date]* using the [Header] class's
 indexing operator/subscript notation:
 
 ```python
-
     raw_value = image.header.raw['PatientBirthDate'].value
     raw_value
     >> "19901214"
@@ -101,6 +100,22 @@ indexing operator/subscript notation:
     >> datetime.date(1990, 12, 14)
     type(parsed_value)
     >> datetime.date
+```
+
+Code String (CS) to a verbose value or set of values:
+
+```python
+    raw_value = image.header.raw['SequenceVariant'].value
+    raw_value
+    >> ['SP', 'OSP']
+    type(raw_value)
+    >> pydicom.multival.MultiValue
+
+    parsed_value = image.header['SequenceVariant']
+    parsed_value
+    >> {'Oversampling Phase', 'Spoiled'}
+    type(parsed_value)
+    >> set
 ```
 
 Et cetera.

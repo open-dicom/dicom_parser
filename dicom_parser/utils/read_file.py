@@ -5,25 +5,26 @@ from pathlib import Path
 
 def read_file(raw_input, read_data: bool = False) -> pydicom.FileDataset:
     """
-    Return [pydicom](https://pypi.org/project/pydicom/)'s :class:`~pydicom.FileDataset`
-    instance based on the provided input.
+    Return pydicom_'s :class:`~pydicom.dataset.FileDataset` instance based on the provided
+    input.
 
-    
+    .. _pydicom: https://pypi.org/project/pydicom/
+
     Parameters
     ----------
-    raw_input : FileDataset, str, or Path
-        The DICOM image to be parsed.
-    
+    raw_input : :class:`~pydicom.dataset.FileDataset`, str, or Path
+        The DICOM image to be parsed
+
     read_data : bool
-        Whether to include the pixel data or not.
-    
+        Whether to include the pixel data or not
+
     Returns
     -------
-    FileDataset
-        A pydicom.FileDataset instance.
+    :class:`~pydicom.dataset.FileDataset`
+        Image data
     """
 
-    if isinstance(raw_input, pydicom.FileDataset):
+    if isinstance(raw_input, pydicom.Dataset):
         return raw_input
     elif isinstance(raw_input, (str, Path)):
         return pydicom.dcmread(str(raw_input), stop_before_pixels=not read_data)
@@ -31,4 +32,3 @@ def read_file(raw_input, read_data: bool = False) -> pydicom.FileDataset:
         raise TypeError(
             "Raw input to header class my be either a pydicom FileDataset instance or the path of a DICOM file as string or pathlib.Path value!"  # noqa E501
         )
-

@@ -7,46 +7,63 @@ for header `data elements <http://northstar-www.dartmouth.edu/doc/idl/html_6.2/D
 
 """
 
-from enum import Enum
+from dicom_parser.utils.choice_enum import ChoiceEnum
 
 
-class ValueRepresentation(Enum):
+class ValueRepresentation(ChoiceEnum):
     """
-    DICOM `value-representations (VRs) <http://northstar-www.dartmouth.edu/doc/idl/html_6.2/Value_Representations.html>`_.
-    
+    DICOM `value-representations (VRs)
+    <http://northstar-www.dartmouth.edu/doc/idl/html_6.2/Value_Representations.html>`_.
+
     """
 
-    APPLICATION_ENTITY = "AE"
-    AGE_STRING = "AS"
-    ATTRIBUTE_TAG = "AT"
-    CODE_STRING = "CS"
-    DATE = "DA"
-    DECIMAL_STRING = "DS"
-    DATE_TIME = "DT"
-    FLOATING_POINT_SINGLE = "FL"
-    FLOATING_POINT_DOUBLE = "FD"
-    INTEGER_STRING = "IS"
-    LONG_STRING = "LO"
-    LONG_TEXT = "LT"
-    OTHER_BYTE = "OB"
-    OTHER_DOUBLE = "OD"
-    OTHER_FLOAT = "OF"
-    OTHER_LONG = "OL"
-    OTHER_64_BIT_VERY_LONG = "OV"
-    OTHER_WORD = "OW"
-    PERSON_NAME = "PN"
-    SHORT_STRING = "SH"
-    SIGNED_LONG = "SL"
-    SEQUENCE_OF_ITEMS = "SQ"
-    SIGNED_SHORT = "SS"
-    SHORT_TEXT = "ST"
-    SIGNED_64_BIT_VERY_LONG = "SV"
-    TIME = "TM"
-    UNLIMITED_CHARACTERS = "UC"
-    UNIQUE_IDENTIFIER = "UI"
-    UNSIGNED_LONG = "UL"
-    UNKNOWN = "UN"
-    UNIVERSAL_RESOURCE = "UR"
-    UNSIGNED_SHORT = "US"
-    UNLIMITED_TEXT = "UT"
-    UNSIGNED_64_BIT_VERY_LONG = "UV"
+    AE = "Application Entity"
+    AS = "Age String"
+    AT = "Attribute Tag"
+    CS = "Code String"
+    DA = "Date"
+    DS = "Decimal String"
+    DT = "Date Time"
+    FL = "Floating Point Single"
+    FD = "Floating Point Double"
+    IS = "Integer String"
+    LO = "Long String"
+    LT = "Long Text"
+    OB = "Other Byte"
+    OD = "Other Double"
+    OF = "Other Float"
+    OL = "Other Long"
+    OV = "Other 64-bit Very Long"
+    OW = "Other Word"
+    PN = "Person Name"
+    SH = "Short String"
+    SL = "Signed Long"
+    SQ = "Sequence of Items"
+    SS = "Signed Short"
+    ST = "Short Text"
+    SV = "Signed 64-bit Very Long"
+    TM = "Time"
+    UC = "Unlimited Characters"
+    UI = "Unique Identifer"
+    UL = "Unsigned Long"
+    UN = "Unknown"
+    UR = "Universal Resource"
+    US = "Unsigned Short"
+    UT = "Unlimited Text"
+    UV = "Unsigned 64-bit Very Long"
+
+
+INVALID_VR_MESSAGE = (
+    "{key} is not a valid DICOM data element value representation (VR)!"
+)
+
+
+class ValueRepresentationError(Exception):
+    pass
+
+
+def get_value_representation(key: str) -> ValueRepresentation:
+    try:
+        return ValueRepresentation[key]
+    except KeyError:
+        raise ValueRepresentationError(INVALID_VR_MESSAGE.format(key=key))

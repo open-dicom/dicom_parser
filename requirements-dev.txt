@@ -1,5 +1,6 @@
 black==19.10b0
 coverage~=5.0
+coverage-badge~=1.0
 doc8~=0.8
 flake8~=3.7
 ipython~=7.12

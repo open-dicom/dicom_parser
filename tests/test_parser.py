@@ -14,9 +14,12 @@ class ParserTestCase(TestCase):
         )
         self.parser = Parser()
 
+    def test_verbose_code_strings_default(self):
+        self.assertTrue(self.parser.verbose_code_strings)
+
     def test_parse_age_string(self):
         data_element = self.header.data_element("PatientAge")
-        result = self.parser.parse_age_string(data_element)
+        result = self.parser.parse_age_string(data_element.value)
         expected = 27.0
         self.assertEqual(result, expected)
 
@@ -24,13 +27,13 @@ class ParserTestCase(TestCase):
         names = {"MagneticFieldStrength", "EchoTime", "RepetitionTime"}
         for name in names:
             data_element = self.header.data_element(name)
-            result = self.parser.parse_decimal_string(data_element)
+            result = self.parser.parse_decimal_string(data_element.value)
             expected = float(data_element.value)
             self.assertEqual(result, expected)
 
     def test_parse_decimal_string_with_value_multiplicity(self):
         data_element = self.header.data_element("PixelSpacing")
-        result = self.parser.parse_decimal_string(data_element)
+        result = self.parser.parse(data_element)
         expected = [float(value) for value in data_element.value]
         self.assertListEqual(result, expected)
 
@@ -38,7 +41,7 @@ class ParserTestCase(TestCase):
         names = {"InstanceNumber", "SeriesNumber", "NumberOfAverages"}
         for name in names:
             data_element = self.header.data_element(name)
-            result = self.parser.parse_integer_string(data_element)
+            result = self.parser.parse_integer_string(data_element.value)
             expected = int(data_element.value)
             self.assertEqual(result, expected)
 
@@ -46,7 +49,7 @@ class ParserTestCase(TestCase):
         names = {"InstanceCreationDate", "StudyDate", "SeriesDate"}
         for name in names:
             data_element = self.header.data_element(name)
-            result = self.parser.parse_date(data_element)
+            result = self.parser.parse_date(data_element.value)
             expected = datetime.datetime.strptime(data_element.value, "%Y%m%d").date()
             self.assertEqual(result, expected)
 
@@ -55,34 +58,38 @@ class ParserTestCase(TestCase):
         for name in names:
             data_element = self.header.data_element(name)
             data_element.value = None
-            self.assertIsNone(self.parser.parse_date(data_element))
+            result = self.parser.parse_date(data_element.value)
+            self.assertIsNone(result)
 
     def test_parse_empty_date(self):
         names = {"InstanceCreationDate", "StudyDate", "SeriesDate"}
         for name in names:
             data_element = self.header.data_element(name)
             data_element.value = ""
-            self.assertIsNone(self.parser.parse_date(data_element))
+            result = self.parser.parse_date(data_element.value)
+            self.assertIsNone(result)
 
     def test_parse_bad_date(self):
         names = {"InstanceCreationDate", "StudyDate", "SeriesDate"}
         for name in names:
             data_element = self.header.data_element(name)
             data_element.value = "test"
-            self.assertRaises(ValueError, self.parser.parse_date, data_element)
+            with self.assertRaises(ValueError):
+                self.parser.parse_date(data_element.value)
 
     def test_parse_bad_date_type(self):
         names = {"InstanceCreationDate", "StudyDate", "SeriesDate"}
         for name in names:
             data_element = self.header.data_element(name)
             data_element.value = 34
-            self.assertRaises(TypeError, self.parser.parse_date, data_element)
+            with self.assertRaises(TypeError):
+                self.parser.parse_date(data_element.value)
 
     def test_parse_time(self):
         names = {"InstanceCreationTime", "StudyTime", "SeriesTime"}
         for name in names:
             data_element = self.header.data_element(name)
-            result = self.parser.parse_time(data_element)
+            result = self.parser.parse_time(data_element.value)
             expected = datetime.datetime.strptime(
                 data_element.value, "%H%M%S.%f"
             ).time()
@@ -93,28 +100,32 @@ class ParserTestCase(TestCase):
         for name in names:
             data_element = self.header.data_element(name)
             data_element.value = None
-            self.assertIsNone(self.parser.parse_time(data_element))
+            result = self.parser.parse_time(data_element.value)
+            self.assertIsNone(result)
 
     def test_parse_empty_time(self):
         names = {"InstanceCreationTime", "StudyTime", "SeriesTime"}
         for name in names:
             data_element = self.header.data_element(name)
             data_element.value = ""
-            self.assertIsNone(self.parser.parse_time(data_element))
+            result = self.parser.parse_time(data_element.value)
+            self.assertIsNone(result)
 
     def test_parse_bad_time(self):
         names = {"InstanceCreationTime", "StudyTime", "SeriesTime"}
         for name in names:
             data_element = self.header.data_element(name)
             data_element.value = "test"
-            self.assertRaises(ValueError, self.parser.parse_time, data_element)
+            with self.assertRaises(ValueError):
+                self.parser.parse_time(data_element.value)
 
     def test_parse_bad_time_type(self):
         names = {"InstanceCreationTime", "StudyTime", "SeriesTime"}
         for name in names:
             data_element = self.header.data_element(name)
             data_element.value = 34
-            self.assertRaises(TypeError, self.parser.parse_time, data_element)
+            with self.assertRaises(TypeError):
+                self.parser.parse_time(data_element.value)
 
     def test_parse_datetime(self):
         # # It turns out the current test DICOM file doesn't actually have any
@@ -130,28 +141,51 @@ class ParserTestCase(TestCase):
         pass
 
     def test_parse_code_string(self):
-        names = {"ScanningSequence": ["EP"], "SequenceVariant": ["SK", "SP"]}
-        for name in names.keys():
-            data_element = self.header.data_element(name)
-            result = self.parser.parse_code_string(data_element)
-            expected = names.get(name)
+        self.parser.verbose_code_strings = True
+        elements = {
+            "ScanningSequence": "Echo Planar",
+            "SequenceVariant": ["Segmented k-Space", "Spoiled"],
+        }
+        for keyword, expected in elements.items():
+            data_element = self.header.data_element(keyword)
+            result = self.parser.parse(data_element)
             self.assertEqual(result, expected)
 
     def test_parse_code_string_with_single_value(self):
-        names = {"PatientSex": "M", "PatientPosition": "HFS", "Modality": "MR"}
-        for name in names.keys():
-            data_element = self.header.data_element(name)
-            result = self.parser.parse_code_string(data_element)
-            expected = names.get(name)
+        self.parser.verbose_code_strings = True
+        elements = {
+            "PatientSex": "Male",
+            "PatientPosition": "Head First-Supine",
+            "Modality": "Magnetic Resonance",
+        }
+        for keyword, expected in elements.items():
+            element = self.header.data_element(keyword)
+            result = self.parser.parse(element)
             self.assertEqual(result, expected)
 
     def test_parse_code_string_without_enum(self):
-        names = {"BodyPartExamined", "ScanOptions"}
-        for name in names:
+        names = {"BodyPartExamined": "BRAIN", "ScanOptions": ["PFP", "FS"]}
+        for name, expected in names.items():
             data_element = self.header.data_element(name)
-            result = self.parser.parse_code_string(data_element)
-            expected = data_element.value
+            result = self.parser.parse_code_string(
+                data_element.value, tag=data_element.tag
+            )
             self.assertEqual(result, expected)
+
+    def test_parse_code_string_with_verbose_false(self):
+        self.parser.verbose_code_strings = False
+        elements = {
+            "ScanningSequence": "EP",
+            "SequenceVariant": ["SK", "SP"],
+            "PatientSex": "M",
+            "PatientPosition": "HFS",
+            "Modality": "MR",
+        }
+        for keyword, expected in elements.items():
+            element = self.header.data_element(keyword)
+            result = self.parser.parse_code_string(element.value, tag=element.tag)
+            self.assertEqual(result, expected)
+        self.parser.verbose_code_strings = True
 
     # SIEMENS tags
     def test_parse_siemens_num_images_in_mosaic(self):
@@ -237,7 +271,7 @@ class ParserTestCase(TestCase):
         tag = ("0051", "1015")
         data_element = self.header.get(tag)
         result = self.parser.parse(data_element)
-        expected = data_element.value
+        expected = data_element.value.decode().replace("\x00", "\uFFFD")
         self.assertEqual(result, expected)
 
     def test_parse_with_keywords(self):
@@ -258,7 +292,7 @@ class ParserTestCase(TestCase):
             # Echo Time attribute with Decimal String (DS) value-representation
             ("0018", "0081"): 94.0,
             # Modality attribute with Code String (CS) value-representation
-            ("0008", "0060"): "MR",
+            ("0008", "0060"): "Magnetic Resonance",
             # Diffusion Directionality attribute with Unknown (UN) value-representation
             ("0019", "100d"): "DIRECTIONAL",
         }

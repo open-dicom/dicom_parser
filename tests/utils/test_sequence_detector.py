@@ -14,7 +14,7 @@ class SequenceDetectorCase(TestCase):
 
     def test_detecting_mr_localizer(self):
         value = self.mr_localizer_image.header.detected_sequence
-        expected = "localizer"
+        expected = "Localizer"
         self.assertEqual(value, expected)
 
     def test_detecting_mr_ep2d(self):
@@ -24,7 +24,7 @@ class SequenceDetectorCase(TestCase):
 
     def test_detecting_mr_fmri(self):
         value = self.mr_fmri_image.header.detected_sequence
-        expected = "fmri"
+        expected = "fMRI"
         self.assertEqual(value, expected)
 
     def test_detecting_with_unknown_modality_raises_not_implemented_error(self):
@@ -38,4 +38,6 @@ class SequenceDetectorCase(TestCase):
                 self.sequence_detector.check_definition(bad_type, {"a": "a"})
 
     def test_detecting_unknown_sequence_returns_none(self):
-        self.assertIsNone(self.sequence_detector.detect("mr", {"a": "a"}))
+        self.assertIsNone(
+            self.sequence_detector.detect("Magnetic Resonance", {"a": "a"})
+        )

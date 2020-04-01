@@ -77,6 +77,22 @@ using the :class:`~dicom_parser.header.Header` class's indexing operator/subscri
     type(parsed_value)
     >> datetime.date
 
+Code String (CS) to a verbose value or set of values:
+
+.. code:: python
+
+    raw_value = image.header.raw['SequenceVariant'].value
+    raw_value
+    >> ['SP', 'OSP']
+    type(raw_value)
+    >> pydicom.multival.MultiValue
+
+    parsed_value = image.header['SequenceVariant']
+    parsed_value
+    >> {'Oversampling Phase', 'Spoiled'}
+    type(parsed_value)
+    >> set
+
 
 Et cetera.
 

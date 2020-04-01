@@ -1,10 +1,28 @@
-from dicom_parser.utils.sequence_detector.exceptions import WRONG_DEFINITION_TYPE
+"""
+Definition of the
+:class:`~dicom_parser.utils.sequence_detector.sequence_detector.SequenceDetector`
+class.
+
+"""
+
+from dicom_parser.utils.sequence_detector.messages import WRONG_DEFINITION_TYPE
 from dicom_parser.utils.sequence_detector.sequences import SEQUENCES
 
 
 class SequenceDetector:
-    def __init__(self, sequences: dict = SEQUENCES):
-        self.sequences = sequences
+    def __init__(self, sequences: dict = None):
+        """
+        Initializes the
+        :class:`~dicom_parser.utils.sequence_detector.sequence_detector.SequenceDetector`
+        class.
+
+        Parameters
+        ----------
+        sequences : dict, optional
+            Dictionary of known sequences by modality, by default None
+        """
+
+        self.sequences = sequences or SEQUENCES
 
     def get_known_modality_sequences(self, modality: str) -> dict:
         """
@@ -55,6 +73,13 @@ class SequenceDetector:
         TypeError
             Encountered a definition of an invalid type.
         """
+
+        # Fix the values as returned from the header to comply with the
+        # definition standards.
+        values = {
+            key: set(value) if isinstance(value, list) else {value}
+            for key, value in values.items()
+        }
 
         if isinstance(definition, dict):
             return values == definition

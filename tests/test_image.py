@@ -32,7 +32,7 @@ class ImageTestCase(TestCase):
 
     def test_initialization_without_pixel_data_raises_attribute_error(self):
         dataset = pydicom.dcmread(TEST_IMAGE_PATH, stop_before_pixels=True)
-        with self.assertRaises(AttributeError):
+        with self.assertWarns(Warning):
             Image(dataset)
 
     def test_is_rsfmri_property(self):

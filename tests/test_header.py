@@ -1,7 +1,9 @@
 import pydicom
+import warnings
 
-from dicom_parser.parser import Parser
 from dicom_parser.header import Header
+from dicom_parser.parser import Parser
+from dicom_parser.utils.sequence_detector import SequenceDetector
 from pathlib import Path
 from tests.fixtures import TEST_IMAGE_PATH, TEST_STUDY_FIELDS, TEST_GE_LOCALIZER_PATH
 from unittest import TestCase
@@ -52,6 +54,12 @@ class HeaderTestCase(TestCase):
 
     def test_initialized_with_default_parser(self):
         self.assertIsInstance(self.header.parser, Parser)
+
+    def test_initialized_with_default_sequence_detector(self):
+        self.assertIsInstance(self.header.sequence_detector, SequenceDetector)
+
+    def test_init_detected_sequence(self):
+        self.assertEqual(self.header.detected_sequence, "Localizer")
 
     def test_get_element_by_keyword(self):
         for keyword in self.KEYWORDS.keys():
@@ -194,4 +202,17 @@ class HeaderTestCase(TestCase):
     def test_get_with_a_missing_csa_header_returns_none(self):
         header = Header(TEST_GE_LOCALIZER_PATH)
         result = header.get("CSASeriesHeaderInfo")
+        self.assertIsNone(result)
+
+    def test_detect_sequence(self):
+        result = self.header.detect_sequence()
+        expected = "Localizer"
+        self.assertEqual(result, expected)
+
+    def test_detect_sequence_with_unknown_modality_returns_none(self):
+        header = Header(TEST_IMAGE_PATH)
+        header.raw.Modality = "UNKNOWN"
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            result = header.detect_sequence()
         self.assertIsNone(result)

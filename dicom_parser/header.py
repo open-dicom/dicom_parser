@@ -3,12 +3,16 @@ Definition of the Header class, which extends the functionality of
 `pydicom <https://github.com/pydicom/pydicom>`_.
 
 """
+import json
 
+from collections.abc import KeysView
 from dicom_parser.parser import Parser
 from dicom_parser.utils.private_tags import PRIVATE_TAGS
 from dicom_parser.utils.read_file import read_file
 from dicom_parser.utils.sequence_detector.sequence_detector import SequenceDetector
+from dicom_parser.utils.value_representation import ValueRepresentation
 from pydicom.dataelem import DataElement
+from types import GeneratorType
 
 
 class Header:
@@ -21,7 +25,9 @@ class Header:
 
     """
 
-    sequence_identifiers = {"mr": ["ScanningSequence", "SequenceVariant"]}
+    sequence_identifiers = {
+        "Magnetic Resonance": ["ScanningSequence", "SequenceVariant"]
+    }
 
     def __init__(self, raw, parser=Parser, sequence_detector=SequenceDetector):
         """
@@ -45,9 +51,10 @@ class Header:
 
         self.parser = parser()
         self.sequence_detector = sequence_detector()
-        self.raw = read_file(raw)
+        self.raw = read_file(raw, read_data=False)
         self.manufacturer = self.get("Manufacturer")
         self.detected_sequence = self.detect_sequence()
+        self._as_dict = None
 
     def __getitem__(self, key):
         """
@@ -77,10 +84,13 @@ class Header:
             Imaging sequence name
         """
 
-        modality = self.get("Modality").lower()
+        modality = self.get("Modality")
         sequence_identifiers = self.sequence_identifiers.get(modality)
-        sequece_identifying_values = self.get(sequence_identifiers)
-        return self.sequence_detector.detect(modality, sequece_identifying_values)
+        sequence_identifying_values = self.get(sequence_identifiers)
+        try:
+            return self.sequence_detector.detect(modality, sequence_identifying_values)
+        except NotImplementedError:
+            pass
 
     def get_element_by_keyword(self, keyword: str) -> DataElement:
         """
@@ -208,6 +218,8 @@ class Header:
         """
 
         element = self.get_element(tag_or_keyword)
+        if element.VR == "SQ":
+            return [Header(raw_header) for raw_header in element.value]
         return self.parser.parse(element)
 
     def get_private_tag(self, keyword: str) -> tuple:
@@ -232,7 +244,12 @@ class Header:
             return manufacturer_private_tags.get(keyword)
 
     def get(
-        self, tag_or_keyword, default=None, parsed: bool = True, missing_ok: bool = True
+        self,
+        tag_or_keyword,
+        default=None,
+        parsed: bool = True,
+        missing_ok: bool = True,
+        as_json: bool = False,
     ):
         """
         Returns the value of a pydicom data element, selected by tag (`tuple`) or
@@ -272,4 +289,34 @@ class Header:
         except (KeyError, TypeError):
             if not missing_ok:
                 raise
+        if value and as_json:
+            value = json.dumps(value, indent=4, sort_keys=True, default=str)
         return value or default
+
+    def filter_by_value_representation(self, value_representation: ValueRepresentation):
+        return {
+            data_element.keyword: self.get(data_element.keyword)
+            for data_element in self.data_elements
+        }
+
+    def to_dict(self, parsed: bool = True) -> dict:
+        return {
+            data_element.keyword: self.get(data_element.keyword, parsed=parsed)
+            for data_element in self.data_elements
+        }
+
+    @property
+    def data_elements(self) -> GeneratorType:
+        for element in self.raw:
+            if element.tag != ("7fe0", "0010"):
+                yield element
+
+    @property
+    def as_dict(self) -> dict:
+        if not isinstance(self._as_dict, dict):
+            self._as_dict = self.to_dict()
+        return self._as_dict
+
+    @property
+    def keys(self) -> KeysView:
+        return self.as_dict.keys()

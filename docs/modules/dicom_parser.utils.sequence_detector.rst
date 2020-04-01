@@ -7,7 +7,7 @@ Submodules
 dicom\_parser.utils.sequence\_detector.exceptions module
 --------------------------------------------------------
 
-.. automodule:: dicom_parser.utils.sequence_detector.exceptions
+.. automodule:: dicom_parser.utils.sequence_detector.messages
    :members:
    :undoc-members:
    :show-inheritance:

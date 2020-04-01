@@ -1,6 +1,20 @@
 Release Notes
 =============
 
+0.1.3
+-----
+
+    * Changed Code String (CS) parsing to return verbose value or set of values using the :mod:`~dicom_parser.utils.code_strings` module. This feature can be disabled by setting the :class:`~dicom_parser.parser.Parser`'s `verbose_code_strings` attribute to `False`.
+
+    * Added warnings for invalid pixel arrays and invalid Code String (CS) values.
+
+    * Updated the :mod:`~dicom_parser.utils.sequence_detector.sequences` class to work with verbose Code String (CS) data element values and renamed known MR sequences.
+
+    * Refactored the :class:`~dicom_parser.parser.Parser` class to a bit to improve readability.
+
+    * Fixed CSA header bug for headers with a duplicate "### ASCCONV END ###" pattern.
+
+
 0.1.2
 -----
 
@@ -16,11 +30,11 @@ Release Notes
 0.1.1
 -----
 
-    * Improved support for accessing `CSA headers <https://nipy.org/nibabel/dicom/siemens_csa.html>`_.
+    * Improved support for accessing `CSA headers`_.
 
-    * Added auto-decoding for `Siemens mosaic encoded data <https://nipy.org/nibabel/dicom/dicom_mosaic.html>`_ (applies to data extraction in both :class:`~dicom_parser.image.Image` and :class:`~dicom_parser.series.Series` instances).
+    * Added auto-decoding for `Siemens mosaic`_ encoded data (applies to data extraction in both :class:`~dicom_parser.image.Image` and :class:`~dicom_parser.series.Series` instances).
 
-        * The decoding method also changes the orientation of the stacked arrays to match the product of conversion to `NIfTI <https://nifti.nimh.nih.gov/>`_ using `dcm2niix <https://github.com/rordenlab/dcm2niix>`_.
+        * The decoding method also changes the orientation of the stacked arrays to match the product of conversion to `NIfTI`_ using `dcm2niix`_.
 
 
 0.1.0
@@ -28,8 +42,15 @@ Release Notes
 
 First release!
 
-    * Type correction based on `value-representation (VR) <http://dicom.nema.org/medical/dicom/current/output/chtml/part05/sect_6.2.html>`_.
+    * Type correction based on `value-representation (VR)`_.
 
     * Simple :class:`~dicom_parser.series.Series` class for reading DICOM series directories.
 
-    * Basic support for reading `CSA headers <https://nipy.org/nibabel/dicom/siemens_csa.html>`_ using the :class:`~dicom_parser.utils.siemens.csa.header.CsaHeader` class.
+    * Basic support for reading `CSA headers`_ using the :class:`~dicom_parser.utils.siemens.csa.header.CsaHeader` class.
+
+
+.. _CSA Headers: https://nipy.org/nibabel/dicom/siemens_csa.html
+.. _dcm2niix: https://github.com/rordenlab/dcm2niix
+.. _NIfTI: https://nifti.nimh.nih.gov/
+.. _Siemens mosaic: https://nipy.org/nibabel/dicom/dicom_mosaic.html
+.. _value-representation (VR): http://dicom.nema.org/medical/dicom/current/output/chtml/part05/sect_6.2.html
