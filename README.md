@@ -5,11 +5,11 @@
 
 # dicom_parser
 
-*dicom_parser* is a utility python package meant to facilitate access to
+_dicom_parser_ is a utility python package meant to facilitate access to
 [DICOM](https://www.dicomstandard.org/) header information by extending the functionality of
-*[pydicom]*.
+_[pydicom]_.
 
-Essentially, *dicom_parser* uses [DICOM](https://www.dicomstandard.org/)'s
+Essentially, _dicom_parser_ uses [DICOM](https://www.dicomstandard.org/)'s
 [data-element](https://northstar-www.dartmouth.edu/doc/idl/html_6.2/DICOM_Attributes.html)
 [value-representation (VR)](http://dicom.nema.org/medical/dicom/current/output/chtml/part05/sect_6.2.html),
 as well as prior knowledge on vendor-specific private tags or encoding schemes,
@@ -31,7 +31,7 @@ To install the latest version of `dicom_parser`, simply run:
 
 ## Quickstart
 
-The most basic usage case is reading a single DICOM image (*.dcm* file) as
+The most basic usage case is reading a single DICOM image (_.dcm_ file) as
 an [Image](https://dicom-parser.readthedocs.io/en/latest/modules/dicom_parser.html#dicom_parser.image.Image)
 instance.
 
@@ -42,16 +42,15 @@ instance.
     image = Image('/path/to/dicom/file.dcm')
 ```
 
-
 ### Coversion to Python's native types
 
-*dicom_parser* provides *dict*-like access to the parsed values of the
+_dicom_parser_ provides _dict_-like access to the parsed values of the
 [header](https://dcm4che.atlassian.net/wiki/spaces/d2/pages/1835038/A+Very+Basic+DICOM+Introduction)'s
-data-elements. The raw values as read by *[pydicom]* remain accessible through the *raw* attribute.
+data-elements. The raw values as read by _[pydicom]_ remain accessible through the _raw_ attribute.
 
 #### Examples
 
-Decimal String (DS) to *float* using the [Header] class's
+Decimal String (DS) to _float_ using the [Header] class's
 [get](https://dicom-parser.readthedocs.io/en/latest/modules/dicom_parser.html#dicom_parser.header.Header.get)
 method:
 
@@ -69,7 +68,7 @@ method:
     >> float
 ```
 
-Age String (AS) to *float*:
+Age String (AS) to _float_:
 
 ```python
     raw_value = image.header.raw['PatientAge'].value
@@ -85,7 +84,7 @@ Age String (AS) to *float*:
     >> float
 ```
 
-Date String (DA) to *[datetime.date]* using the [Header] class's
+Date String (DA) to _[datetime.date]_ using the [Header] class's
 indexing operator/subscript notation:
 
 ```python
@@ -120,23 +119,22 @@ Code String (CS) to a verbose value or set of values:
 
 Et cetera.
 
->   The *dict*-like functionality also includes safe getting:
+> The _dict_-like functionality also includes safe getting:
 >
->   ```python
->       image.header.get('MissingKey')
->       >> None
->       image.header.get('MissingKey', 'DefaultValue')
->       >> 'DefaultValue'
->   ```
+> ```python
+>     image.header.get('MissingKey')
+>     >> None
+>     image.header.get('MissingKey', 'DefaultValue')
+>     >> 'DefaultValue'
+> ```
 >
->   As well as raising a KeyError for missing keys with the indexing operator:
+> As well as raising a KeyError for missing keys with the indexing operator:
 >
->   ```python
->       image.header['MissingKey']
->       >> ...
->       >> KeyError: "The keyword: 'MissingKey' does not exist in the header!"
->   ```
-
+> ```python
+>     image.header['MissingKey']
+>     >> ...
+>     >> KeyError: "The keyword: 'MissingKey' does not exist in the header!"
+> ```
 
 ### Read DICOM series directory as a `Series`
 
@@ -206,7 +204,6 @@ The `data` property returns a stacked volume of the images' data:
     >> (224, 224, 208)
 ```
 
-
 #### Siemens 4D data
 
 Reading Siemens 4D data
@@ -219,9 +216,8 @@ is also supported:
     >> (96, 96, 64, 200)
 ```
 
-
 [datetime.date]: https://docs.python.org/3/library/datetime.html#available-types
-[Header]: https://dicom-parser.readthedocs.io/en/latest/modules/dicom_parser.html#dicom_parser.header.Header
+[header]: https://dicom-parser.readthedocs.io/en/latest/modules/dicom_parser.html#dicom_parser.header.Header
 [pydicom]: https://pydicom.github.io/
-[Series]: https://dicom-parser.readthedocs.io/en/latest/modules/dicom_parser.html#dicom_parser.series.Series
+[series]: https://dicom-parser.readthedocs.io/en/latest/modules/dicom_parser.html#dicom_parser.series.Series
 [the documentation]: http://dicom-parser.readthedocs.io/?badge=latest

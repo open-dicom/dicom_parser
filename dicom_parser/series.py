@@ -170,6 +170,15 @@ class Series:
         unique_values = set(values)
         return values if len(unique_values) > 1 else unique_values.pop()
 
+    def get_spatial_resolution(self) -> tuple:
+        sample_header = self.images[0]
+        pixel_spacing = sample_header.get("PixelSpacing")
+        slice_thickness = sample_header.get("SliceThickness")
+        if slice_thickness:
+            return tuple(pixel_spacing.append(slice_thickness))
+        else:
+            return tuple(pixel_spacing)
+
     @property
     def data(self) -> np.ndarray:
         """
@@ -184,3 +193,7 @@ class Series:
         if not isinstance(self._data, np.ndarray):
             self._data = np.stack([image.data for image in self.images], axis=-1)
         return self._data
+
+    @property
+    def spatial_resolution(self) -> tuple:
+        return self.get_spatial_resolution()

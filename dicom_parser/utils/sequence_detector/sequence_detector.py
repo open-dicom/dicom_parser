@@ -76,10 +76,13 @@ class SequenceDetector:
 
         # Fix the values as returned from the header to comply with the
         # definition standards.
-        values = {
-            key: set(value) if isinstance(value, list) else {value}
-            for key, value in values.items()
-        }
+        if values:
+            values = {
+                key: set(value) if isinstance(value, list) else {value}
+                for key, value in values.items()
+            }
+        else:
+            return None
 
         if isinstance(definition, dict):
             return values == definition

@@ -397,15 +397,23 @@ class Parser:
             return CsaHeader(value).parsed
 
         #
+        # GE Private Tags
+        #
+        # Dates encoded as seconds since epoch
+        elif tag in (("0009", "1027"), ("0009", "10e9")):
+            seconds_since_epoch = int.from_bytes(value, byteorder="little")
+            return datetime.fromtimestamp(seconds_since_epoch)
+        # Other Binary (OB) encoded data
+        elif tag == ("0043", "1029"):
+            return [v for v in value]
+
+        #
         # Other
         #
         # Try to decode bytes
         elif isinstance(value, bytes):
             try:
-                return value.decode().replace("\x00", "\uFFFD")
-                # The `.replace("\x00", "\uFFFD")` part prevents a ValueError
-                # that may be raised for those characters.
-                # See: https://github.com/cms-dev/cms/issues/888#issuecomment-516977572
+                return value.decode().replace("\x00", "").strip()
             except UnicodeDecodeError:
                 pass
 

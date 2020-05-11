@@ -4,14 +4,17 @@ Definition of the Header class, which extends the functionality of
 
 """
 import json
+import pandas as pd
 
 from collections.abc import KeysView
-from dicom_parser.parser import Parser
+from dicom_parser.data_element import DataElement
+from dicom_parser.utils.format_header_df import format_header_df
 from dicom_parser.utils.private_tags import PRIVATE_TAGS
 from dicom_parser.utils.read_file import read_file
 from dicom_parser.utils.sequence_detector.sequence_detector import SequenceDetector
 from dicom_parser.utils.value_representation import ValueRepresentation
-from pydicom.dataelem import DataElement
+from dicom_parser.utils.vr_to_data_element import get_data_element_class
+from pydicom.dataelem import DataElement as PydicomDataElement
 from types import GeneratorType
 
 
@@ -28,8 +31,10 @@ class Header:
     sequence_identifiers = {
         "Magnetic Resonance": ["ScanningSequence", "SequenceVariant"]
     }
+    DATAFRAME_COLUMNS = "Tag", "Keyword", "VR", "VM", "Value"
+    DATAFRAME_INDEX = "Tag"
 
-    def __init__(self, raw, parser=Parser, sequence_detector=SequenceDetector):
+    def __init__(self, raw, sequence_detector=SequenceDetector):
         """
         Header is meant to be initialized with a pydicom_ FileDataset_
         representing a single image's header, or a string representing
@@ -49,7 +54,6 @@ class Header:
 
         """
 
-        self.parser = parser()
         self.sequence_detector = sequence_detector()
         self.raw = read_file(raw, read_data=False)
         self.manufacturer = self.get("Manufacturer")
@@ -73,6 +77,26 @@ class Header:
 
         return self.get(key, missing_ok=False)
 
+    def __str__(self) -> str:
+        base = self.to_dataframe(exclude=ValueRepresentation.SQ, private=False)
+        sequences = self.get_data_elements(value_representation=ValueRepresentation.SQ)
+        privates = self.to_dataframe(private=True)
+        sequences_string = ""
+        if sequences:
+            sequences_string = "\n\nSequences\n=========\n"
+            separator = "_" * 100 + "\n\n"
+            sequences_string += separator.join(
+                [str(sequence) for sequence in sequences]
+            )
+        privates_string = "\n\nPrivate Data Elements\n=====================\n"
+        privates_string = (
+            privates_string + format_header_df(privates) if not privates.empty else ""
+        )
+        return format_header_df(base) + sequences_string + privates_string
+
+    def __repr__(self) -> str:
+        return self.__str__()
+
     def detect_sequence(self) -> str:
         """
         Returns the detected imaging sequence using the modality's sequence
@@ -92,13 +116,13 @@ class Header:
         except NotImplementedError:
             pass
 
-    def get_element_by_keyword(self, keyword: str) -> DataElement:
+    def get_raw_element_by_keyword(self, keyword: str) -> PydicomDataElement:
         """
-        Returns a pydicom_ DataElement_ from the header (FileDataset_ isntance)
+        Returns a pydicom_ PydicomDataElement_ from the header (FileDataset_ isntance)
         by keyword.
 
         .. _pydicom: https://github.com/pydicom/pydicom
-        .. _DataElement: https://github.com/pydicom/pydicom/blob/master/pydicom/dataelem.py
+        .. _PydicomDataElement: https://github.com/pydicom/pydicom/blob/master/pydicom/dataelem.py
         .. _FileDataset: https://github.com/pydicom/pydicom/blob/master/pydicom/dataset.py
 
         Parameters
@@ -108,22 +132,22 @@ class Header:
 
         Returns
         -------
-        DataElement
+        PydicomDataElement
             The requested data element
         """
 
         value = self.raw.data_element(keyword)
-        if isinstance(value, DataElement):
+        if isinstance(value, PydicomDataElement):
             return value
         raise KeyError(f"The keyword: '{keyword}' does not exist in the header!")
 
-    def get_element_by_tag(self, tag: tuple) -> DataElement:
+    def get_raw_element_by_tag(self, tag: tuple) -> PydicomDataElement:
         """
-        Returns a pydicom_ DataElement_ from the header (FileDataset_ isntance)
+        Returns a pydicom_ PydicomDataElement_ from the header (FileDataset_ isntance)
         by tag.
 
         .. _pydicom: https://github.com/pydicom/pydicom
-        .. _DataElement: https://github.com/pydicom/pydicom/blob/master/pydicom/dataelem.py
+        .. _PydicomDataElement: https://github.com/pydicom/pydicom/blob/master/pydicom/dataelem.py
         .. _FileDataset: https://github.com/pydicom/pydicom/blob/master/pydicom/dataset.py
 
         Parameters
@@ -133,23 +157,23 @@ class Header:
 
         Returns
         -------
-        DataElement
+        PydicomDataElement
             The requested data element
         """
 
         value = self.raw.get(tag)
-        if isinstance(value, DataElement):
+        if isinstance(value, PydicomDataElement):
             return value
         raise KeyError(f"The tag: {tag} does not exist in the header!")
 
-    def get_element(self, tag_or_keyword) -> DataElement:
+    def get_raw_element(self, tag_or_keyword) -> PydicomDataElement:
         """
-        Returns a pydicom_ DataElement_ from the associated FileDataset_ either by
+        Returns a pydicom_ PydicomDataElement_ from the associated FileDataset_ either by
         tag (passed as a tuple) or a keyword (passed as a string). If none found
         or the tag or keyword are invalid, returns None.
 
         .. _pydicom: https://github.com/pydicom/pydicom
-        .. _DataElement: https://github.com/pydicom/pydicom/blob/master/pydicom/dataelem.py
+        .. _PydicomDataElement: https://github.com/pydicom/pydicom/blob/master/pydicom/dataelem.py
         .. _FileDataset: https://github.com/pydicom/pydicom/blob/master/pydicom/dataset.py
 
         Parameters
@@ -159,23 +183,63 @@ class Header:
 
         Returns
         -------
-        DataElement
+        PydicomDataElement
             The requested data element
         """
 
         # By keyword
         if type(tag_or_keyword) is str:
-            return self.get_element_by_keyword(tag_or_keyword)
-
+            return self.get_raw_element_by_keyword(tag_or_keyword)
         # By tag
         elif type(tag_or_keyword) is tuple:
-            return self.get_element_by_tag(tag_or_keyword)
+            return self.get_raw_element_by_tag(tag_or_keyword)
 
         # If not a keyword or a tag, raise a TypeError
         else:
             raise TypeError(
                 f"Invalid data element identifier: {tag_or_keyword} of type {type(tag_or_keyword)}!\nData elements may only be queried using a string represeting a keyword or a tuple of two strings representing a tag!"  # noqa
             )
+
+    def get_data_element(self, tag_or_keyword) -> DataElement:
+        if isinstance(tag_or_keyword, (tuple, str)):
+            raw_element = self.get_raw_element(tag_or_keyword)
+        elif not isinstance(tag_or_keyword, PydicomDataElement):
+            raise TypeError("Bad data element identifier!")
+        else:
+            raw_element = tag_or_keyword
+        DataElementClass = get_data_element_class(raw_element.VR)
+        data_element = DataElementClass(raw_element)
+        if data_element.VALUE_REPRESENTATION == ValueRepresentation.SQ:
+            data_element._value = [
+                Header(raw_header) for raw_header in raw_element.value
+            ]
+        return data_element
+
+    def get_data_elements(
+        self, value_representation=None, exclude=None, private: bool = None
+    ) -> list:
+        data_elements = []
+        filter_by_vr = isinstance(
+            value_representation, (ValueRepresentation, list, tuple)
+        )
+        exclusions = isinstance(exclude, (ValueRepresentation, list, tuple))
+        for data_element in self.data_elements:
+            if isinstance(value_representation, ValueRepresentation):
+                matching_vr = data_element.VALUE_REPRESENTATION == value_representation
+            elif isinstance(value_representation, (list, tuple)):
+                matching_vr = data_element.VALUE_REPRESENTATION in value_representation
+            filtered = filter_by_vr and not matching_vr
+            if isinstance(exclude, ValueRepresentation):
+                excluded_vr = data_element.VALUE_REPRESENTATION == exclude
+            elif isinstance(exclude, (list, tuple)):
+                excluded_vr = data_element.VALUE_REPRESENTATION in exclude
+            excluded = exclusions and excluded_vr
+            private_filter = False
+            if private is not None:
+                private_filter = data_element.is_private != private
+            if not (filtered or excluded or private_filter):
+                data_elements.append(data_element)
+        return data_elements
 
     def get_raw_value(self, tag_or_keyword):
         """
@@ -195,7 +259,7 @@ class Header:
             The raw value of the data element
         """
 
-        element = self.get_element(tag_or_keyword)
+        element = self.get_raw_element(tag_or_keyword)
         return element.value
 
     def get_parsed_value(self, tag_or_keyword):
@@ -217,10 +281,8 @@ class Header:
             Parsed data element value
         """
 
-        element = self.get_element(tag_or_keyword)
-        if element.VR == "SQ":
-            return [Header(raw_header) for raw_header in element.value]
-        return self.parser.parse(element)
+        data_element = self.get_data_element(tag_or_keyword)
+        return data_element.value
 
     def get_private_tag(self, keyword: str) -> tuple:
         """
@@ -293,23 +355,39 @@ class Header:
             value = json.dumps(value, indent=4, sort_keys=True, default=str)
         return value or default
 
-    def filter_by_value_representation(self, value_representation: ValueRepresentation):
-        return {
-            data_element.keyword: self.get(data_element.keyword)
-            for data_element in self.data_elements
-        }
-
     def to_dict(self, parsed: bool = True) -> dict:
         return {
             data_element.keyword: self.get(data_element.keyword, parsed=parsed)
             for data_element in self.data_elements
         }
 
+    def to_dataframe(
+        self,
+        data_elements: list = None,
+        value_representation=None,
+        exclude=None,
+        private: bool = None,
+    ) -> pd.DataFrame:
+        data_elements = [
+            data_element.to_series()
+            for data_element in data_elements
+            or self.get_data_elements(
+                value_representation=value_representation,
+                exclude=exclude,
+                private=private,
+            )
+        ]
+        df = pd.concat(data_elements, axis=1).transpose()
+        df.columns = self.DATAFRAME_COLUMNS
+        df.set_index(self.DATAFRAME_INDEX, inplace=True)
+        df.style.set_properties(**{"text-align": "left"})
+        return df
+
     @property
     def data_elements(self) -> GeneratorType:
         for element in self.raw:
             if element.tag != ("7fe0", "0010"):
-                yield element
+                yield self.get_data_element(element)
 
     @property
     def as_dict(self) -> dict:
