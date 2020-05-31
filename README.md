@@ -23,7 +23,7 @@ For more information, please see [the documentation].
 
 To install the latest version of `dicom_parser`, simply run:
 
-```shell
+```bash
     pip install dicom_parser
 ```
 
