@@ -1,0 +1,28 @@
+version: 2.1
+
+orbs:
+  python: circleci/python@0.3.0
+  codecov: codecov/codecov@1.0.5
+
+jobs:
+  build-and-test:
+    working_directory: ~/dicom_parser
+    docker:
+      - image: themattrix/tox
+    steps:
+      - checkout
+      - python/load-cache
+      - python/install-deps
+      - python/save-cache
+      - run: pip install tox
+      - run:
+          command: tox
+          name: Test using tox
+      - codecov/upload:
+          file: coverage.xml
+          flags: unittests
+
+workflows:
+  main:
+    jobs:
+      - build-and-test

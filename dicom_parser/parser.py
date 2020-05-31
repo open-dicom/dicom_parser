@@ -21,7 +21,7 @@ from dicom_parser.utils.value_representation import ValueRepresentation
 from enum import Enum
 from pydicom.dataelem import DataElement
 from pydicom.sequence import Sequence
-from pydicom.valuerep import PersonName3
+from pydicom.valuerep import PersonName
 
 
 class Parser:
@@ -294,8 +294,8 @@ class Parser:
     def parse_sequence_of_items(self, value: Sequence):
         return [self.parse(subelement) for dataset in value for subelement in dataset]
 
-    def parse_person_name(self, value: PersonName3, **kwargs):
-        if isinstance(value, PersonName3):
+    def parse_person_name(self, value: PersonName, **kwargs):
+        if isinstance(value, PersonName):
             components = (
                 "name_prefix",
                 "given_name",
@@ -397,15 +397,23 @@ class Parser:
             return CsaHeader(value).parsed
 
         #
+        # GE Private Tags
+        #
+        # Dates encoded as seconds since epoch
+        elif tag in (("0009", "1027"), ("0009", "10e9")):
+            seconds_since_epoch = int.from_bytes(value, byteorder="little")
+            return datetime.fromtimestamp(seconds_since_epoch)
+        # Other Binary (OB) encoded data
+        elif tag == ("0043", "1029"):
+            return [v for v in value]
+
+        #
         # Other
         #
         # Try to decode bytes
         elif isinstance(value, bytes):
             try:
-                return value.decode().replace("\x00", "\uFFFD")
-                # The `.replace("\x00", "\uFFFD")` part prevents a ValueError
-                # that may be raised for those characters.
-                # See: https://github.com/cms-dev/cms/issues/888#issuecomment-516977572
+                return value.decode().replace("\x00", "").strip()
             except UnicodeDecodeError:
                 pass
 

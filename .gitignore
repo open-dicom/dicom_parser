@@ -32,8 +32,13 @@ node_modules/
 
 # Coverage reports
 htmlcov
+.coverage
+coverage.xml
 
 # Docs
 docs/_build/
 docs/_static/
 docs/_templates/
+
+# tox directory
+.tox

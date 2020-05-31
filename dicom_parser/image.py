@@ -7,8 +7,8 @@ Definition of the Image class, representing a single pair of
 import numpy as np
 import warnings
 
+from dicom_parser import messages
 from dicom_parser.header import Header
-from dicom_parser.parser import Parser
 from dicom_parser.utils.read_file import read_file
 from dicom_parser.utils.siemens.mosaic import Mosaic
 from pathlib import Path
@@ -21,7 +21,7 @@ class Image:
 
     """
 
-    def __init__(self, raw, parser=Parser):
+    def __init__(self, raw):
         """
         The Image class should be initialized with either a string or a
         :class:`~pathlib.Path` instance representing the path of a .dcm file.
@@ -40,7 +40,8 @@ class Image:
         """
 
         self.raw = read_file(raw, read_data=True)
-        self.header = Header(self.raw, parser=parser)
+        self.header = Header(self.raw)
+        self.warnings = []
         self._data = self.read_raw_data()
 
     def read_raw_data(self) -> np.ndarray:
@@ -56,7 +57,10 @@ class Image:
         try:
             return self.raw.pixel_array
         except (AttributeError, ValueError) as exception:
-            warnings.warn(f"Failed to read image data!\n{exception}")
+            warning = messages.DATA_READ_FAILURE.format(exception=exception)
+            warnings.warn(warning)
+            if warning not in self.warnings:
+                self.warnings.append(warning)
 
     def fix_data(self) -> np.ndarray:
         """
