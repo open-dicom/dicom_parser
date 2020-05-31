@@ -21,7 +21,7 @@ from dicom_parser.utils.value_representation import ValueRepresentation
 from enum import Enum
 from pydicom.dataelem import DataElement
 from pydicom.sequence import Sequence
-from pydicom.valuerep import PersonName3
+from pydicom.valuerep import PersonName
 
 
 class Parser:
@@ -294,8 +294,8 @@ class Parser:
     def parse_sequence_of_items(self, value: Sequence):
         return [self.parse(subelement) for dataset in value for subelement in dataset]
 
-    def parse_person_name(self, value: PersonName3, **kwargs):
-        if isinstance(value, PersonName3):
+    def parse_person_name(self, value: PersonName, **kwargs):
+        if isinstance(value, PersonName):
             components = (
                 "name_prefix",
                 "given_name",

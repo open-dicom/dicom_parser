@@ -39,3 +39,6 @@ coverage.xml
 docs/_build/
 docs/_static/
 docs/_templates/
+
+# tox directory
+.tox
