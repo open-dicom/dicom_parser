@@ -1,7 +1,8 @@
-[![Documentation Status](https://readthedocs.org/projects/dicom-parser/badge/?version=latest)](http://dicom-parser.readthedocs.io/?badge=latest)
 [![PyPI version](https://img.shields.io/pypi/v/dicom_parser.svg)](https://pypi.python.org/pypi/pylabber/)
 [![PyPI status](https://img.shields.io/pypi/status/dicom_parser.svg)](https://pypi.python.org/pypi/pylabber/)
-![Coverage](coverage.svg)
+[![CircleCI](https://circleci.com/gh/ZviBaratz/dicom_parser.svg?style=shield)](https://app.circleci.com/pipelines/github/ZviBaratz/dicom_parser)
+[![codecov.io](https://codecov.io/gh/ZviBaratz/dicom_parser/coverage.svg?branch=master)](https://codecov.io/github/ZviBaratzabbingProject/dicom_parser?branch=master)
+[![Documentation Status](https://readthedocs.org/projects/dicom-parser/badge/?version=latest)](http://dicom-parser.readthedocs.io/?badge=latest)
 
 # dicom_parser
 
