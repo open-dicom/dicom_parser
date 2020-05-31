@@ -271,7 +271,7 @@ class ParserTestCase(TestCase):
         tag = ("0051", "1015")
         data_element = self.header.get(tag)
         result = self.parser.parse(data_element)
-        expected = data_element.value.decode().replace("\x00", "\uFFFD")
+        expected = data_element.value.decode().replace("\x00", "").strip()
         self.assertEqual(result, expected)
 
     def test_parse_with_keywords(self):

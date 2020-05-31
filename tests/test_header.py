@@ -52,8 +52,8 @@ class HeaderTestCase(TestCase):
             with self.assertRaises(TypeError):
                 Header(bad_input)
 
-    def test_initialized_with_default_parser(self):
-        self.assertIsInstance(self.header.parser, Parser)
+    # def test_initialized_with_default_parser(self):
+    #     self.assertIsInstance(self.header.parser, Parser)
 
     def test_initialized_with_default_sequence_detector(self):
         self.assertIsInstance(self.header.sequence_detector, SequenceDetector)
@@ -61,41 +61,41 @@ class HeaderTestCase(TestCase):
     def test_init_detected_sequence(self):
         self.assertEqual(self.header.detected_sequence, "Localizer")
 
-    def test_get_element_by_keyword(self):
-        for keyword in self.KEYWORDS.keys():
-            result = self.header.get_element_by_keyword(keyword)
-            self.assertIsInstance(result, pydicom.DataElement)
+    # def test_get_element_by_keyword(self):
+    #     for keyword in self.KEYWORDS.keys():
+    #         result = self.header.get_element_by_keyword(keyword)
+    #         self.assertIsInstance(result, pydicom.DataElement)
 
-    def test_get_element_by_keyword_with_invalid_key_raises_key_error(self):
-        for keyword in self.NON_KEYWORDS:
-            with self.assertRaises(KeyError):
-                self.header.get_element_by_keyword(keyword)
+    # def test_get_element_by_keyword_with_invalid_key_raises_key_error(self):
+    #     for keyword in self.NON_KEYWORDS:
+    #         with self.assertRaises(KeyError):
+    #             self.header.get_element_by_keyword(keyword)
 
-    def test_get_element_by_tag(self):
-        for tag in self.TAGS.keys():
-            result = self.header.get_element_by_tag(tag)
-            self.assertIsInstance(result, pydicom.DataElement)
+    # def test_get_element_by_tag(self):
+    #     for tag in self.TAGS.keys():
+    #         result = self.header.get_element_by_tag(tag)
+    #         self.assertIsInstance(result, pydicom.DataElement)
 
-    def test_get_element_by_tag_invalid_tag_returns_none(self):
-        for invalid_tag in self.NON_TAGS:
-            with self.assertRaises(KeyError):
-                self.header.get_element_by_tag(invalid_tag)
+    # def test_get_element_by_tag_invalid_tag_returns_none(self):
+    #     for invalid_tag in self.NON_TAGS:
+    #         with self.assertRaises(KeyError):
+    #             self.header.get_element_by_tag(invalid_tag)
 
-    def test_get_element(self):
-        keys = list(self.TAGS.keys()) + list(self.KEYWORDS.keys())
-        for key in keys:
-            result = self.header.get_element(key)
-            self.assertIsInstance(result, pydicom.DataElement)
+    # def test_get_element(self):
+    #     keys = list(self.TAGS.keys()) + list(self.KEYWORDS.keys())
+    #     for key in keys:
+    #         result = self.header.get_element(key)
+    #         self.assertIsInstance(result, pydicom.DataElement)
 
-    def test_get_element_with_invalid_key_or_tag_raises_key_error(self):
-        for key in self.NON_TAGS + self.NON_KEYWORDS:
-            with self.assertRaises(KeyError):
-                self.header.get_element(key)
+    # def test_get_element_with_invalid_key_or_tag_raises_key_error(self):
+    #     for key in self.NON_TAGS + self.NON_KEYWORDS:
+    #         with self.assertRaises(KeyError):
+    #             self.header.get_element(key)
 
-    def test_get_element_with_non_string_or_tuple_raises_type_error(self):
-        for key in self.BAD_DATA_ELEMENT_QUERY_VALUES:
-            with self.assertRaises(TypeError):
-                self.header.get_element(key)
+    # def test_get_element_with_non_string_or_tuple_raises_type_error(self):
+    #     for key in self.BAD_DATA_ELEMENT_QUERY_VALUES:
+    #         with self.assertRaises(TypeError):
+    #             self.header.get_element(key)
 
     def test_get_raw_value(self):
         keys = list(self.TAGS.keys()) + list(self.KEYWORDS.keys())
