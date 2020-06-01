@@ -4,6 +4,7 @@ A wrapper around pydicom_'s :class:`~pydicom.dataelem.DataElement` class.
 .. _pydicom: https://github.com/pydicom/pydicom
 
 """
+
 import pandas as pd
 import re
 
@@ -82,6 +83,8 @@ class DataElement:
 
     @property
     def is_private(self) -> bool:
+        # TODO: This should probably be changed to simply check if the tag's
+        # group number is odd.
         pattern = self.PRIVATE_ELEMENT_DESCRIPTION_PATTERN
         description = self.raw.description()
         return bool(re.match(pattern, description))
