@@ -6,4 +6,7 @@ class DecimalString(DataElement):
     VALUE_REPRESENTATION = ValueRepresentation.DS
 
     def parse_value(self, value: str):
-        return float(value)
+        try:
+            return float(value)
+        except TypeError:
+            pass
