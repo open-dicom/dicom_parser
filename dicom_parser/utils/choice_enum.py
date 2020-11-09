@@ -1,33 +1,28 @@
-"""
-Definition of the :class:`~dicom_parser.utils.choice_enum.ChoiceEnum` class,
-which is used to facilitate the usage of :class:`~enum.Enum` definitions with Django_
-Field_ choices_.
-
-.. _choices: https://docs.djangoproject.com/en/3.0/ref/models/fields/#choices
-.. _Django: https://www.djangoproject.com/
-.. _Field: https://docs.djangoproject.com/en/3.0/ref/models/fields/#django.db.models.Field
-
-"""
-
 from enum import Enum
+from typing import Tuple
 
 
 class ChoiceEnum(Enum):
     """
-    A small adaptation to python's built-in :class:`~enum.Enum` class.
+    An :class:`~enum.Enum` with a custom `class method`_ that facilitates
+    integration with a Django_ :class:`~django.db.models.Field`'s
+    :attr:`~django.db.models.Field.choices` attribute.
 
+
+    .. _class method:
+       https://realpython.com/instance-class-and-static-methods-demystified/#class-methods
+    .. _Django: https://www.djangoproject.com/
     """
 
     @classmethod
-    def choices(cls) -> tuple:
+    def choices(cls) -> Tuple[Tuple[str, str], ...]:
         """
-        Returns a tuple of tuples containing the name and the value of each
-        item.
+        Returns the contained items as a tuple of tuples.
 
         Returns
         -------
-        tuple
-            (name, value) tuples representing each item.
+        Tuple[Tuple[str, str], ...]
+            Tuple of (name, value) tuples
         """
 
         return tuple([(item.name, item.value) for item in cls])
