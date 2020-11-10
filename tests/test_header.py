@@ -114,9 +114,9 @@ class HeaderTestCase(TestCase):
     def test_get_parsed_value(self):
         expected_study_date = TEST_STUDY_FIELDS["date"]
         study_date = self.header.get_parsed_value("StudyDate")
-        expected_pixel_spacing = [
+        expected_pixel_spacing = tuple(
             float(value) for value in self.header.get_raw_value("PixelSpacing")
-        ]
+        )
         pixel_spacing = self.header.get_parsed_value("PixelSpacing")
         self.assertEqual(study_date, expected_study_date)
         self.assertEqual(pixel_spacing, expected_pixel_spacing)

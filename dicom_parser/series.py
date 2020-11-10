@@ -1,12 +1,12 @@
 """
-Definition of the Series class, representing a collection of Image instances
-ordered by the header's InstanceNumber data element.
+Definition of the :class:`Series` class.
 
 """
 
 import numpy as np
 
 from dicom_parser.image import Image
+from dicom_parser.messages import EMPTY_SERIES_DIRECTORY
 from dicom_parser.utils.peek import peek
 from pathlib import Path
 from types import GeneratorType
@@ -119,9 +119,7 @@ class Series:
 
         _, dcm_paths = peek(self.path.rglob("*.dcm"))
         if not dcm_paths:
-            raise FileNotFoundError(
-                "Could not locate any .dcm files within the provided series directory!"
-            )
+            raise FileNotFoundError(EMPTY_SERIES_DIRECTORY)
         return dcm_paths
 
     def get_images(self) -> tuple:

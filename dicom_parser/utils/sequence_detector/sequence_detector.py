@@ -78,7 +78,7 @@ class SequenceDetector:
         # definition standards.
         if values:
             values = {
-                key: set(value) if isinstance(value, list) else {value}
+                key: set(value) if isinstance(value, tuple) else {value}
                 for key, value in values.items()
             }
         else:

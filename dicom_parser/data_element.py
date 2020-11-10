@@ -59,7 +59,7 @@ class DataElement:
 
     def parse_values(self):
         if self.value_multiplicity > 1:
-            return [self.parse_value(value) for value in self.raw.value]
+            return tuple(self.parse_value(value) for value in self.raw.value)
         return self.parse_value(self.raw.value)
 
     def to_dict(self) -> dict:

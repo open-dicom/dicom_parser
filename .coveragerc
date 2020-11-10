@@ -1,6 +1,6 @@
 [run]
 omit = *tests*
-    .tox/
+    .tox/**
     venv/**
     setup.py
 
