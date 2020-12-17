@@ -11,20 +11,29 @@ from dicom_parser.data_element import DataElement
 from dicom_parser.utils.format_header_df import format_header_df
 from dicom_parser.utils.private_tags import PRIVATE_TAGS
 from dicom_parser.utils.read_file import read_file
-from dicom_parser.utils.sequence_detector.sequence_detector import SequenceDetector
+from dicom_parser.utils.sequence_detector.sequence_detector import (
+    SequenceDetector,
+)
 from dicom_parser.utils.value_representation import ValueRepresentation
 from dicom_parser.utils.vr_to_data_element import get_data_element_class
+from pathlib import Path
 from pydicom.dataelem import DataElement as PydicomDataElement
+from pydicom.dataset import FileDataset
 from types import GeneratorType
+from typing import Any, Union
 
 
 class Header:
     """
-    Facilitates access to DICOM_ header information from pydicom_'s FileDataset_.
+    Facilitates access to DICOM_ header information from pydicom_'s
+    FileDataset_.
 
-    .. _DICOM: https://www.dicomstandard.org/
-    .. _pydicom: https://github.com/pydicom/pydicom
-    .. _FileDataset: https://github.com/pydicom/pydicom/blob/master/pydicom/dataset.py
+    .. _DICOM:
+       https://www.dicomstandard.org/
+    .. _pydicom:
+       https://github.com/pydicom/pydicom
+    .. _FileDataset:
+       https://github.com/pydicom/pydicom/blob/master/pydicom/dataset.py
 
     """
 
@@ -34,7 +43,11 @@ class Header:
     DATAFRAME_COLUMNS = "Tag", "Keyword", "VR", "VM", "Value"
     DATAFRAME_INDEX = "Tag"
 
-    def __init__(self, raw, sequence_detector=SequenceDetector):
+    def __init__(
+        self,
+        raw: Union[FileDataset, str, Path],
+        sequence_detector=SequenceDetector,
+    ):
         """
         Header is meant to be initialized with a pydicom_ FileDataset_
         representing a single image's header, or a string representing
@@ -42,11 +55,10 @@ class Header:
 
         Parameters
         ----------
-        raw : pydicom.dataset.FileDataset / path string or pathlib.Path instance
-            DICOM_ image header information or path.
-        parser : type
-            An object with a public `parse()` method that may be used to parse
-            data elements, by default Parser.
+        raw : Union[pydicom.dataset.FileDataset, str, pathlib.Path]
+            DICOM_ image header information or path
+        sequence_detector : SequenceDetector
+            A utility class to automatically detect sequences
 
         .. _pydicom: https://github.com/pydicom/pydicom
         .. _FileDataset: https://github.com/pydicom/pydicom/blob/master/pydicom/dataset.py
@@ -60,7 +72,7 @@ class Header:
         self.detected_sequence = self.detect_sequence()
         self._as_dict = None
 
-    def __getitem__(self, key):
+    def __getitem__(self, key) -> Any:
         """
         Provide dictionary like indexing-operator functionality.
 
@@ -71,7 +83,7 @@ class Header:
 
         Returns
         -------
-        [type]
+        Any
             Parsed header information of the given key or keys
         """
 
@@ -79,7 +91,9 @@ class Header:
 
     def __str__(self) -> str:
         base = self.to_dataframe(exclude=ValueRepresentation.SQ, private=False)
-        sequences = self.get_data_elements(value_representation=ValueRepresentation.SQ)
+        sequences = self.get_data_elements(
+            value_representation=ValueRepresentation.SQ
+        )
         privates = self.to_dataframe(private=True)
         sequences_string = ""
         if sequences:
@@ -90,7 +104,9 @@ class Header:
             )
         privates_string = "\n\nPrivate Data Elements\n=====================\n"
         privates_string = (
-            privates_string + format_header_df(privates) if not privates.empty else ""
+            privates_string + format_header_df(privates)
+            if not privates.empty
+            else ""
         )
         return format_header_df(base) + sequences_string + privates_string
 
@@ -112,7 +128,9 @@ class Header:
         sequence_identifiers = self.sequence_identifiers.get(modality)
         sequence_identifying_values = self.get(sequence_identifiers)
         try:
-            return self.sequence_detector.detect(modality, sequence_identifying_values)
+            return self.sequence_detector.detect(
+                modality, sequence_identifying_values
+            )
         except NotImplementedError:
             pass
 
@@ -139,7 +157,9 @@ class Header:
         value = self.raw.data_element(keyword)
         if isinstance(value, PydicomDataElement):
             return value
-        raise KeyError(f"The keyword: '{keyword}' does not exist in the header!")
+        raise KeyError(
+            f"The keyword: '{keyword}' does not exist in the header!"
+        )
 
     def get_raw_element_by_tag(self, tag: tuple) -> PydicomDataElement:
         """
@@ -225,9 +245,13 @@ class Header:
         exclusions = isinstance(exclude, (ValueRepresentation, list, tuple))
         for data_element in self.data_elements:
             if isinstance(value_representation, ValueRepresentation):
-                matching_vr = data_element.VALUE_REPRESENTATION == value_representation
+                matching_vr = (
+                    data_element.VALUE_REPRESENTATION == value_representation
+                )
             elif isinstance(value_representation, (list, tuple)):
-                matching_vr = data_element.VALUE_REPRESENTATION in value_representation
+                matching_vr = (
+                    data_element.VALUE_REPRESENTATION in value_representation
+                )
             filtered = filter_by_vr and not matching_vr
             if isinstance(exclude, ValueRepresentation):
                 excluded_vr = data_element.VALUE_REPRESENTATION == exclude
@@ -262,7 +286,7 @@ class Header:
         element = self.get_raw_element(tag_or_keyword)
         return element.value
 
-    def get_parsed_value(self, tag_or_keyword):
+    def get_parsed_value(self, tag_or_keyword) -> Any:
         """
         Returns the parsed value of pydicom_ data element using the this class's
         parser attribute. The data element may be represented by tag or by its
@@ -277,7 +301,7 @@ class Header:
 
         Returns
         -------
-        type
+        Any
             Parsed data element value
         """
 
@@ -312,24 +336,25 @@ class Header:
         parsed: bool = True,
         missing_ok: bool = True,
         as_json: bool = False,
-    ):
+    ) -> Any:
         """
-        Returns the value of a pydicom data element, selected by tag (`tuple`) or
-        keyword (`str`). Input may also be a `list` of such identifiers, in which
-        case a dictionary will be returned with the identifiers as keys and header
-        information as values.
+        Returns the value of a pydicom data element, selected by tag (`tuple`)
+        or keyword (`str`). Input may also be a `list` of such identifiers, in
+        which case a dictionary will be returned with the identifiers as keys and
+        header information as values.
 
         Parameters
         ----------
         tag_or_keyword : tuple or str, or list
-            Tag or keyword representing the requested data element, or a list of such.
+            Tag or keyword representing the requested data element, or a list
+            of such
         parsed : bool, optional
-            Whether to return a parsed or raw value (the default is True, which will
-            return the parsed value).
+            Whether to return a parsed or raw value (the default is True,
+            which will return the parsed value)
 
         Returns
         -------
-        type
+        Any
             The requested data element value (or a dict for multiple values)
         """
 
@@ -339,7 +364,9 @@ class Header:
         # Tries to find a private tags tuple if the given tag_or_keyword is a
         # keyword that has been registered in the private_tags module
         if isinstance(tag_or_keyword, str):
-            tag_or_keyword = self.get_private_tag(tag_or_keyword) or tag_or_keyword
+            tag_or_keyword = (
+                self.get_private_tag(tag_or_keyword) or tag_or_keyword
+            )
 
         # Get the requested value
         value = None

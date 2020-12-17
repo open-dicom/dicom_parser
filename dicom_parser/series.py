@@ -10,20 +10,24 @@ from dicom_parser.messages import EMPTY_SERIES_DIRECTORY
 from dicom_parser.utils.peek import peek
 from pathlib import Path
 from types import GeneratorType
+from typing import Any
 
 
 class Series:
     """
-    This class represents a complete collection of Image instances originating from
-    a single directory and ordered by InstanceNumber.
+    This class represents a complete collection of Image instances originating
+    from a single directory and ordered by InstanceNumber.
 
     """
 
     def __init__(self, path: Path):
         """
-        The Series class should be initialized with a string or a :class:`~pathlib.Path`
-        instance representing the path of single
-        `DICOM series <https://dcm4che.atlassian.net/wiki/spaces/d2/pages/1835038/A+Very+Basic+DICOM+Introduction>`_.
+        The Series class should be initialized with a string or a
+        :class:`~pathlib.Path` instance representing the path of single
+        `DICOM series`_.
+
+        .. _DICOM series:
+           https://dcm4che.atlassian.net/wiki/spaces/d2/pages/1835038/A+Very+Basic+DICOM+Introduction
 
         Parameters
         ----------
@@ -49,20 +53,22 @@ class Series:
 
     def __getitem__(self, key):
         """
-        Provide dictionary-like indexing-operator functionality for querying header
-        information using a str or a tuple, and list-like functionality for int,
-        returning the image at the given index.
+        Provide dictionary-like indexing-operator functionality for querying
+        header information using a str or a tuple, and list-like functionality
+        for int, returning the image at the given index.
 
         Parameters
         ----------
         key : str or tuple or int
             The key or tag for which to retrieve header information,
-            or the index for the required :class:`~dicom_parser.image.Image` instance.
+            or the index for the required :class:`~dicom_parser.image.Image`
+            instance
 
         Returns
         -------
         type
-            Parsed header information of the given key or the image at the given index.
+            Parsed header information of the given key or the image at the
+            given index
         """
 
         if isinstance(key, (str, tuple)):
@@ -76,8 +82,8 @@ class Series:
 
     def check_path(self, path) -> Path:
         """
-        Converts to a :class:`~pathlib.Path` instance if required and checks that it
-        represents an existing directory.
+        Converts to a :class:`~pathlib.Path` instance if required and checks
+        that it represents an existing directory.
 
         Parameters
         ----------
@@ -87,12 +93,12 @@ class Series:
         Returns
         -------
         Path
-            A pathlib.Path instance representing an existing directory.
+            A pathlib.Path instance representing an existing directory
 
         Raises
         ------
         ValueError
-            If the provided path is not an existing directory.
+            If the provided path is not an existing directory
         """
 
         path = Path(path)
@@ -109,12 +115,12 @@ class Series:
         Returns
         -------
         GeneratorType
-            DICOM images (.dcm files) generator.
+            DICOM images (.dcm files) generator
 
         Raises
         ------
         FileNotFoundError
-            No DICOM images found under provided directory.
+            No DICOM images found under provided directory
         """
 
         _, dcm_paths = peek(self.path.rglob("*.dcm"))
@@ -130,17 +136,23 @@ class Series:
         Returns
         -------
         tuple
-            Image instance by instance number.
+            Image instance by instance number
         """
 
         images = [Image(dcm_path) for dcm_path in self.get_dcm_paths()]
         return tuple(
-            sorted(images, key=lambda image: image.header.get("InstanceNumber"))
+            sorted(
+                images, key=lambda image: image.header.get("InstanceNumber")
+            )
         )
 
     def get(
-        self, tag_or_keyword, default=None, parsed: bool = True, missing_ok: bool = True
-    ):
+        self,
+        tag_or_keyword,
+        default=None,
+        parsed: bool = True,
+        missing_ok: bool = True,
+    ) -> Any:
         """
         Returns header information from the
         :class:`~dicom_parser.image.Image` that compose this series.
@@ -151,17 +163,21 @@ class Series:
         Parameters
         ----------
         tag_or_keyword : tuple or str, or list
-            Tag or keyword representing the requested data element, or a list of such.
+            Tag or keyword representing the requested data element, or a list
+            of such
 
         Returns
         -------
-        type
+        Any
             The requested data element value for the entire series
         """
 
         values = [
             image.header.get(
-                tag_or_keyword, default=default, parsed=parsed, missing_ok=missing_ok
+                tag_or_keyword,
+                default=default,
+                parsed=parsed,
+                missing_ok=missing_ok,
             )
             for image in self.images
         ]
@@ -185,13 +201,24 @@ class Series:
         Returns
         -------
         np.ndarray
-            Series 3D data.
+            Series 3D data
         """
 
         if not isinstance(self._data, np.ndarray):
-            self._data = np.stack([image.data for image in self.images], axis=-1)
+            self._data = np.stack(
+                [image.data for image in self.images], axis=-1
+            )
         return self._data
 
     @property
     def spatial_resolution(self) -> tuple:
+        """
+        Returns the spatial resolution of the series.
+
+        Returns
+        -------
+        tuple
+            Spatial resolution
+        """
+
         return self.get_spatial_resolution()

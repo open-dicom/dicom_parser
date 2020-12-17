@@ -14,7 +14,8 @@ def parse_siemens_slice_timing(value: bytes) -> list:
     (0019, 1029) `MosaicRefAcqTimes`_ tag to a list of floats representing
     slice times in milliseconds.
 
-    .. _MosaicRefAcqTimes: https://en.wikibooks.org/wiki/SPM/Slice_Timing#Siemens_scanners
+    .. _MosaicRefAcqTimes:
+       https://en.wikibooks.org/wiki/SPM/Slice_Timing#Siemens_scanners
 
     Parameters
     ----------
@@ -27,7 +28,9 @@ def parse_siemens_slice_timing(value: bytes) -> list:
         Slice times in milliseconds
     """
 
-    return [round(slice_time, 5) for slice_time in list(array.array("d", value))]
+    return [
+        round(slice_time, 5) for slice_time in list(array.array("d", value))
+    ]
 
 
 def parse_siemens_gradient_direction(value: bytes) -> list:
@@ -35,7 +38,8 @@ def parse_siemens_gradient_direction(value: bytes) -> list:
     Parses a SIEMENS MR image's B-vector as represented in the private
     (0019, 100E) `DiffusionGradientDirection`_ DICOM tag.
 
-    .. _DiffusionGradientDirection: https://na-mic.org/wiki/NAMIC_Wiki:DTI:DICOM_for_DWI_and_DTI#Private_vendor:_Siemens
+    .. _DiffusionGradientDirection:
+       https://na-mic.org/wiki/NAMIC_Wiki:DTI:DICOM_for_DWI_and_DTI#Private_vendor:_Siemens
 
     Parameters
     ----------

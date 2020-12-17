@@ -27,14 +27,6 @@ dicom\_parser.image module
    :undoc-members:
    :show-inheritance:
 
-dicom\_parser.parser module
----------------------------
-
-.. automodule:: dicom_parser.parser
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 dicom\_parser.series module
 ---------------------------
 

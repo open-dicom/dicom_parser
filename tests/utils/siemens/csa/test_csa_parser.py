@@ -46,28 +46,40 @@ class CsaParserTestCase(TestCase):
     def test_create_new_element_list(self):
         destination = {}
         part_name = "NewArray"
-        result = self.csa_parser.create_new_element_list(part_name, destination)
+        result = self.csa_parser.create_new_element_list(
+            part_name, destination
+        )
         expected = destination[part_name][0]
         self.assertIs(result, expected)
         self.assertIsInstance(result, dict)
 
     def test_scaffold_list_part_with_existing_list(self):
         destination = {
-            "ExistingArrayPattern": [{"ElementA": "value"}, {"ElementB": "value"}]
+            "ExistingArrayPattern": [
+                {"ElementA": "value"},
+                {"ElementB": "value"},
+            ]
         }
         part_name = "ExistingArrayPattern"
         index = 2
-        result = self.csa_parser.scaffold_list_part(part_name, index, destination)
+        result = self.csa_parser.scaffold_list_part(
+            part_name, index, destination
+        )
         self.assertIs(result, destination[part_name][index])
         self.assertIsInstance(result, dict)
 
     def test_scaffold_list_part_with_missing_list(self):
         destination = {
-            "ExistingArrayPattern": [{"ElementA": "value"}, {"ElementB": "value"}]
+            "ExistingArrayPattern": [
+                {"ElementA": "value"},
+                {"ElementB": "value"},
+            ]
         }
         part_name = "MissingArrayPattern"
         index = 0
-        result = self.csa_parser.scaffold_list_part(part_name, index, destination)
+        result = self.csa_parser.scaffold_list_part(
+            part_name, index, destination
+        )
         self.assertIs(result, destination[part_name][index])
         self.assertIsInstance(result, dict)
 
@@ -108,9 +120,9 @@ class CsaParserTestCase(TestCase):
         self.assertEqual(slice_position, expected)
 
     def test_parse_cleans_extra_quotes(self):
-        value = self.parsed["CoilSelectMeas"]["RxCoilSelectData"][0]["List"][0][
-            "CoilElementID"
-        ]["CoilID"]
+        value = self.parsed["CoilSelectMeas"]["RxCoilSelectData"][0]["List"][
+            0
+        ]["CoilElementID"]["CoilID"]
         expected = "HeadNeck_64"
         self.assertEqual(value, expected)
 
