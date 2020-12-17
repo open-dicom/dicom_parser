@@ -1,5 +1,5 @@
-dicom\_parser.utils.code\_strings package
-=========================================
+code\_strings
+=============
 
 Submodules
 ----------

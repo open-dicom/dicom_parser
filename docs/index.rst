@@ -10,7 +10,7 @@ Welcome to dicom_parser's documentation!
 
    quickstart
    vendors
-   modules/modules
+   modules/reference
    release_notes
 
 
