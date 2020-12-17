@@ -1,6 +1,16 @@
 Release Notes
 =============
 
+0.1.5
+-----
+
+  * Changed
+    :class:`~dicom_parser.data_elements.private_data_element.PrivateDataElement`'s
+    :func:`~dicom_parser.data_elements.private_data_element.PrivateDataElement.parse_value`
+    method to try and call :func:`bytes.decode` on the raw value by default.
+  * Removed deprecated :class:`dicom_parser.parser.Parser` class.
+  * Fixed some linting and docstring issues.
+
 0.1.4
 -----
 
