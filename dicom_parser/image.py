@@ -1,6 +1,7 @@
 """
-Definition of the Image class, representing a single pair of
-:class:`~dicom_parser.header.Header` and data (3D `NumPy <https://numpy.org>`_ array).
+Definition of the :class:`Image` class, representing a single pair of
+:class:`~dicom_parser.header.Header` and data (3D `NumPy <https://numpy.org>`_
+array).
 
 """
 
@@ -12,6 +13,8 @@ from dicom_parser.header import Header
 from dicom_parser.utils.read_file import read_file
 from dicom_parser.utils.siemens.mosaic import Mosaic
 from pathlib import Path
+from pydicom.dataset import FileDataset
+from typing import Union
 
 
 class Image:
@@ -21,7 +24,7 @@ class Image:
 
     """
 
-    def __init__(self, raw):
+    def __init__(self, raw: Union[FileDataset, str, Path]):
         """
         The Image class should be initialized with either a string or a
         :class:`~pathlib.Path` instance representing the path of a .dcm file.
@@ -32,11 +35,8 @@ class Image:
 
         Parameters
         ----------
-        raw : str, pathlib.Path, or pydicom.FileDataset
-            A single DICOM image.
-        parser : type, optional
-            An object with a public `parse()` method that may be used to parse
-            data elements, by default Parser.
+        raw : Union[pydicom.dataset.FileDataset, str, pathlib.Path]
+            A single DICOM image
         """
 
         self.raw = read_file(raw, read_data=True)
@@ -107,7 +107,7 @@ class Image:
         Returns
         -------
         bool
-            Whether this image represents fMRI data.
+            Whether this image represents fMRI data
         """
 
         return self.header.detected_sequence == "fMRI"
@@ -121,7 +121,7 @@ class Image:
         Returns
         -------
         np.ndarray
-            Pixel data array.
+            Pixel data array
         """
 
         return self.fix_data()
