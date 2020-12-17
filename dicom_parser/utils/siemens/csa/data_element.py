@@ -23,8 +23,8 @@ class CsaDataElement:
 
     def __init__(self, raw_element: str):
         """
-        Initialized with a raw (string) data element as extracted from the header
-        information.
+        Initialized with a raw (string) data element as extracted from the
+        header information.
 
         Parameters
         ----------
@@ -87,7 +87,8 @@ class CsaDataElement:
 
     def search_array_pattern(self, part: str) -> int:
         """
-        Checks if the pattern indicating a particular key part represents an array.
+        Checks if the pattern indicating a particular key part represents an
+        array.
 
         Parameters
         ----------

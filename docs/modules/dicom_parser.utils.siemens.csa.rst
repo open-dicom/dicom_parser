@@ -1,5 +1,5 @@
-dicom\_parser.utils.siemens.csa package
-=======================================
+csa
+===
 
 Module contents
 ---------------

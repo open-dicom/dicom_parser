@@ -1,5 +1,5 @@
-dicom\_parser.utils.siemens package
-===================================
+siemens
+=======
 
 Module contents
 ---------------

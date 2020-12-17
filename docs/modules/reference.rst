@@ -1,15 +1,25 @@
-dicom\_parser package
-=====================
+Reference
+=========
 
 Subpackages
 -----------
 
 .. toctree::
+   :maxdepth: 1
 
    dicom_parser.utils
+   dicom_parser.data_elements
 
 Submodules
 ----------
+
+dicom\_parser.data\_element module
+----------------------------------
+
+.. automodule:: dicom_parser.data_element
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 dicom\_parser.header module
 ---------------------------
@@ -31,15 +41,6 @@ dicom\_parser.series module
 ---------------------------
 
 .. automodule:: dicom_parser.series
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-
-Module contents
----------------
-
-.. automodule:: dicom_parser
    :members:
    :undoc-members:
    :show-inheritance:

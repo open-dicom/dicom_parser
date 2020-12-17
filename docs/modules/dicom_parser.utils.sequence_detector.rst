@@ -1,5 +1,5 @@
-dicom\_parser.utils.sequence\_detector package
-==============================================
+sequence\_detector
+==================
 
 Submodules
 ----------

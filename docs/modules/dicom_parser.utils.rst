@@ -1,10 +1,20 @@
-dicom\_parser.utils package
-===========================
+utils
+=====
+
+Module contents
+---------------
+
+.. automodule:: dicom_parser.utils
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 
 Subpackages
 -----------
 
 .. toctree::
+   :maxdepth: 1
 
    dicom_parser.utils.code_strings
    dicom_parser.utils.sequence_detector
@@ -41,15 +51,6 @@ dicom\_parser.utils.value\_representation module
 ------------------------------------------------
 
 .. automodule:: dicom_parser.utils.value_representation
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-
-Module contents
----------------
-
-.. automodule:: dicom_parser.utils
    :members:
    :undoc-members:
    :show-inheritance:
