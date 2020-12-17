@@ -2,10 +2,13 @@ import pydicom
 import warnings
 
 from dicom_parser.header import Header
-from dicom_parser.parser import Parser
 from dicom_parser.utils.sequence_detector import SequenceDetector
 from pathlib import Path
-from tests.fixtures import TEST_IMAGE_PATH, TEST_STUDY_FIELDS, TEST_GE_LOCALIZER_PATH
+from tests.fixtures import (
+    TEST_IMAGE_PATH,
+    TEST_STUDY_FIELDS,
+    TEST_GE_LOCALIZER_PATH,
+)
 from unittest import TestCase
 
 
@@ -19,14 +22,25 @@ class HeaderTestCase(TestCase):
     }
     NON_KEYWORDS = ["ABC", "DEF", "GHI", "JKL"]
     TAGS = {
-        ("0020", "000D"): "1.3.12.2.1107.5.2.43.66024.30000018050107081466900000007",
+        (
+            "0020",
+            "000D",
+        ): "1.3.12.2.1107.5.2.43.66024.30000018050107081466900000007",
         ("0008", "0060"): "MR",
-        ("0020", "000E"): "1.3.12.2.1107.5.2.43.66024.2018050112250992296484473.0.0.0",
+        (
+            "0020",
+            "000E",
+        ): "1.3.12.2.1107.5.2.43.66024.2018050112250992296484473.0.0.0",
         ("0028", "0030"): pydicom.multival.MultiValue(
             float, ["0.48828125", "0.48828125"]
         ),
     }
-    NON_TAGS = [("1111", "0000"), ("0000", "1111"), ("2222", "3333"), ("3333", "4444")]
+    NON_TAGS = [
+        ("1111", "0000"),
+        ("0000", "1111"),
+        ("2222", "3333"),
+        ("3333", "4444"),
+    ]
     BAD_DATA_ELEMENT_QUERY_VALUES = 0, ["1"], 1.1, False
 
     @classmethod
@@ -51,9 +65,6 @@ class HeaderTestCase(TestCase):
         for bad_input in bad_inputs:
             with self.assertRaises(TypeError):
                 Header(bad_input)
-
-    # def test_initialized_with_default_parser(self):
-    #     self.assertIsInstance(self.header.parser, Parser)
 
     def test_initialized_with_default_sequence_detector(self):
         self.assertIsInstance(self.header.sequence_detector, SequenceDetector)
