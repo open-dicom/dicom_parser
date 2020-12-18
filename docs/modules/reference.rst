@@ -1,6 +1,14 @@
 Reference
 =========
 
+Module contents
+---------------
+
+.. automodule:: dicom_parser
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Subpackages
 -----------
 

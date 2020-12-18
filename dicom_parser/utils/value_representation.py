@@ -1,19 +1,18 @@
 """
-This file contains an `Enum <https://docs.python.org/3/library/enum.html>`_ with the two-character codes of the
-various `DICOM <https://en.wikipedia.org/wiki/DICOM>`__
-`value-representations (VRs) <http://northstar-www.dartmouth.edu/doc/idl/html_6.2/Value_Representations.html>`_
-(also see `here <http://dicom.nema.org/medical/dicom/current/output/chtml/part05/sect_6.2.html>`_)
-for header `data elements <http://northstar-www.dartmouth.edu/doc/idl/html_6.2/DICOM_Attributes.html>`_.
-
+This file contains an *Enum* with the two-character codes of the various DICOM
+value-representations (VRs).
 """
 
 from dicom_parser.utils.choice_enum import ChoiceEnum
+from dicom_parser.utils.messages import INVALID_VR
 
 
 class ValueRepresentation(ChoiceEnum):
     """
-    DICOM `value-representations (VRs)
-    <http://northstar-www.dartmouth.edu/doc/idl/html_6.2/Value_Representations.html>`_.
+    DICOM `value-representations (VRs)`_.
+
+    .. _value-representations (VRs):
+       http://northstar-www.dartmouth.edu/doc/idl/html_6.2/Value_Representations.html
 
     """
 
@@ -53,17 +52,36 @@ class ValueRepresentation(ChoiceEnum):
     UV = "Unsigned 64-bit Very Long"
 
 
-INVALID_VR_MESSAGE = (
-    "{key} is not a valid DICOM data element value representation (VR)!"
-)
-
-
 class ValueRepresentationError(Exception):
+    """
+    Custom execption indicating a data element has an invalid VR value.
+    """
+
     pass
 
 
 def get_value_representation(key: str) -> ValueRepresentation:
+    """
+    Utility function to match the VR key in *pydicom*\'s data elements
+    with the appropriate *Enum* value.
+
+    Parameters
+    ----------
+    key : str
+        Value representation key
+
+    Returns
+    -------
+    ValueRepresentation
+        *Enum* value
+
+    Raises
+    ------
+    ValueRepresentationError
+        Invalid value representation
+    """
+
     try:
         return ValueRepresentation[key]
     except KeyError:
-        raise ValueRepresentationError(INVALID_VR_MESSAGE.format(key=key))
+        raise ValueRepresentationError(INVALID_VR.format(key=key))

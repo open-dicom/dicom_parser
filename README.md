@@ -9,7 +9,7 @@
 _dicom_parser_ is a utility python package meant to facilitate access to
 [DICOM](https://www.dicomstandard.org/) header information by extending the functionality of _[pydicom]_.
 
-Essentially, _dicom_parser_ uses [DICOM](https://www.dicomstandard.org/)'s
+Essentially, _dicom_parser_ uses DICOM's
 [data-element](https://northstar-www.dartmouth.edu/doc/idl/html_6.2/DICOM_Attributes.html)
 [value-representation (VR)](http://dicom.nema.org/medical/dicom/current/output/chtml/part05/sect_6.2.html),
 as well as prior knowledge on vendor-specific private tags or encoding schemes,

@@ -1,20 +1,19 @@
 """
-Definition of the
-:class:`~dicom_parser.utils.sequence_detector.sequence_detector.SequenceDetector`
-class.
+Definition of the :class:`SequenceDetector` class.
 
 """
 
-from dicom_parser.utils.sequence_detector.messages import WRONG_DEFINITION_TYPE
+from dicom_parser.utils.sequence_detector.messages import (
+    INVALID_MODALITY,
+    WRONG_DEFINITION_TYPE,
+)
 from dicom_parser.utils.sequence_detector.sequences import SEQUENCES
 
 
 class SequenceDetector:
     def __init__(self, sequences: dict = None):
         """
-        Initializes the
-        :class:`~dicom_parser.utils.sequence_detector.sequence_detector.SequenceDetector`
-        class.
+        Initializes a new instance of this class.
 
         Parameters
         ----------
@@ -31,37 +30,37 @@ class SequenceDetector:
         Parameters
         ----------
         modality : str
-            The modality for which to return imaging sequence defitions.
+            The modality for which to return imaging sequence defitions
 
         Returns
         -------
         dict
-            Imaging sequence definitions.
+            Imaging sequence definitions
 
         Raises
         ------
         NotImplementedError
-            The `sequences` dictionary does not include the provided modality.
+            The `sequences` dictionary does not include the provided modality
         """
 
         try:
             return self.sequences[modality]
         except KeyError:
-            raise NotImplementedError(
-                f"The {modality} modality has not been implemented or doesn't exist!"
-            )
+            message = INVALID_MODALITY.format(modality=modality)
+            raise NotImplementedError(message)
 
     def check_definition(self, definition, values: dict) -> bool:
         """
-        Checks whether the specified header information values satisfy the provided
-        definition.
+        Checks whether the specified header information values satisfy the
+        provided definition.
 
         Parameters
         ----------
         definition : dict or list
-            The imaging sequence definition, as a dict or list of dict instances.
+            The imaging sequence definition, as a dict or list of dict
+            instances
         values : dict
-            Header information provided for the comparison.
+            Header information provided for the comparison
 
         Returns
         -------
@@ -88,19 +87,21 @@ class SequenceDetector:
             return values == definition
         elif isinstance(definition, (list, tuple)):
             return values in definition
-        raise TypeError(WRONG_DEFINITION_TYPE.format(definition_type=type(definition)))
+        raise TypeError(
+            WRONG_DEFINITION_TYPE.format(definition_type=type(definition))
+        )
 
     def detect(self, modality: str, values: dict) -> str:
         """
-        Tries to detect the imaging sequence according to the modality and provided
-        header information.
+        Tries to detect the imaging sequence according to the modality and
+        provided header information.
 
         Parameters
         ----------
         modality : str
-            The imaging modality as described in the DICOM header.
+            The imaging modality as described in the DICOM header
         values : dict
-            Sequence identifying header elements.
+            Sequence identifying header elements
 
         Returns
         -------

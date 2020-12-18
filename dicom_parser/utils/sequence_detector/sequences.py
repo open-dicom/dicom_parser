@@ -1,8 +1,10 @@
 """
-Known sequences defined by the expected (parsed) data element values from the header.
-
+Known sequences defined by the expected (parsed) data element values from the
+header.
 """
 
+#: Sequences used in Magnetic Resonance (MR) imaging and their associated
+#: definitions.
 MR_SEQUENCES = {
     "Localizer": {
         "ScanningSequence": {"Gradient Recalled"},
@@ -25,7 +27,10 @@ MR_SEQUENCES = {
         "SequenceVariant": {"Segmented k-Space", "Spoiled", "MAG Prepared"},
     },
     "DTI": (
-        {"ScanningSequence": {"Echo Planar", "Spin Echo"}, "SequenceVariant": {"None"}},
+        {
+            "ScanningSequence": {"Echo Planar", "Spin Echo"},
+            "SequenceVariant": {"None"},
+        },
         {
             "ScanningSequence": {"Echo Planar", "Research Mode"},
             "SequenceVariant": {"None"},
@@ -61,4 +66,5 @@ MR_SEQUENCES = {
 }
 
 
+#: Known sequences by modality.
 SEQUENCES = {"Magnetic Resonance": MR_SEQUENCES}
