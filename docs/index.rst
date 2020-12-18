@@ -5,7 +5,7 @@ Welcome to dicom_parser's documentation!
 .. include:: installation.rst
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Contents:
 
    quickstart

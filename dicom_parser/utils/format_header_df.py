@@ -1,8 +1,30 @@
+"""
+Definition of the :func:`format_header_df` utility function, used to display
+a formatted version of a single DICOM header's information dataframe.
+"""
+
 import functools
 import pandas as pd
 
 
-def format_header_df(df: pd.DataFrame, max_colwidth: int = 28) -> pd.DataFrame:
+def format_header_df(df: pd.DataFrame, max_colwidth: int = 28) -> str:
+    """
+    Formats a raw DIOCM header's dataframe to display the contained information
+    more conveniently.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        Raw header information
+    max_colwidth : int, optional
+        Maximal column width for formatted table, by default 28
+
+    Returns
+    -------
+    str
+        Formatted dataframe information
+    """
+
     formatters = {}
     for column_name in df.columns:
         form = None

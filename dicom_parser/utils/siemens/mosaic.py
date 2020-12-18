@@ -1,10 +1,10 @@
 """
-Defines the :class:`~dicom_parser.utils.siemens.mosaic.Mosaic` class
-that decodes the 2D encoding of 3D volumes used by Siemens.
-For more information read `this <https://nipy.org/nibabel/dicom/dicom_mosaic.html>`_
-`NiBabel <https://nipy.org/nibabel/index.html>`_ article or see pages 10-12 in
-`here <https://discovery.ucl.ac.uk/id/eprint/1495621/1/Li%20et%20al%20The%20first%20step%20for%20neuroimaging%20data%20analysis%20-%20DICOM%20to%20NIfTI%20conversion.pdf>`_.
-
+Definition of the :class:`Mosaic` class that decodes the 2D encoding of 3D
+volumes used by Siemens. For more information read `this
+<https://nipy.org/nibabel/dicom/dicom_mosaic.html>`_ `NiBabel
+<https://nipy.org/nibabel/index.html>`_ article or see pages 10-12 in
+`here
+<https://discovery.ucl.ac.uk/id/eprint/1495621/1/Li%20et%20al%20The%20first%20step%20for%20neuroimaging%20data%20analysis%20-%20DICOM%20to%20NIfTI%20conversion.pdf>`_.
 """
 
 import numpy as np

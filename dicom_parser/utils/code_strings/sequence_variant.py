@@ -3,8 +3,11 @@ from dicom_parser.utils.choice_enum import ChoiceEnum
 
 class SequenceVariant(ChoiceEnum):
     """
-    Represents the `Sequence Variant <https://dicom.innolitics.com/ciods/mr-image/mr-image/00180021>`_ attribute.
-    
+    Represents the `Sequence Variant`_ attribute.
+
+    .. _Sequence Variant:
+       https://dicom.innolitics.com/ciods/mr-image/mr-image/00180021
+
     """
 
     SK = "Segmented k-Space"

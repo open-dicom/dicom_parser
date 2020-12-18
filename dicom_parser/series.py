@@ -6,7 +6,11 @@ Definition of the :class:`Series` class.
 import numpy as np
 
 from dicom_parser.image import Image
-from dicom_parser.messages import EMPTY_SERIES_DIRECTORY
+from dicom_parser.messages import (
+    EMPTY_SERIES_DIRECTORY,
+    INVALID_INDEXING_OPERATOR,
+    INVALID_SERIES_DIRECTORY,
+)
 from dicom_parser.utils.peek import peek
 from pathlib import Path
 from types import GeneratorType
@@ -76,9 +80,8 @@ class Series:
         elif isinstance(key, (int, slice)) and not isinstance(key, bool):
             return self.images[key]
         else:
-            raise TypeError(
-                f"Invalid indexing operator value ({key})! Must be of type str, tuple, int, or slice."
-            )
+            message = INVALID_INDEXING_OPERATOR.format(key=key)
+            raise TypeError(message)
 
     def check_path(self, path) -> Path:
         """
@@ -103,9 +106,8 @@ class Series:
 
         path = Path(path)
         if not path.is_dir():
-            raise ValueError(
-                f"Series instances must be initialized with a valid directory path! Could not locate directory {path}."
-            )
+            message = INVALID_SERIES_DIRECTORY.format(path=path)
+            raise ValueError(message)
         return path
 
     def get_dcm_paths(self) -> GeneratorType:

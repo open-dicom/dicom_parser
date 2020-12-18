@@ -60,9 +60,12 @@ class Header:
         sequence_detector : SequenceDetector
             A utility class to automatically detect sequences
 
-        .. _pydicom: https://github.com/pydicom/pydicom
-        .. _FileDataset: https://github.com/pydicom/pydicom/blob/master/pydicom/dataset.py
-        .. _DICOM: https://www.dicomstandard.org/
+        .. _pydicom:
+           https://github.com/pydicom/pydicom
+        .. _FileDataset:
+           https://github.com/pydicom/pydicom/blob/master/pydicom/dataset.py
+        .. _DICOM:
+           https://www.dicomstandard.org/
 
         """
 
@@ -136,12 +139,15 @@ class Header:
 
     def get_raw_element_by_keyword(self, keyword: str) -> PydicomDataElement:
         """
-        Returns a pydicom_ PydicomDataElement_ from the header (FileDataset_ isntance)
-        by keyword.
+        Returns a pydicom_ PydicomDataElement_ from the header (FileDataset_
+        instance) by keyword.
 
-        .. _pydicom: https://github.com/pydicom/pydicom
-        .. _PydicomDataElement: https://github.com/pydicom/pydicom/blob/master/pydicom/dataelem.py
-        .. _FileDataset: https://github.com/pydicom/pydicom/blob/master/pydicom/dataset.py
+        .. _pydicom:
+           https://github.com/pydicom/pydicom
+        .. _PydicomDataElement:
+           https://github.com/pydicom/pydicom/blob/master/pydicom/dataelem.py
+        .. _FileDataset:
+           https://github.com/pydicom/pydicom/blob/master/pydicom/dataset.py
 
         Parameters
         ----------
@@ -163,12 +169,15 @@ class Header:
 
     def get_raw_element_by_tag(self, tag: tuple) -> PydicomDataElement:
         """
-        Returns a pydicom_ PydicomDataElement_ from the header (FileDataset_ isntance)
-        by tag.
+        Returns a pydicom_ PydicomDataElement_ from the header (FileDataset_
+        instance) by tag.
 
-        .. _pydicom: https://github.com/pydicom/pydicom
-        .. _PydicomDataElement: https://github.com/pydicom/pydicom/blob/master/pydicom/dataelem.py
-        .. _FileDataset: https://github.com/pydicom/pydicom/blob/master/pydicom/dataset.py
+        .. _pydicom:
+           https://github.com/pydicom/pydicom
+        .. _PydicomDataElement:
+           https://github.com/pydicom/pydicom/blob/master/pydicom/dataelem.py
+        .. _FileDataset:
+           https://github.com/pydicom/pydicom/blob/master/pydicom/dataset.py
 
         Parameters
         ----------
@@ -188,13 +197,17 @@ class Header:
 
     def get_raw_element(self, tag_or_keyword) -> PydicomDataElement:
         """
-        Returns a pydicom_ PydicomDataElement_ from the associated FileDataset_ either by
-        tag (passed as a tuple) or a keyword (passed as a string). If none found
-        or the tag or keyword are invalid, returns None.
+        Returns a pydicom_ PydicomDataElement_ from the associated
+        FileDataset_ either by tag (passed as a tuple) or a keyword (passed as
+        a string). If none found or the tag or keyword are invalid, returns
+        None.
 
-        .. _pydicom: https://github.com/pydicom/pydicom
-        .. _PydicomDataElement: https://github.com/pydicom/pydicom/blob/master/pydicom/dataelem.py
-        .. _FileDataset: https://github.com/pydicom/pydicom/blob/master/pydicom/dataset.py
+        .. _pydicom:
+           https://github.com/pydicom/pydicom
+        .. _PydicomDataElement:
+           https://github.com/pydicom/pydicom/blob/master/pydicom/dataelem.py
+        .. _FileDataset:
+           https://github.com/pydicom/pydicom/blob/master/pydicom/dataset.py
 
         Parameters
         ----------
@@ -288,9 +301,9 @@ class Header:
 
     def get_parsed_value(self, tag_or_keyword) -> Any:
         """
-        Returns the parsed value of pydicom_ data element using the this class's
-        parser attribute. The data element may be represented by tag or by its
-        pydicom_ keyword. If none is found will return None.
+        Returns the parsed value of pydicom_ data element using the this
+        class's parser attribute. The data element may be represented by tag
+        or by its pydicom_ keyword. If none is found will return *None*.
 
         .. _pydicom: https://github.com/pydicom/pydicom
 
@@ -310,9 +323,10 @@ class Header:
 
     def get_private_tag(self, keyword: str) -> tuple:
         """
-        Returns a vendor-specific private tag corresponding to the provided keyword,
-        if the tag is registered (see the :mod:`~dicom_parser.utils.private_tags` module).
-        This is required because pydicom does not offer keyword access to private tags.
+        Returns a vendor-specific private tag corresponding to the provided
+        keyword, if the tag is registered (see the
+        :mod:`~dicom_parser.utils.private_tags` module). This is required
+        because pydicom does not offer keyword access to private tags.
 
         Parameters
         ----------
@@ -340,8 +354,8 @@ class Header:
         """
         Returns the value of a pydicom data element, selected by tag (`tuple`)
         or keyword (`str`). Input may also be a `list` of such identifiers, in
-        which case a dictionary will be returned with the identifiers as keys and
-        header information as values.
+        which case a dictionary will be returned with the identifiers as keys
+        and header information as values.
 
         Parameters
         ----------

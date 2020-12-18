@@ -3,8 +3,11 @@ from dicom_parser.utils.choice_enum import ChoiceEnum
 
 class Modality(ChoiceEnum):
     """
-    Represents the `Modality <https://dicom.innolitics.com/ciods/mr-image/general-series/00080060>`_ attribute.
-    
+    Represents the Modality_ attribute.
+
+    .. _Modality:
+       https://dicom.innolitics.com/ciods/mr-image/general-series/00080060
+
     """
 
     AR = "Autorefraction"

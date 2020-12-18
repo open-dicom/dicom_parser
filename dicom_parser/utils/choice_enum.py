@@ -1,3 +1,7 @@
+"""
+Definition of the :class:`ChoiceEnum` class.
+"""
+
 from enum import Enum
 from typing import Tuple
 

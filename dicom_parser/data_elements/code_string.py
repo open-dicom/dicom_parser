@@ -1,3 +1,8 @@
+"""
+Definition of the :class:`CodeString` class, representing a single "CS" data
+element.
+"""
+
 import warnings
 
 from dicom_parser.data_element import DataElement
@@ -13,7 +18,11 @@ from enum import Enum
 
 
 class CodeString(DataElement):
+    #: The VR value of data elements represented by this class.
     VALUE_REPRESENTATION = ValueRepresentation.CS
+
+    #: Most code strings have a set of valid values. This dictionary checks
+    #: parsed values against *Enum*\s of the valid values associated by tag.
     TAG_TO_ENUM = {
         ("0008", "0060"): Modality,
         ("0018", "5100"): PatientPosition,
@@ -22,7 +31,9 @@ class CodeString(DataElement):
         ("0010", "0040"): Sex,
     }
 
-    def warn_invalid_code_string_value(self, exception: KeyError, enum: Enum) -> None:
+    def warn_invalid_code_string_value(
+        self, exception: KeyError, enum: Enum
+    ) -> None:
         """
         Displays a warning for invalid Code String (CS) values.
 
@@ -41,7 +52,25 @@ class CodeString(DataElement):
         if warning not in self.warnings:
             self.warnings.append(warning)
 
-    def parse_with_enum(self, value: str, enum: Enum):
+    def parse_with_enum(self, value: str, enum: Enum) -> str:
+        """
+        Tries to return the verbose value of a "CS" data element using the
+        appropriate *Enum* (see
+        :attr:`~dicom_parser.data_elements.code_string.CodeString.TAG_TO_ENUM`).
+
+        Parameters
+        ----------
+        value : str
+            Raw "CS" data element value
+        enum : Enum
+            This data element's values *Enum*
+
+        Returns
+        -------
+        str
+            Parsed "CS" data element value
+        """
+
         try:
             return enum[value].value
         except KeyError as exception:
@@ -49,6 +78,21 @@ class CodeString(DataElement):
             return value
 
     def parse_value(self, value: str) -> str:
+        """
+        Tries to return a parsed value using the appropriate values *Enum* (see
+        :attr:`~dicom_parser.data_elements.code_string.CodeString.TAG_TO_ENUM`).
+
+        Parameters
+        ----------
+        value : str
+            Raw "CS" data element value
+
+        Returns
+        -------
+        str
+            Parsed "CS" data element value
+        """
+
         enum = self.TAG_TO_ENUM.get(self.tag)
         if enum:
             return self.parse_with_enum(value, enum)
