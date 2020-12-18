@@ -1,6 +1,13 @@
 Release Notes
 =============
 
+0.1.6
+-----
+
+  * Lots of documentation updates and linting fixes.
+  * Changed invalid integer strings ("IS" data elements) to return *None* (see
+    :class:`~dicom_parser.data_elements.integer_string.IntegerString`).
+
 0.1.5
 -----
 
