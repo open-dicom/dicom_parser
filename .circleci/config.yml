@@ -6,13 +6,14 @@ orbs:
 
 jobs:
   build-and-test:
+    executor: python/default
     working_directory: ~/dicom_parser
     docker:
       - image: themattrix/tox
     steps:
       - checkout
       - python/load-cache
-      - python/install-deps
+      - python/install-packages
       - python/save-cache
       - run:
           name: Install libmagic
