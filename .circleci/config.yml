@@ -9,13 +9,14 @@ jobs:
     executor: python/default
     working_directory: ~/dicom_parser
     docker:
-      - image: themattrix/tox
+      - image: younata/tox
     steps:
       - checkout
       - python/install-packages:
           app-dir: ~/dicom_parser
           pkg-manager: pip
           pip-dependency-file: requirements.txt
+          cache-version: v2
       - run:
           name: Install libmagic
           command: |
