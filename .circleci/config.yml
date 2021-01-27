@@ -12,9 +12,7 @@ jobs:
       - image: themattrix/tox
     steps:
       - checkout
-      - python/load-cache
       - python/install-packages
-      - python/save-cache
       - run:
           name: Install libmagic
           command: |
