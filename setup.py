@@ -1,4 +1,5 @@
 import os
+
 from setuptools import find_packages, setup
 
 with open("README.md", "r") as fh:
@@ -30,7 +31,7 @@ setup(
     install_requires=requirements,
     extras_require={"dev": dev_requirements},
     classifiers=[
-        "Development Status :: 3 - Alpha",
+        "Development Status :: 4 - Beta",
         "Intended Audience :: Science/Research",
         "License :: OSI Approved :: GNU Affero General Public License v3",
         "Operating System :: OS Independent",
