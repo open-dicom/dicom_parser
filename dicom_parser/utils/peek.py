@@ -5,7 +5,6 @@ StackOverflow answer.
 """
 
 import itertools
-
 from types import GeneratorType
 
 

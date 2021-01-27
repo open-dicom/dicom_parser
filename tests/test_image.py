@@ -1,11 +1,12 @@
+from pathlib import Path
+from unittest import TestCase
+
 import numpy as np
 import pydicom
 
 from dicom_parser.header import Header
 from dicom_parser.image import Image
-from pathlib import Path
 from tests.fixtures import TEST_IMAGE_PATH, TEST_RSFMRI_IMAGE_PATH
-from unittest import TestCase
 
 
 class ImageTestCase(TestCase):

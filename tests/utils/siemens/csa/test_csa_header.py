@@ -1,10 +1,11 @@
+from unittest import TestCase
+
 import pydicom
 
 from dicom_parser.utils.siemens.csa.data_element import CsaDataElement
 from dicom_parser.utils.siemens.csa.header import CsaHeader
 from dicom_parser.utils.siemens.private_tags import SIEMENS_PRIVATE_TAGS
 from tests.fixtures import TEST_RSFMRI_IMAGE_PATH
-from unittest import TestCase
 
 
 class CsaHeaderTestCase(TestCase):

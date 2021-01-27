@@ -5,8 +5,11 @@ Release Notes
 -----
 
   * Lots of documentation updates and linting fixes.
+  * Integrated `isort`_.
   * Changed invalid integer strings ("IS" data elements) to return *None* (see
     :class:`~dicom_parser.data_elements.integer_string.IntegerString`).
+  * Added `mime` option to :class:`~dicom_parser.series.Series`.
+  * Updated development status classifier to beta.
 
 0.1.5
 -----
@@ -99,6 +102,7 @@ First release!
 .. _CSA Headers: https://nipy.org/nibabel/dicom/siemens_csa.html
 .. _dcm2niix: https://github.com/rordenlab/dcm2niix
 .. _django_dicom: https://github.com/TheLabbingProject/django_dicom
+.. _isort: https://pycqa.github.io/isort/
 .. _NIfTI: https://nifti.nimh.nih.gov/
 .. _pydicom: https://github.com/pydicom/pydicom
 .. _Siemens mosaic: https://nipy.org/nibabel/dicom/dicom_mosaic.html

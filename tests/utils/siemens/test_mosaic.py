@@ -1,14 +1,12 @@
+from unittest import TestCase
+
 import nibabel as nib
 import numpy as np
 
 from dicom_parser.image import Image
 from dicom_parser.utils.siemens.mosaic import Mosaic
-from tests.fixtures import (
-    TEST_RSFMRI_IMAGE_PATH,
-    TEST_RSFMRI_IMAGE_VOLUME,
-    TEST_RSFMRI_SERIES_NIFTI,
-)
-from unittest import TestCase
+from tests.fixtures import (TEST_RSFMRI_IMAGE_PATH, TEST_RSFMRI_IMAGE_VOLUME,
+                            TEST_RSFMRI_SERIES_NIFTI)
 
 
 class MosaicTestCase(TestCase):

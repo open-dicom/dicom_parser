@@ -4,17 +4,13 @@ element.
 """
 
 import warnings
+from enum import Enum
 
 from dicom_parser.data_element import DataElement
-from dicom_parser.utils.code_strings import (
-    Modality,
-    Sex,
-    PatientPosition,
-    ScanningSequence,
-    SequenceVariant,
-)
+from dicom_parser.utils.code_strings import (Modality, PatientPosition,
+                                             ScanningSequence, SequenceVariant,
+                                             Sex)
 from dicom_parser.utils.value_representation import ValueRepresentation
-from enum import Enum
 
 
 class CodeString(DataElement):

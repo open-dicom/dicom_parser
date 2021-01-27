@@ -3,6 +3,7 @@ Definition of the :class:`Time` class, representing a single "TM" data element.
 """
 
 from datetime import datetime
+
 from dicom_parser.data_element import DataElement
 from dicom_parser.data_elements.messages import TIME_PARSING_FAILURE
 from dicom_parser.utils.value_representation import ValueRepresentation

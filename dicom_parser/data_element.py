@@ -2,13 +2,14 @@
 Definition of the :class:`DataElement` class.
 """
 
-import pandas as pd
 import re
+from typing import Any
+
+import pandas as pd
+from pydicom.dataelem import DataElement as PydicomDataElement
 
 from dicom_parser.utils.parse_tag import parse_tag
 from dicom_parser.utils.value_representation import ValueRepresentation
-from pydicom.dataelem import DataElement as PydicomDataElement
-from typing import Any
 
 
 class DataElement:

@@ -9,11 +9,9 @@ from typing import Any, Generator
 import numpy as np
 
 from dicom_parser.image import Image
-from dicom_parser.messages import (
-    EMPTY_SERIES_DIRECTORY,
-    INVALID_INDEXING_OPERATOR,
-    INVALID_SERIES_DIRECTORY,
-)
+from dicom_parser.messages import (EMPTY_SERIES_DIRECTORY,
+                                   INVALID_INDEXING_OPERATOR,
+                                   INVALID_SERIES_DIRECTORY)
 from dicom_parser.utils.mime_generator import generate_by_mime
 from dicom_parser.utils.peek import peek
 

@@ -4,9 +4,7 @@ Definition of the :class:`SequenceDetector` class.
 """
 
 from dicom_parser.utils.sequence_detector.messages import (
-    INVALID_MODALITY,
-    WRONG_DEFINITION_TYPE,
-)
+    INVALID_MODALITY, WRONG_DEFINITION_TYPE)
 from dicom_parser.utils.sequence_detector.sequences import SEQUENCES
 
 

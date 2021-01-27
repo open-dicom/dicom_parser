@@ -1,6 +1,6 @@
 import os
-
 from datetime import datetime
+
 from dicom_parser.utils.choice_enum import ChoiceEnum
 
 TESTS_DIRECTORY = os.path.dirname(os.path.realpath(__file__))

@@ -1,7 +1,10 @@
-from dicom_parser.image import Image
-from dicom_parser.utils.sequence_detector.sequence_detector import SequenceDetector
-from tests.fixtures import TEST_EP2D_IMAGE_PATH, TEST_IMAGE_PATH, TEST_RSFMRI_IMAGE_PATH
 from unittest import TestCase
+
+from dicom_parser.image import Image
+from dicom_parser.utils.sequence_detector.sequence_detector import \
+    SequenceDetector
+from tests.fixtures import (TEST_EP2D_IMAGE_PATH, TEST_IMAGE_PATH,
+                            TEST_RSFMRI_IMAGE_PATH)
 
 
 class SequenceDetectorCase(TestCase):

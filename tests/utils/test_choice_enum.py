@@ -1,5 +1,6 @@
-from tests.fixtures import ChoiceEnumDefinition
 from unittest import TestCase
+
+from tests.fixtures import ChoiceEnumDefinition
 
 
 class ChoiceEnumTestCase(TestCase):
