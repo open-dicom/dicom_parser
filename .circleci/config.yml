@@ -12,7 +12,8 @@ jobs:
       - image: themattrix/tox
     steps:
       - checkout
-      - python/install-packages
+      - python/install-packages:
+          pkg-manager: pip
       - run:
           name: Install libmagic
           command: |
