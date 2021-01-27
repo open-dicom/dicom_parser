@@ -1,23 +1,34 @@
 version: 2.1
 
 orbs:
-  python: circleci/python@0.3.0
-  codecov: codecov/codecov@1.0.5
+  python: circleci/python@1.3.2
+  codecov: codecov/codecov@1.1.3
 
 jobs:
   build-and-test:
+    executor: python/default
     working_directory: ~/dicom_parser
     docker:
       - image: themattrix/tox
     steps:
       - checkout
-      - python/load-cache
-      - python/install-deps
-      - python/save-cache
-      - run: pip install tox
+      - python/install-packages:
+          app-dir: ~/dicom_parser
+          pkg-manager: pip
+          pip-dependency-file: requirements.txt
+          cache-version: v2
+          include-python-in-cache-key: false
       - run:
-          command: tox
+          name: Install libmagic
+          command: |
+            apt update
+            apt install -y libmagic1
+      - run:
+          name: Install tox
+          command: pip install tox
+      - run:
           name: Test using tox
+          command: tox
       - codecov/upload:
           file: coverage.xml
           flags: unittests

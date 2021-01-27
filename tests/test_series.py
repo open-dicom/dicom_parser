@@ -1,17 +1,18 @@
+from pathlib import Path
+from unittest import TestCase
+
 import nibabel as nib
 import numpy as np
-
 from dicom_parser.image import Image
 from dicom_parser.series import Series
-from pathlib import Path
+
 from tests.fixtures import (
     TEST_IMAGE_PATH,
-    TEST_RSFMRI_SERIES_PATH,
     TEST_RSFMRI_SERIES_NIFTI,
+    TEST_RSFMRI_SERIES_PATH,
     TEST_SERIES_PATH,
     TEST_UTILS_DIRECTORY,
 )
-from unittest import TestCase
 
 
 class SeriesTestCase(TestCase):
@@ -38,7 +39,9 @@ class SeriesTestCase(TestCase):
         with self.assertRaises(ValueError):
             Series("/some/invalid_path/at/nowhere")
 
-    def test_initialization_with_no_dcms_in_path_raises_file_not_found_error(self):
+    def test_initialization_with_no_dcms_in_path_raises_file_not_found_error(
+        self,
+    ):
         with self.assertRaises(FileNotFoundError):
             Series(TEST_UTILS_DIRECTORY)
 
@@ -60,18 +63,18 @@ class SeriesTestCase(TestCase):
         self.assertTupleEqual(series.data.shape, (512, 512, 11))
 
     def test_mosaic_series_returns_as_4d(self):
-        series = Series(TEST_RSFMRI_SERIES_PATH)
+        series = Series(TEST_RSFMRI_SERIES_PATH, mime=True)
         data = series.data
         expected_shape = 96, 96, 64, 3
         self.assertTupleEqual(data.shape, expected_shape)
 
     def test_mosaic_series_data_same_as_nifti(self):
-        series = Series(TEST_RSFMRI_SERIES_PATH)
+        series = Series(TEST_RSFMRI_SERIES_PATH, mime=True)
         nii_data = np.asanyarray(nib.load(TEST_RSFMRI_SERIES_NIFTI).dataobj)
         self.assertTrue(np.array_equal(series.data, nii_data))
 
     def test_len(self):
-        rsfmri = Series(TEST_RSFMRI_SERIES_PATH)
+        rsfmri = Series(TEST_RSFMRI_SERIES_PATH, mime=True)
         self.assertEqual(len(self.localizer), 11)
         self.assertEqual(len(rsfmri), 3)
 

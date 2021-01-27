@@ -3,6 +3,9 @@ Definition of the :class:`Series` class.
 
 """
 
+from pathlib import Path
+from typing import Any, Generator
+
 import numpy as np
 
 from dicom_parser.image import Image
@@ -11,10 +14,8 @@ from dicom_parser.messages import (
     INVALID_INDEXING_OPERATOR,
     INVALID_SERIES_DIRECTORY,
 )
+from dicom_parser.utils.mime_generator import generate_by_mime
 from dicom_parser.utils.peek import peek
-from pathlib import Path
-from types import GeneratorType
-from typing import Any
 
 
 class Series:
@@ -24,7 +25,7 @@ class Series:
 
     """
 
-    def __init__(self, path: Path):
+    def __init__(self, path: Path, mime: bool = False):
         """
         The Series class should be initialized with a string or a
         :class:`~pathlib.Path` instance representing the path of single
@@ -37,10 +38,13 @@ class Series:
         ----------
         path : :class:`~pathlib.Path` or str
             Directory containing .dcm files.
+        mime : bool, optional
+            Whether to find DICOM images by file mime type instead of
+            extension, defaults to False
         """
 
         self.path = self.check_path(path)
-        self.images = self.get_images()
+        self.images = self.get_images(mime)
         self._data = None
 
     def __len__(self) -> int:
@@ -110,14 +114,20 @@ class Series:
             raise ValueError(message)
         return path
 
-    def get_dcm_paths(self) -> GeneratorType:
+    def get_dcm_paths(self, mime: bool = False) -> Generator:
         """
-        Returns a generator of .dcm files within the provided directory path.
+        Returns a generator of DICOM files within the provided directory path.
+
+        Parameters
+        ----------
+        mime : bool, optional
+            Whether to return files by mime type (instead of extension), by
+            default False
 
         Returns
         -------
         GeneratorType
-            DICOM images (.dcm files) generator
+            DICOM images generator
 
         Raises
         ------
@@ -125,12 +135,16 @@ class Series:
             No DICOM images found under provided directory
         """
 
-        _, dcm_paths = peek(self.path.rglob("*.dcm"))
+        dcm_paths = (
+            generate_by_mime(self.path) if mime else self.path.rglob("*.dcm")
+        )
+        # Use peek to convert dcm_paths to None if the generator is "empty"
+        _, dcm_paths = peek(dcm_paths)
         if not dcm_paths:
             raise FileNotFoundError(EMPTY_SERIES_DIRECTORY)
         return dcm_paths
 
-    def get_images(self) -> tuple:
+    def get_images(self, mime: bool = False) -> tuple:
         """
         Returns a tuple of :class:`~dicom_parser.image.Image` instances
         ordered by instance number.
@@ -139,9 +153,12 @@ class Series:
         -------
         tuple
             Image instance by instance number
+        mime : bool, optional
+            Whether to find DICOM images by file mime type instead of
+            extension, defaults to False
         """
 
-        images = [Image(dcm_path) for dcm_path in self.get_dcm_paths()]
+        images = [Image(dcm_path) for dcm_path in self.get_dcm_paths(mime)]
         return tuple(
             sorted(
                 images, key=lambda image: image.header.get("InstanceNumber")
