@@ -16,7 +16,7 @@ jobs:
       - python/save-cache
       - run:
           name: Install libmagic
-          command: sudo apt-get update && sudo apt-get install libmagic1
+          command: apt-get install -y sudo && sudo apt-get -y update && sudo apt-get install -y libmagic1
       - run:
           name: Install tox
           command: pip install tox
