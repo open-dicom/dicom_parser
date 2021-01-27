@@ -13,6 +13,7 @@ jobs:
     steps:
       - checkout
       - python/install-packages:
+          app-dir: ~/dicom_parser
           pkg-manager: pip
           pip-dependency-file: requirements.txt
       - run:
