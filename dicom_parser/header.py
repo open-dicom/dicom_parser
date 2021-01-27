@@ -4,23 +4,23 @@ Definition of the Header class, which extends the functionality of
 
 """
 import json
-import pandas as pd
-
 from collections.abc import KeysView
+from pathlib import Path
+from types import GeneratorType
+from typing import Any, Union
+
+import pandas as pd
+from pydicom.dataelem import DataElement as PydicomDataElement
+from pydicom.dataset import FileDataset
+
 from dicom_parser.data_element import DataElement
 from dicom_parser.utils.format_header_df import format_header_df
 from dicom_parser.utils.private_tags import PRIVATE_TAGS
 from dicom_parser.utils.read_file import read_file
-from dicom_parser.utils.sequence_detector.sequence_detector import (
-    SequenceDetector,
-)
+from dicom_parser.utils.sequence_detector.sequence_detector import \
+    SequenceDetector
 from dicom_parser.utils.value_representation import ValueRepresentation
 from dicom_parser.utils.vr_to_data_element import get_data_element_class
-from pathlib import Path
-from pydicom.dataelem import DataElement as PydicomDataElement
-from pydicom.dataset import FileDataset
-from types import GeneratorType
-from typing import Any, Union
 
 
 class Header:

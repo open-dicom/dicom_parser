@@ -1,15 +1,13 @@
-import pydicom
 import warnings
+from pathlib import Path
+from unittest import TestCase
+
+import pydicom
 
 from dicom_parser.header import Header
 from dicom_parser.utils.sequence_detector import SequenceDetector
-from pathlib import Path
-from tests.fixtures import (
-    TEST_IMAGE_PATH,
-    TEST_STUDY_FIELDS,
-    TEST_GE_LOCALIZER_PATH,
-)
-from unittest import TestCase
+from tests.fixtures import (TEST_GE_LOCALIZER_PATH, TEST_IMAGE_PATH,
+                            TEST_STUDY_FIELDS)
 
 
 class HeaderTestCase(TestCase):

@@ -3,16 +3,12 @@ from unittest import TestCase
 
 import nibabel as nib
 import numpy as np
+
 from dicom_parser.image import Image
 from dicom_parser.series import Series
-
-from tests.fixtures import (
-    TEST_IMAGE_PATH,
-    TEST_RSFMRI_SERIES_NIFTI,
-    TEST_RSFMRI_SERIES_PATH,
-    TEST_SERIES_PATH,
-    TEST_UTILS_DIRECTORY,
-)
+from tests.fixtures import (TEST_IMAGE_PATH, TEST_RSFMRI_SERIES_NIFTI,
+                            TEST_RSFMRI_SERIES_PATH, TEST_SERIES_PATH,
+                            TEST_UTILS_DIRECTORY)
 
 
 class SeriesTestCase(TestCase):

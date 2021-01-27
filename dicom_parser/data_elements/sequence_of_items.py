@@ -4,12 +4,12 @@ data element.
 """
 
 import pandas as pd
+from pydicom.dataset import Dataset as PydicomDataset
 
 from dicom_parser.data_element import DataElement
 from dicom_parser.data_elements.messages import INVALID_SEQUENCE_PARSING
 from dicom_parser.utils.format_header_df import format_header_df
 from dicom_parser.utils.value_representation import ValueRepresentation
-from pydicom.dataset import Dataset as PydicomDataset
 
 
 class SequenceOfItems(DataElement):

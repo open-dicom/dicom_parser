@@ -1,17 +1,14 @@
+from unittest import TestCase
+
 import pydicom
 
 from dicom_parser.utils.siemens.csa.data_element import CsaDataElement
 from dicom_parser.utils.siemens.csa.header import CsaHeader
 from dicom_parser.utils.siemens.private_tags import SIEMENS_PRIVATE_TAGS
 from tests.fixtures import TEST_RSFMRI_IMAGE_PATH
-from tests.utils.siemens.csa.fixtures import (
-    ARRAY_PATTERNS,
-    LISTED_KEYS,
-    NON_ARRAY_PATTERNS,
-    RAW_ELEMENTS,
-    VALUES,
-)
-from unittest import TestCase
+from tests.utils.siemens.csa.fixtures import (ARRAY_PATTERNS, LISTED_KEYS,
+                                              NON_ARRAY_PATTERNS, RAW_ELEMENTS,
+                                              VALUES)
 
 
 class CsaDataElementTestCase(TestCase):

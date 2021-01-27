@@ -2,12 +2,13 @@
 Definition of the :func:`read_file` function.
 """
 
+from pathlib import Path
+from typing import Union
+
 import pydicom
+from pydicom.dataset import FileDataset
 
 from dicom_parser.utils.messages import BAD_FILE_INPUT
-from pathlib import Path
-from pydicom.dataset import FileDataset
-from typing import Union
 
 
 def read_file(

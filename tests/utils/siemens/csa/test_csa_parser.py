@@ -1,10 +1,11 @@
+from unittest import TestCase
+
 from dicom_parser.header import Header
 from dicom_parser.utils.siemens.csa.header import CsaHeader
 from dicom_parser.utils.siemens.csa.parser import CsaParser
 from dicom_parser.utils.siemens.private_tags import SIEMENS_PRIVATE_TAGS
 from tests.fixtures import TEST_EP2D_IMAGE_PATH
 from tests.utils.siemens.csa.fixtures import ELEMENT_LIST
-from unittest import TestCase
 
 
 class CsaParserTestCase(TestCase):

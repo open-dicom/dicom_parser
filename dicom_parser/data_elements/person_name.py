@@ -3,9 +3,10 @@ Definition of the :class:`PersonName` class, representing a single "PN" data
 element.
 """
 
+from pydicom.valuerep import PersonName as PydicomPersonName
+
 from dicom_parser.data_element import DataElement
 from dicom_parser.utils.value_representation import ValueRepresentation
-from pydicom.valuerep import PersonName as PydicomPersonName
 
 
 class PersonName(DataElement):

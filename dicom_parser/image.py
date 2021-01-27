@@ -5,16 +5,17 @@ array).
 
 """
 
-import numpy as np
 import warnings
+from pathlib import Path
+from typing import Union
+
+import numpy as np
+from pydicom.dataset import FileDataset
 
 from dicom_parser import messages
 from dicom_parser.header import Header
 from dicom_parser.utils.read_file import read_file
 from dicom_parser.utils.siemens.mosaic import Mosaic
-from pathlib import Path
-from pydicom.dataset import FileDataset
-from typing import Union
 
 
 class Image:

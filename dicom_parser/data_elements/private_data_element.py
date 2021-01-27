@@ -3,19 +3,17 @@ Definition of the :class:`PrivateDataElement` class, representing a single "UN"
 data element.
 """
 
-from dicom_parser.data_element import DataElement
-from dicom_parser.utils.siemens.private_tags import (
-    parse_siemens_b_matrix,
-    parse_siemens_bandwith_per_pixel_phase_encode,
-    parse_siemens_csa_header,
-    parse_siemens_gradient_direction,
-    parse_siemens_number_of_slices_in_mosaic,
-    parse_siemens_slice_timing,
-)
-from dicom_parser.utils.value_representation import ValueRepresentation
-from pydicom.dataelem import DataElement as PydicomDataElement
 from types import FunctionType
 from typing import Any
+
+from pydicom.dataelem import DataElement as PydicomDataElement
+
+from dicom_parser.data_element import DataElement
+from dicom_parser.utils.siemens.private_tags import (
+    parse_siemens_b_matrix, parse_siemens_bandwith_per_pixel_phase_encode,
+    parse_siemens_csa_header, parse_siemens_gradient_direction,
+    parse_siemens_number_of_slices_in_mosaic, parse_siemens_slice_timing)
+from dicom_parser.utils.value_representation import ValueRepresentation
 
 #: A dictionary matching private data elements to their appropriate parsing
 #: method.
