@@ -1,8 +1,8 @@
 version: 2.1
 
 orbs:
-  python: circleci/python@0.3.0
-  codecov: codecov/codecov@1.0.5
+  python: circleci/python@1.3.2
+  codecov: codecov/codecov@1.1.3
 
 jobs:
   build-and-test:
@@ -16,7 +16,9 @@ jobs:
       - python/save-cache
       - run:
           name: Install libmagic
-          command: apt-get install -y sudo && sudo apt-get -y update && sudo apt-get install -y libmagic1
+          command: |
+            sudo apt update
+            sudo apt install -y libmagic1
       - run:
           name: Install tox
           command: pip install tox
