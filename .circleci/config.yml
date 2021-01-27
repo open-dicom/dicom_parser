@@ -9,8 +9,8 @@ jobs:
     executor: python/default
     working_directory: ~/dicom_parser
     docker:
-      - image: cimg/base:stable
       - image: themattrix/tox
+      - image: cimg/base:stable
     steps:
       - checkout
       - python/install-packages:
