@@ -14,10 +14,15 @@ jobs:
       - python/load-cache
       - python/install-deps
       - python/save-cache
-      - run: pip install tox
       - run:
-          command: tox
+          name: Install libmagic
+          command: sudo apt-get update && sudo apt-get install libmagic1
+      - run:
+          name: Install tox
+          command: pip install tox
+      - run:
           name: Test using tox
+          command: tox
       - codecov/upload:
           file: coverage.xml
           flags: unittests
