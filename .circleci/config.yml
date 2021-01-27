@@ -9,7 +9,7 @@ jobs:
     executor: python/default
     working_directory: ~/dicom_parser
     docker:
-      - image: younata/tox
+      - image: themattrix/tox
     steps:
       - checkout
       - python/install-packages:
