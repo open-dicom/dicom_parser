@@ -10,7 +10,6 @@ jobs:
     working_directory: ~/dicom_parser
     docker:
       - image: themattrix/tox
-      - image: cimg/base:stable
     steps:
       - checkout
       - python/install-packages:
@@ -22,8 +21,8 @@ jobs:
       - run:
           name: Install libmagic
           command: |
-            sudo apt update
-            sudo apt install -y libmagic1
+            apt update
+            apt install -y libmagic1
       - run:
           name: Install tox
           command: pip install tox
