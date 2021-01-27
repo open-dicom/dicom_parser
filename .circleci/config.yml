@@ -17,6 +17,7 @@ jobs:
           pkg-manager: pip
           pip-dependency-file: requirements.txt
           cache-version: v2
+          include-python-in-cache-key: false
       - run:
           name: Install libmagic
           command: |
