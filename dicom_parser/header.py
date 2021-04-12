@@ -7,7 +7,7 @@ import json
 from collections.abc import KeysView
 from pathlib import Path
 from types import GeneratorType
-from typing import Any, Union
+from typing import Any, List, Union
 
 import pandas as pd
 from pydicom.dataelem import DataElement as PydicomDataElement
@@ -17,8 +17,9 @@ from dicom_parser.data_element import DataElement
 from dicom_parser.utils.format_header_df import format_header_df
 from dicom_parser.utils.private_tags import PRIVATE_TAGS
 from dicom_parser.utils.read_file import read_file
-from dicom_parser.utils.sequence_detector.sequence_detector import \
-    SequenceDetector
+from dicom_parser.utils.sequence_detector.sequence_detector import (
+    SequenceDetector,
+)
 from dicom_parser.utils.value_representation import ValueRepresentation
 from dicom_parser.utils.vr_to_data_element import get_data_element_class
 
@@ -417,6 +418,21 @@ class Header:
                 exclude=exclude,
                 private=private,
             )
+        ]
+        if data_elements:
+            df = pd.concat(data_elements, axis=1).transpose()
+            df.columns = self.DATAFRAME_COLUMNS
+            df.set_index(self.DATAFRAME_INDEX, inplace=True)
+            df.style.set_properties(**{"text-align": "left"})
+            return df
+        else:
+            return pd.DataFrame()
+
+    def filter_keyword(self, keyword: str) -> List[DataElement]:
+        data_elements = [
+            data_element.to_series()
+            for data_element in self.data_elements
+            if keyword in data_element.keyword
         ]
         df = pd.concat(data_elements, axis=1).transpose()
         df.columns = self.DATAFRAME_COLUMNS
