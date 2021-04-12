@@ -410,14 +410,17 @@ class Header:
         exclude=None,
         private: bool = None,
     ) -> pd.DataFrame:
-        data_elements = [
-            data_element.to_series()
-            for data_element in data_elements
-            or self.get_data_elements(
+        data_elements = (
+            data_elements
+            if data_elements is not None
+            else self.get_data_elements(
                 value_representation=value_representation,
                 exclude=exclude,
                 private=private,
             )
+        )
+        data_elements = [
+            data_element.to_series() for data_element in data_elements
         ]
         if data_elements:
             df = pd.concat(data_elements, axis=1).transpose()
@@ -428,17 +431,34 @@ class Header:
         else:
             return pd.DataFrame()
 
-    def filter_keyword(self, keyword: str) -> List[DataElement]:
-        data_elements = [
-            data_element.to_series()
-            for data_element in self.data_elements
-            if keyword in data_element.keyword
-        ]
-        df = pd.concat(data_elements, axis=1).transpose()
-        df.columns = self.DATAFRAME_COLUMNS
-        df.set_index(self.DATAFRAME_INDEX, inplace=True)
-        df.style.set_properties(**{"text-align": "left"})
-        return df
+    def keyword_contains(
+        self, query: str, exact: bool = False
+    ) -> pd.DataFrame:
+        """
+        Returns a dataframe containing only data elements in which the keyword
+        contains the specified provided string.
+
+        Parameters
+        ----------
+        query : str
+            String to look for in the data elements' keyword
+        exact : bool, optional
+            Whether to look for exact matches or use a case-insensitive query,
+            default to False
+
+        Returns
+        -------
+        pd.DataFrame
+            Data elements containing the provided string in their keyword
+        """
+        query = query if exact else query.lower()
+        matches = []
+        for data_element in self.data_elements:
+            keyword = data_element.keyword
+            keyword = keyword if exact else keyword.lower()
+            if query in keyword:
+                matches.append(data_element)
+        return self.to_dataframe(data_elements=matches)
 
     @property
     def data_elements(self) -> GeneratorType:
