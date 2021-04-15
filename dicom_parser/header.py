@@ -7,7 +7,7 @@ import json
 from collections.abc import KeysView
 from pathlib import Path
 from types import GeneratorType
-from typing import Any, List, Union
+from typing import Any, Union
 
 import pandas as pd
 from pydicom.dataelem import DataElement as PydicomDataElement

@@ -3,19 +3,25 @@ from pathlib import Path
 from unittest import TestCase
 
 import pydicom
-
 from dicom_parser.header import Header
 from dicom_parser.utils.sequence_detector import SequenceDetector
-from tests.fixtures import (TEST_GE_LOCALIZER_PATH, TEST_IMAGE_PATH,
-                            TEST_STUDY_FIELDS)
+
+from tests.fixtures import (
+    SERIES_INSTANCE_UID,
+    SOP_INSTANCE_UID,
+    STUDY_INSTANCE_UID,
+    TEST_GE_LOCALIZER_PATH,
+    TEST_IMAGE_PATH,
+    TEST_STUDY_FIELDS,
+)
 
 
 class HeaderTestCase(TestCase):
     KEYWORDS = {
         "PatientID": "012345678",
-        "SeriesInstanceUID": "1.3.12.2.1107.5.2.43.66024.2018050112250992296484473.0.0.0",
-        "SOPInstanceUID": "1.3.12.2.1107.5.2.43.66024.2018050112252318571884482",
-        "StudyInstanceUID": "1.3.12.2.1107.5.2.43.66024.30000018050107081466900000007",
+        "SeriesInstanceUID": SERIES_INSTANCE_UID,
+        "SOPInstanceUID": SOP_INSTANCE_UID,
+        "StudyInstanceUID": STUDY_INSTANCE_UID,
         "StudyDate": "20180501",
     }
     NON_KEYWORDS = ["ABC", "DEF", "GHI", "JKL"]
@@ -40,6 +46,7 @@ class HeaderTestCase(TestCase):
         ("3333", "4444"),
     ]
     BAD_DATA_ELEMENT_QUERY_VALUES = 0, ["1"], 1.1, False
+    KEYWORD_CONTAINS = {"time": 10, "DATE": 7, "abcdef": 0}
 
     @classmethod
     def setUpClass(cls):
@@ -69,42 +76,6 @@ class HeaderTestCase(TestCase):
 
     def test_init_detected_sequence(self):
         self.assertEqual(self.header.detected_sequence, "Localizer")
-
-    # def test_get_element_by_keyword(self):
-    #     for keyword in self.KEYWORDS.keys():
-    #         result = self.header.get_element_by_keyword(keyword)
-    #         self.assertIsInstance(result, pydicom.DataElement)
-
-    # def test_get_element_by_keyword_with_invalid_key_raises_key_error(self):
-    #     for keyword in self.NON_KEYWORDS:
-    #         with self.assertRaises(KeyError):
-    #             self.header.get_element_by_keyword(keyword)
-
-    # def test_get_element_by_tag(self):
-    #     for tag in self.TAGS.keys():
-    #         result = self.header.get_element_by_tag(tag)
-    #         self.assertIsInstance(result, pydicom.DataElement)
-
-    # def test_get_element_by_tag_invalid_tag_returns_none(self):
-    #     for invalid_tag in self.NON_TAGS:
-    #         with self.assertRaises(KeyError):
-    #             self.header.get_element_by_tag(invalid_tag)
-
-    # def test_get_element(self):
-    #     keys = list(self.TAGS.keys()) + list(self.KEYWORDS.keys())
-    #     for key in keys:
-    #         result = self.header.get_element(key)
-    #         self.assertIsInstance(result, pydicom.DataElement)
-
-    # def test_get_element_with_invalid_key_or_tag_raises_key_error(self):
-    #     for key in self.NON_TAGS + self.NON_KEYWORDS:
-    #         with self.assertRaises(KeyError):
-    #             self.header.get_element(key)
-
-    # def test_get_element_with_non_string_or_tuple_raises_type_error(self):
-    #     for key in self.BAD_DATA_ELEMENT_QUERY_VALUES:
-    #         with self.assertRaises(TypeError):
-    #             self.header.get_element(key)
 
     def test_get_raw_value(self):
         keys = list(self.TAGS.keys()) + list(self.KEYWORDS.keys())
@@ -225,3 +196,16 @@ class HeaderTestCase(TestCase):
             warnings.simplefilter("ignore")
             result = header.detect_sequence()
         self.assertIsNone(result)
+
+    def test_keyword_contains(self):
+        for substring, expected in self.KEYWORD_CONTAINS.items():
+            df = self.header.keyword_contains(substring)
+            self.assertEqual(len(df), expected)
+
+    def test_keyword_contains_exact(self):
+        for substring, _ in self.KEYWORD_CONTAINS.items():
+            df = self.header.keyword_contains(substring, exact=True)
+            self.assertEqual(len(df), 0)
+        for substring, expected in self.KEYWORD_CONTAINS.items():
+            df = self.header.keyword_contains(substring.title())
+            self.assertEqual(len(df), expected)
