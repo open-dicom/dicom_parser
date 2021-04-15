@@ -1,6 +1,13 @@
 Release Notes
 =============
 
+0.1.7
+-----
+
+  * Added the :meth:`~dicom_parser.header.Header.keyword_contains` method to
+    easily look for data elements using a substring of the keyword.
+  * Increased tests coverage.
+
 0.1.6
 -----
 

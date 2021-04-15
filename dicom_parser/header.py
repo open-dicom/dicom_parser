@@ -1,24 +1,23 @@
 """
-Definition of the Header class, which extends the functionality of
-`pydicom <https://github.com/pydicom/pydicom>`_.
-
+Definition of the :class:`Header` class.
 """
 import json
-from collections.abc import KeysView
 from pathlib import Path
 from types import GeneratorType
-from typing import Any, Union
+from typing import Any, List, Union
 
 import pandas as pd
 from pydicom.dataelem import DataElement as PydicomDataElement
 from pydicom.dataset import FileDataset
 
 from dicom_parser.data_element import DataElement
+from dicom_parser.messages import INVALID_ELEMENT_IDENTIFIER
 from dicom_parser.utils.format_header_df import format_header_df
 from dicom_parser.utils.private_tags import PRIVATE_TAGS
 from dicom_parser.utils.read_file import read_file
-from dicom_parser.utils.sequence_detector.sequence_detector import \
-    SequenceDetector
+from dicom_parser.utils.sequence_detector.sequence_detector import (
+    SequenceDetector,
+)
 from dicom_parser.utils.value_representation import ValueRepresentation
 from dicom_parser.utils.vr_to_data_element import get_data_element_class
 
@@ -75,13 +74,13 @@ class Header:
         self.detected_sequence = self.detect_sequence()
         self._as_dict = None
 
-    def __getitem__(self, key) -> Any:
+    def __getitem__(self, key: Union[str, tuple, list]) -> Any:
         """
         Provide dictionary like indexing-operator functionality.
 
         Parameters
         ----------
-        key : str or tuple or list
+        key : Union[str, tuple, list]
             The key or list of keys for which to retrieve header information
 
         Returns
@@ -195,7 +194,9 @@ class Header:
             return value
         raise KeyError(f"The tag: {tag} does not exist in the header!")
 
-    def get_raw_element(self, tag_or_keyword) -> PydicomDataElement:
+    def get_raw_element(
+        self, tag_or_keyword: Union[str, tuple]
+    ) -> PydicomDataElement:
         """
         Returns a pydicom_ PydicomDataElement_ from the associated
         FileDataset_ either by tag (passed as a tuple) or a keyword (passed as
@@ -211,7 +212,7 @@ class Header:
 
         Parameters
         ----------
-        tag_or_keyword : tuple or str
+        tag_or_keyword : Union[str, tuple]
             Tag or keyword representing the requested data element
 
         Returns
@@ -229,15 +230,40 @@ class Header:
 
         # If not a keyword or a tag, raise a TypeError
         else:
-            raise TypeError(
-                f"Invalid data element identifier: {tag_or_keyword} of type {type(tag_or_keyword)}!\nData elements may only be queried using a string represeting a keyword or a tuple of two strings representing a tag!"  # noqa
+            message = INVALID_ELEMENT_IDENTIFIER.format(
+                tag_or_keyword=tag_or_keyword, input_type=type(tag_or_keyword)
             )
+            raise TypeError(message)
 
-    def get_data_element(self, tag_or_keyword) -> DataElement:
+    def get_data_element(
+        self, tag_or_keyword: Union[str, tuple, PydicomDataElement]
+    ) -> DataElement:
+        """
+        Returns a :class:`~dicom_parser.data_element.DataElement` subclass
+        instance matching the requested tag or keyword.
+
+        Parameters
+        ----------
+        tag_or_keyword : Union[str, tuple, PydicomDataElement]
+            Tag or keyword representing the requested data element
+
+        Returns
+        -------
+        DataElement
+            Header data element
+
+        Raises
+        ------
+        TypeError
+            Invalid data element identifier
+        """
         if isinstance(tag_or_keyword, (tuple, str)):
             raw_element = self.get_raw_element(tag_or_keyword)
         elif not isinstance(tag_or_keyword, PydicomDataElement):
-            raise TypeError("Bad data element identifier!")
+            message = INVALID_ELEMENT_IDENTIFIER.format(
+                tag_or_keyword=tag_or_keyword, input_type=type(tag_or_keyword)
+            )
+            raise TypeError(message)
         else:
             raw_element = tag_or_keyword
         DataElementClass = get_data_element_class(raw_element.VR)
@@ -249,8 +275,28 @@ class Header:
         return data_element
 
     def get_data_elements(
-        self, value_representation=None, exclude=None, private: bool = None
-    ) -> list:
+        self, value_representation=None, exclude=None, private: bool = None,
+    ) -> List[DataElement]:
+        """
+        Returns a list of data elements included in this header.
+
+        Parameters
+        ----------
+        value_representation : Union[str, tuple, list], optional
+            Tag, keyword, value representation, or iterable of such, by default
+            None
+        exclude : Union[str, tuple, list], optional
+            Tag, keyword, value representation, or iterable of such, by default
+            None
+        private : bool, optional
+            If set to True or False, only public or private tags will be
+            displayed accordingly, by default None
+
+        Returns
+        -------
+        List[DataElement]
+            Data elements contained in this header
+        """
         data_elements = []
         filter_by_vr = isinstance(
             value_representation, (ValueRepresentation, list, tuple)
@@ -397,6 +443,19 @@ class Header:
         return value or default
 
     def to_dict(self, parsed: bool = True) -> dict:
+        """
+        Returns a dictionary representation of this instance.
+
+        Parameters
+        ----------
+        parsed : bool, optional
+            Whether to parse the returned value or not, by default True
+
+        Returns
+        -------
+        dict
+            Header information
+        """
         return {
             data_element.keyword: self.get(data_element.keyword, parsed=parsed)
             for data_element in self.data_elements
@@ -409,33 +468,114 @@ class Header:
         exclude=None,
         private: bool = None,
     ) -> pd.DataFrame:
-        data_elements = [
-            data_element.to_series()
-            for data_element in data_elements
-            or self.get_data_elements(
+        """
+        Returns a DataFrame representation of this instance.
+
+        Parameters
+        ----------
+        data_elements : list, optional
+            Data elements to include, by default None (include all)
+        value_representation : Union[ValueRepresentation, tuple, list], optional
+            Value representation (or iterable of such) to include, by default
+            None (include all)
+        exclude : Union[ValueRepresentation, tuple, list], optional
+            Value representation (or iterable of such) to exclude, by default
+            None (include all)
+        private : bool, optional
+            If set to True or False, only public or private tags will be
+            displayed accordingly, by default None
+
+        Returns
+        -------
+        pd.DataFrame
+            DataFrame representation of this instance
+        """
+        data_elements = (
+            data_elements
+            if data_elements is not None
+            else self.get_data_elements(
                 value_representation=value_representation,
                 exclude=exclude,
                 private=private,
             )
+        )
+        data_elements = [
+            data_element.to_series() for data_element in data_elements
         ]
-        df = pd.concat(data_elements, axis=1).transpose()
-        df.columns = self.DATAFRAME_COLUMNS
-        df.set_index(self.DATAFRAME_INDEX, inplace=True)
-        df.style.set_properties(**{"text-align": "left"})
-        return df
+        if data_elements:
+            df = pd.concat(data_elements, axis=1).transpose()
+            df.columns = self.DATAFRAME_COLUMNS
+            df.set_index(self.DATAFRAME_INDEX, inplace=True)
+            df.style.set_properties(**{"text-align": "left"})
+            return df
+        else:
+            return pd.DataFrame()
+
+    def keyword_contains(
+        self, query: str, exact: bool = False
+    ) -> pd.DataFrame:
+        """
+        Returns a dataframe containing only data elements in which the keyword
+        contains the specified provided string.
+
+        Parameters
+        ----------
+        query : str
+            String to look for in the data elements' keyword
+        exact : bool, optional
+            Whether to look for exact matches or use a case-insensitive query,
+            default to False
+
+        Returns
+        -------
+        pd.DataFrame
+            Data elements containing the provided string in their keyword
+        """
+        query = query if exact else query.lower()
+        matches = []
+        for data_element in self.data_elements:
+            keyword = data_element.keyword
+            keyword = keyword if exact else keyword.lower()
+            if query in keyword:
+                matches.append(data_element)
+        return self.to_dataframe(data_elements=matches)
 
     @property
     def data_elements(self) -> GeneratorType:
+        """
+        Generates non-pixel array data elements from the header.
+
+        Yields
+        -------
+        GeneratorType
+            Header information data elements
+        """
         for element in self.raw:
             if element.tag != ("7fe0", "0010"):
                 yield self.get_data_element(element)
 
     @property
     def as_dict(self) -> dict:
+        """
+        Returns a dictionary representation of this instance.
+
+        Returns
+        -------
+        dict
+            Header information
+        """
         if not isinstance(self._as_dict, dict):
             self._as_dict = self.to_dict()
         return self._as_dict
 
     @property
-    def keys(self) -> KeysView:
-        return self.as_dict.keys()
+    def keys(self) -> List[str]:
+        """
+        Returns a list of header keywords included in this instance.
+
+        Returns
+        -------
+        List[str]
+            Header keywords
+        """
+        return list(self.as_dict.keys())
