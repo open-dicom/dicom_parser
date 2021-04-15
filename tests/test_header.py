@@ -1,3 +1,4 @@
+import json
 import warnings
 from pathlib import Path
 from unittest import TestCase
@@ -5,6 +6,7 @@ from unittest import TestCase
 import pydicom
 from dicom_parser.header import Header
 from dicom_parser.utils.sequence_detector import SequenceDetector
+from dicom_parser.utils.value_representation import ValueRepresentation
 
 from tests.fixtures import (
     SERIES_INSTANCE_UID,
@@ -12,6 +14,7 @@ from tests.fixtures import (
     STUDY_INSTANCE_UID,
     TEST_GE_LOCALIZER_PATH,
     TEST_IMAGE_PATH,
+    TEST_RSFMRI_IMAGE_PATH,
     TEST_STUDY_FIELDS,
 )
 
@@ -45,13 +48,29 @@ class HeaderTestCase(TestCase):
         ("2222", "3333"),
         ("3333", "4444"),
     ]
-    BAD_DATA_ELEMENT_QUERY_VALUES = 0, ["1"], 1.1, False
+    BAD_DATA_ELEMENT_QUERY_VALUES = (
+        0,
+        ["1"],
+        1.1,
+        False,
+        {"a": "b"},
+        {1, 2, 3},
+        None,
+    )
     KEYWORD_CONTAINS = {"time": 10, "DATE": 7, "abcdef": 0}
 
     @classmethod
     def setUpClass(cls):
         cls.raw = pydicom.dcmread(TEST_IMAGE_PATH, stop_before_pixels=True)
         cls.header = Header(cls.raw)
+
+    def test_str(self):
+        value = str(self.header)
+        self.assertIsInstance(value, str)
+
+    def test_repr(self):
+        value = repr(Header(TEST_RSFMRI_IMAGE_PATH))
+        self.assertIsInstance(value, str)
 
     def test_instantiation_with_filedataset(self):
         self.assertIsInstance(self.header.raw, pydicom.FileDataset)
@@ -76,6 +95,22 @@ class HeaderTestCase(TestCase):
 
     def test_init_detected_sequence(self):
         self.assertEqual(self.header.detected_sequence, "Localizer")
+
+    def test_get_raw_element(self):
+        keys = list(self.TAGS.keys()) + list(self.KEYWORDS.keys())
+        for key in keys:
+            result = self.header.get_raw_element(key)
+            self.assertIsInstance(result, pydicom.DataElement)
+
+    def test_get_raw_value_with_bad_type_raises_type_error(self):
+        for invalid_key in self.BAD_DATA_ELEMENT_QUERY_VALUES:
+            with self.assertRaises(TypeError):
+                self.header.get_data_element(invalid_key)
+
+    def test_get_data_element_with_bad_type_raises_type_error(self):
+        for invalid_key in self.BAD_DATA_ELEMENT_QUERY_VALUES:
+            with self.assertRaises(TypeError):
+                self.header.get_raw_element(invalid_key)
 
     def test_get_raw_value(self):
         keys = list(self.TAGS.keys()) + list(self.KEYWORDS.keys())
@@ -184,6 +219,15 @@ class HeaderTestCase(TestCase):
         result = header.get("CSASeriesHeaderInfo")
         self.assertIsNone(result)
 
+    def test_get_as_json(self):
+        keys = list(self.TAGS.keys()) + list(self.KEYWORDS.keys())
+        for key in keys:
+            json_value = self.header.get(key, as_json=True)
+            self.assertIsInstance(json_value, str)
+            # Try to execute json.loads() just to make sure no exception is
+            # raised.
+            _ = json.loads(json_value)
+
     def test_detect_sequence(self):
         result = self.header.detect_sequence()
         expected = "Localizer"
@@ -209,3 +253,48 @@ class HeaderTestCase(TestCase):
         for substring, expected in self.KEYWORD_CONTAINS.items():
             df = self.header.keyword_contains(substring.title())
             self.assertEqual(len(df), expected)
+
+    def test_get_data_elements_with_vr_list(self):
+        vr = [ValueRepresentation.IS, ValueRepresentation.CS]
+        result = self.header.get_data_elements(value_representation=vr)
+        self.assertIsInstance(result, list)
+        self.assertEqual(len(result), 20)
+
+    def test_get_data_elements_with_vr_tuple(self):
+        vr = ValueRepresentation.DA, ValueRepresentation.TM
+        result = self.header.get_data_elements(value_representation=vr)
+        self.assertIsInstance(result, list)
+        self.assertEqual(len(result), 13)
+
+    def test_get_data_elements_with_exclude_list(self):
+        exclude = [
+            ValueRepresentation.IS,
+            ValueRepresentation.CS,
+            ValueRepresentation.DS,
+            ValueRepresentation.UN,
+        ]
+        result = self.header.get_data_elements(exclude=exclude)
+        self.assertIsInstance(result, list)
+        self.assertEqual(len(result), 59)
+
+    def test_get_data_elements_with_exclude_tuple(self):
+        exclude = ValueRepresentation.DA, ValueRepresentation.TM
+        result = self.header.get_data_elements(exclude=exclude)
+        self.assertIsInstance(result, list)
+        self.assertEqual(len(result), 120)
+
+    def test_to_dict(self):
+        value = self.header.to_dict()
+        self.assertIsInstance(value, dict)
+        self.assertEqual(len(value), 119)
+
+    def test_as_dict(self):
+        value = self.header.as_dict
+        expected = self.header.to_dict()
+        self.assertIsInstance(value, dict)
+        self.assertDictEqual(value, expected)
+
+    def test_keys(self):
+        value = self.header.keys
+        self.assertIsInstance(value, list)
+        self.assertEqual(len(value), 119)

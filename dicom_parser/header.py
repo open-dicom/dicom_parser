@@ -4,22 +4,21 @@ Definition of the Header class, which extends the functionality of
 
 """
 import json
-from collections.abc import KeysView
 from pathlib import Path
 from types import GeneratorType
-from typing import Any, Union
+from typing import Any, List, Union
 
 import pandas as pd
 from pydicom.dataelem import DataElement as PydicomDataElement
 from pydicom.dataset import FileDataset
 
 from dicom_parser.data_element import DataElement
+from dicom_parser.messages import INVALID_ELEMENT_IDENTIFIER
 from dicom_parser.utils.format_header_df import format_header_df
 from dicom_parser.utils.private_tags import PRIVATE_TAGS
 from dicom_parser.utils.read_file import read_file
-from dicom_parser.utils.sequence_detector.sequence_detector import (
-    SequenceDetector,
-)
+from dicom_parser.utils.sequence_detector.sequence_detector import \
+    SequenceDetector
 from dicom_parser.utils.value_representation import ValueRepresentation
 from dicom_parser.utils.vr_to_data_element import get_data_element_class
 
@@ -230,15 +229,21 @@ class Header:
 
         # If not a keyword or a tag, raise a TypeError
         else:
-            raise TypeError(
-                f"Invalid data element identifier: {tag_or_keyword} of type {type(tag_or_keyword)}!\nData elements may only be queried using a string represeting a keyword or a tuple of two strings representing a tag!"  # noqa
+            message = INVALID_ELEMENT_IDENTIFIER.format(
+                tag_or_keyword=tag_or_keyword, input_type=type(tag_or_keyword)
             )
+            raise TypeError(message)
 
-    def get_data_element(self, tag_or_keyword) -> DataElement:
+    def get_data_element(
+        self, tag_or_keyword: Union[str, tuple, PydicomDataElement]
+    ) -> DataElement:
         if isinstance(tag_or_keyword, (tuple, str)):
             raw_element = self.get_raw_element(tag_or_keyword)
         elif not isinstance(tag_or_keyword, PydicomDataElement):
-            raise TypeError("Bad data element identifier!")
+            message = INVALID_ELEMENT_IDENTIFIER.format(
+                tag_or_keyword=tag_or_keyword, input_type=type(tag_or_keyword)
+            )
+            raise TypeError(message)
         else:
             raw_element = tag_or_keyword
         DataElementClass = get_data_element_class(raw_element.VR)
@@ -473,5 +478,5 @@ class Header:
         return self._as_dict
 
     @property
-    def keys(self) -> KeysView:
-        return self.as_dict.keys()
+    def keys(self) -> List[str]:
+        return list(self.as_dict.keys())
