@@ -1,3 +1,4 @@
+jinja~=2.11
 nibabel~=3.0
 pandas~=1.0
 pydicom~=2.0
