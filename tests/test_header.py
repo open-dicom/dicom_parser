@@ -1,3 +1,4 @@
+import datetime
 import json
 import warnings
 from pathlib import Path
@@ -12,10 +13,10 @@ from tests.fixtures import (
     SERIES_INSTANCE_UID,
     SOP_INSTANCE_UID,
     STUDY_INSTANCE_UID,
+    TEST_FIELDS,
     TEST_GE_LOCALIZER_PATH,
     TEST_IMAGE_PATH,
     TEST_RSFMRI_IMAGE_PATH,
-    TEST_STUDY_FIELDS,
 )
 
 
@@ -59,10 +60,9 @@ class HeaderTestCase(TestCase):
     )
     KEYWORD_CONTAINS = {"time": 10, "DATE": 7, "abcdef": 0}
 
-    @classmethod
-    def setUpClass(cls):
-        cls.raw = pydicom.dcmread(TEST_IMAGE_PATH, stop_before_pixels=True)
-        cls.header = Header(cls.raw)
+    def setUp(self):
+        self.raw = pydicom.dcmread(TEST_IMAGE_PATH, stop_before_pixels=True)
+        self.header = Header(self.raw)
 
     def test_str(self):
         value = str(self.header)
@@ -126,15 +126,85 @@ class HeaderTestCase(TestCase):
             with self.assertRaises(KeyError):
                 self.header.get_raw_value(invalid_key)
 
-    def test_get_parsed_value(self):
-        expected_study_date = TEST_STUDY_FIELDS["date"]
-        study_date = self.header.get_parsed_value("StudyDate")
-        expected_pixel_spacing = tuple(
-            float(value) for value in self.header.get_raw_value("PixelSpacing")
-        )
-        pixel_spacing = self.header.get_parsed_value("PixelSpacing")
-        self.assertEqual(study_date, expected_study_date)
-        self.assertEqual(pixel_spacing, expected_pixel_spacing)
+    def test_get_parsed_decimal_string(self):
+        value = self.header.get_parsed_value("PixelSpacing")
+        expected = TEST_FIELDS["PixelSpacing"]
+        self.assertEqual(value, expected)
+
+    def test_get_parsed_integer_string(self):
+        value = self.header.get_parsed_value("InstanceNumber")
+        expected = TEST_FIELDS["InstanceNumber"]
+        self.assertEqual(value, expected)
+
+    def test_get_parsed_date(self):
+        value = self.header.get_parsed_value("StudyDate")
+        expected = TEST_FIELDS["StudyDate"]
+        self.assertEqual(value, expected)
+
+    def test_get_parsed_none_date(self):
+        self.header.raw["StudyDate"].value = None
+        value = self.header.get_parsed_value("StudyDate")
+        self.assertIsNone(value)
+
+    def test_get_parsed_empty_date(self):
+        self.header.raw["StudyDate"].value = ""
+        value = self.header.get_parsed_value("StudyDate")
+        self.assertIsNone(value)
+
+    def test_get_parsed_invalid_date(self):
+        self.header.raw["StudyDate"].value = "not_a_date"
+        with self.assertRaises(ValueError):
+            self.header.get_parsed_value("StudyDate")
+
+    def test_get_parsed_invalid_date_type(self):
+        self.header.raw["StudyDate"].value = ("why?",)
+        with self.assertRaises(TypeError):
+            self.header.get_parsed_value("StudyDate")
+
+    def test_get_parsed_time(self):
+        value = self.header.get_parsed_value("StudyTime")
+        expected = TEST_FIELDS["StudyTime"]
+        self.assertEqual(value, expected)
+
+    def test_get_parsed_short_time(self):
+        self.header.raw["StudyTime"].value = "122156"
+        value = self.header.get_parsed_value("StudyTime")
+        self.assertIsInstance(value, datetime.time)
+
+    def test_get_parsed_invalid_time(self):
+        self.header.raw["StudyTime"].value = "not_a_time"
+        with self.assertRaises(ValueError):
+            self.header.get_parsed_value("StudyTime")
+
+    def test_get_parsed_empty_time(self):
+        self.header.raw["StudyTime"].value = ""
+        value = self.header.get_parsed_value("StudyTime")
+        self.assertIsNone(value)
+
+    def test_get_parsed_bad_time(self):
+        # Bad type with an actual value
+        self.header.raw["StudyTime"].value = ("why?",)
+        with self.assertRaises(TypeError):
+            self.header.get_parsed_value("StudyTime")
+        # Bad type that evaluates to False
+        self.header.raw["StudyTime"].value = False
+        value = self.header.get_parsed_value("StudyTime")
+        self.assertIsNone(value)
+
+    def test_get_parsed_age_string(self):
+        value = self.header.get_parsed_value("PatientAge")
+        expected = TEST_FIELDS["PatientAge"]
+        self.assertEqual(value, expected)
+
+    def test_get_parsed_empty_age_string(self):
+        self.header.raw["PatientAge"].value = ""
+        value = self.header.get_parsed_value("PatientAge")
+        self.assertIsNone(value)
+
+    def test_get_parsed_code_string(self):
+        value = self.header.get_parsed_value("SequenceVariant")
+        expected = TEST_FIELDS["SequenceVariant"]
+        self.assertEqual(value, expected)
 
     def test_get(self):
         keys = list(self.TAGS.keys()) + list(self.KEYWORDS.keys())
@@ -153,18 +223,16 @@ class HeaderTestCase(TestCase):
             self.assertIsNone(result)
 
     def test_get_default_parsed_configuration_is_true(self):
-        raw = self.KEYWORDS["StudyDate"]
-        parsed = TEST_STUDY_FIELDS["date"]
+        parsed = TEST_FIELDS["StudyDate"]
         result = self.header.get("StudyDate")
         self.assertEqual(result, parsed)
-        self.assertNotEqual(result, raw)
 
     def test_indexing_operator_with_invalid_key_raises_key_error(self):
         with self.assertRaises(KeyError):
             self.header["invalid_key"]
 
     def test_get_with_default_and_existing_key_return_key_value(self):
-        expected = TEST_STUDY_FIELDS["date"]
+        expected = TEST_FIELDS["StudyDate"]
         result = self.header.get("StudyDate", "default value")
         self.assertEqual(result, expected)
 
@@ -174,7 +242,7 @@ class HeaderTestCase(TestCase):
         self.assertEqual(result, default)
 
     def test_default_value_with_verbose_parse_true_and_existing_key(self):
-        expected = TEST_STUDY_FIELDS["date"]
+        expected = TEST_FIELDS["StudyDate"]
         result = self.header.get("StudyDate", 0, parsed=True)
         self.assertEqual(result, expected)
 

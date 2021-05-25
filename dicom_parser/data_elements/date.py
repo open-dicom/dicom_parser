@@ -1,7 +1,6 @@
 """
 Definition of the :class:`Date` class, representing a single "DA" data element.
 """
-
 from datetime import datetime
 
 from dicom_parser.data_element import DataElement

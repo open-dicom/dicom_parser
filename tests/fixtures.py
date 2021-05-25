@@ -20,11 +20,15 @@ TEST_SERIES_PATH = os.path.join(TEST_FILES_PATH, "series")
 TEST_UTILS_DIRECTORY = os.path.join(TESTS_DIRECTORY, "utils")
 
 
-TEST_STUDY_FIELDS = {
-    "uid": "1.3.12.2.1107.5.2.43.66024.30000018050107081466900000007",
-    "description": "YA_lab^Assi",
-    "date": datetime.strptime("20180501", "%Y%m%d").date(),
-    "time": datetime.strptime("12:21:56.958000", "%H:%M:%S.%f").time(),
+TEST_FIELDS = {
+    "InstanceNumber": 1,
+    "StudyID": "1.3.12.2.1107.5.2.43.66024.30000018050107081466900000007",
+    "StudyDescription": "YA_lab^Assi",
+    "StudyDate": datetime.strptime("20180501", "%Y%m%d").date(),
+    "StudyTime": datetime.strptime("12:21:56.958000", "%H:%M:%S.%f").time(),
+    "PixelSpacing": (0.48828125, 0.48828125),
+    "PatientAge": 27.0,
+    "SequenceVariant": ("Spoiled", "Oversampling Phase"),
 }
 
 SERIES_INSTANCE_UID = (
