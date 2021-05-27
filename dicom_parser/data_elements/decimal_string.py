@@ -17,8 +17,8 @@ class DecimalString(DataElement):
 
         Warning
         -------
-        Invalid values (values raising a *TypeError* when passed to
-        :class:`float`) will return *None*.
+        Invalid values (values raising a *TypeError* or *ValueError* when
+        passed to :class:`float`) will return *None*.
 
         Parameters
         ----------
@@ -33,5 +33,5 @@ class DecimalString(DataElement):
 
         try:
             return float(value)
-        except TypeError:
+        except (TypeError, ValueError):
             pass

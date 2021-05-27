@@ -17,8 +17,8 @@ class IntegerString(DataElement):
 
         Warning
         -------
-        Invalid values (values raising a *TypeError* when passed to
-        :class:`int`) will return *None*.
+        Invalid values (values raising a *TypeError* or *ValueError* when
+        passed to :class:`int`) will return *None*.
 
         Parameters
         ----------
@@ -33,5 +33,5 @@ class IntegerString(DataElement):
 
         try:
             return int(value)
-        except TypeError:
+        except (TypeError, ValueError):
             pass

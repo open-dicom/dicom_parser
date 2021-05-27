@@ -10,13 +10,17 @@ from dicom_parser.utils.sequence_detector import SequenceDetector
 from dicom_parser.utils.value_representation import ValueRepresentation
 
 from tests.fixtures import (
+    PARSED_B_MATRIX,
+    PARSED_DIFFUSTION_GRADIENT_DIRECTION,
     SERIES_INSTANCE_UID,
     SOP_INSTANCE_UID,
     STUDY_INSTANCE_UID,
     TEST_FIELDS,
     TEST_GE_LOCALIZER_PATH,
     TEST_IMAGE_PATH,
+    TEST_OW_ELEMENT,
     TEST_RSFMRI_IMAGE_PATH,
+    TEST_SIEMENS_DWI_PATH,
 )
 
 
@@ -63,6 +67,7 @@ class HeaderTestCase(TestCase):
     def setUp(self):
         self.raw = pydicom.dcmread(TEST_IMAGE_PATH, stop_before_pixels=True)
         self.header = Header(self.raw)
+        self.dwi_header = Header(TEST_SIEMENS_DWI_PATH)
 
     def test_str(self):
         value = str(self.header)
@@ -131,10 +136,20 @@ class HeaderTestCase(TestCase):
         expected = TEST_FIELDS["PixelSpacing"]
         self.assertEqual(value, expected)
 
+    def test_get_parsed_bad_decimal_string(self):
+        self.header.raw["WindowCenter"].value = None
+        value = self.header.get_parsed_value("WindowCenter")
+        self.assertIsNone(value)
+
     def test_get_parsed_integer_string(self):
         value = self.header.get_parsed_value("InstanceNumber")
         expected = TEST_FIELDS["InstanceNumber"]
         self.assertEqual(value, expected)
+
+    def test_get_parsed_bad_integer_string(self):
+        self.header.raw["InstanceNumber"].value = None
+        value = self.header.get_parsed_value("InstanceNumber")
+        self.assertIsNone(value)
 
     def test_get_parsed_date(self):
         value = self.header.get_parsed_value("StudyDate")
@@ -205,6 +220,22 @@ class HeaderTestCase(TestCase):
         value = self.header.get_parsed_value("SequenceVariant")
         expected = TEST_FIELDS["SequenceVariant"]
         self.assertEqual(value, expected)
+
+    def test_get_parsed_other_word(self):
+        self.header.raw.add_new(*TEST_OW_ELEMENT)
+        value = self.header.get_parsed_value("SelectorOWValue")
+        expected = TEST_FIELDS["SelectorOWValue"]
+        self.assertEqual(value, expected)
+
+    def test_get_parsed_b_matrix(self):
+        value = self.dwi_header.get((0x0019, 0x1027))
+        expected = PARSED_B_MATRIX
+        self.assertListEqual(value, expected)
+
+    def test_get_parsed_diffusion_gradient_direction(self):
+        value = self.dwi_header.get((0x0019, 0x100E))
+        expected = PARSED_DIFFUSTION_GRADIENT_DIRECTION
+        self.assertListEqual(value, expected)
 
     def test_get(self):
         keys = list(self.TAGS.keys()) + list(self.KEYWORDS.keys())
