@@ -3,12 +3,17 @@ from unittest import TestCase
 
 import nibabel as nib
 import numpy as np
-
 from dicom_parser.image import Image
 from dicom_parser.series import Series
-from tests.fixtures import (TEST_IMAGE_PATH, TEST_RSFMRI_SERIES_NIFTI,
-                            TEST_RSFMRI_SERIES_PATH, TEST_SERIES_PATH,
-                            TEST_UTILS_DIRECTORY)
+
+from tests.fixtures import (
+    SERIES_SPATIAL_RESOLUTION,
+    TEST_IMAGE_PATH,
+    TEST_RSFMRI_SERIES_NIFTI,
+    TEST_RSFMRI_SERIES_PATH,
+    TEST_SERIES_PATH,
+    TEST_UTILS_DIRECTORY,
+)
 
 
 class SeriesTestCase(TestCase):
@@ -147,3 +152,20 @@ class SeriesTestCase(TestCase):
         for value_type in invalid_types:
             with self.assertRaises(TypeError):
                 self.localizer[value_type]
+
+    def test_get_spatial_resolution(self):
+        series = Series(TEST_SERIES_PATH)
+        value = series.get_spatial_resolution()
+        self.assertTupleEqual(value, SERIES_SPATIAL_RESOLUTION)
+
+    def test_get_spatial_resolution_without_slice_thickness(self):
+        series = Series(TEST_SERIES_PATH)
+        del series[0].header.raw.SliceThickness
+        value = series.get_spatial_resolution()
+        expected = SERIES_SPATIAL_RESOLUTION[:-1]
+        self.assertTupleEqual(value, expected)
+
+    def test_spatial_resolution(self):
+        series = Series(TEST_SERIES_PATH)
+        value = series.spatial_resolution
+        self.assertTupleEqual(value, SERIES_SPATIAL_RESOLUTION)

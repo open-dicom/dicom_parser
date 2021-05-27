@@ -3,10 +3,14 @@ from unittest import TestCase
 
 import numpy as np
 import pydicom
-
 from dicom_parser.header import Header
 from dicom_parser.image import Image
-from tests.fixtures import TEST_IMAGE_PATH, TEST_RSFMRI_IMAGE_PATH
+
+from tests.fixtures import (
+    TEST_IMAGE_PATH,
+    TEST_IMAGE_RELATIVE_PATH,
+    TEST_RSFMRI_IMAGE_PATH,
+)
 
 
 class ImageTestCase(TestCase):
@@ -59,3 +63,13 @@ class ImageTestCase(TestCase):
         shape = self.rsfmri_image.data.shape
         expected = 96, 96, 64
         self.assertEqual(shape, expected)
+
+    def test_get_default_relative_path(self):
+        value = self.image.get_default_relative_path()
+        expected = TEST_IMAGE_RELATIVE_PATH
+        self.assertEqual(value, expected)
+
+    def test_default_relative_path(self):
+        value = self.image.default_relative_path
+        expected = TEST_IMAGE_RELATIVE_PATH
+        self.assertEqual(value, expected)

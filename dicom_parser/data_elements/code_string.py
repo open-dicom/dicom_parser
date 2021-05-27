@@ -7,9 +7,13 @@ import warnings
 from enum import Enum
 
 from dicom_parser.data_element import DataElement
-from dicom_parser.utils.code_strings import (Modality, PatientPosition,
-                                             ScanningSequence, SequenceVariant,
-                                             Sex)
+from dicom_parser.utils.code_strings import (
+    Modality,
+    PatientPosition,
+    ScanningSequence,
+    SequenceVariant,
+    Sex,
+)
 from dicom_parser.utils.value_representation import ValueRepresentation
 
 
@@ -45,8 +49,6 @@ class CodeString(DataElement):
         value = exception.args[0]
         warning = f"'{value}' is not a valid {field_name} value!"
         warnings.warn(warning)
-        if warning not in self.warnings:
-            self.warnings.append(warning)
 
     def parse_with_enum(self, value: str, enum: Enum) -> str:
         """

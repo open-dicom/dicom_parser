@@ -9,9 +9,11 @@ from typing import Any, Generator
 import numpy as np
 
 from dicom_parser.image import Image
-from dicom_parser.messages import (EMPTY_SERIES_DIRECTORY,
-                                   INVALID_INDEXING_OPERATOR,
-                                   INVALID_SERIES_DIRECTORY)
+from dicom_parser.messages import (
+    EMPTY_SERIES_DIRECTORY,
+    INVALID_INDEXING_OPERATOR,
+    INVALID_SERIES_DIRECTORY,
+)
 from dicom_parser.utils.mime_generator import generate_by_mime
 from dicom_parser.utils.peek import peek
 
@@ -202,13 +204,12 @@ class Series:
         return values if len(unique_values) > 1 else unique_values.pop()
 
     def get_spatial_resolution(self) -> tuple:
-        sample_header = self.images[0]
-        pixel_spacing = sample_header.get("PixelSpacing")
+        sample_header = self[0].header
+        pixel_spacing = list(sample_header.get("PixelSpacing"))
         slice_thickness = sample_header.get("SliceThickness")
         if slice_thickness:
-            return tuple(pixel_spacing.append(slice_thickness))
-        else:
-            return tuple(pixel_spacing)
+            pixel_spacing.append(slice_thickness)
+        return tuple(pixel_spacing)
 
     @property
     def data(self) -> np.ndarray:
