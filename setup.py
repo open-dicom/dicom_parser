@@ -16,7 +16,7 @@ with open("requirements-dev.txt") as fh:
 
 setup(
     name="dicom_parser",
-    version="0.1.6",
+    version="1.0.0",
     packages=find_packages(),
     include_package_data=True,
     license="AGPLv3",
@@ -31,12 +31,13 @@ setup(
     install_requires=requirements,
     extras_require={"dev": dev_requirements},
     classifiers=[
-        "Development Status :: 4 - Beta",
+        "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Science/Research",
         "License :: OSI Approved :: GNU Affero General Public License v3",
         "Operating System :: OS Independent",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
     ],
 )
