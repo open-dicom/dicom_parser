@@ -6,7 +6,6 @@ orbs:
 
 jobs:
   build-and-test:
-    version: 3.9
     executor: python/default
     working_directory: ~/dicom_parser
     docker:
