@@ -1,6 +1,15 @@
 Release Notes
 =============
 
+1.0.1
+-----
+  * Fixed `ImportError` bug upon importing the `python-magic` library in
+    a non-Linux OS.
+
+1.0.0
+-----
+  * Improved test coverage and added more docstrings.
+
 0.1.7
 -----
 
