@@ -12,8 +12,6 @@ article`_.
 from pathlib import Path
 from typing import Generator
 
-import magic
-
 #: DICOM file's expected mime type.
 DICOM_MIME_TYPE = "application/dicom"
 
@@ -38,6 +36,7 @@ def generate_by_mime(
     GeneratorType
         Paths of the desired mime type
     """
+    import magic
 
     for path in Path(root_path).rglob(pattern):
         path_mime = magic.from_file(str(path), mime=True)
