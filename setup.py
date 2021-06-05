@@ -16,7 +16,7 @@ with open("requirements-dev.txt") as fh:
 
 setup(
     name="dicom_parser",
-    version="1.0.1",
+    version="1.0.2",
     packages=find_packages(),
     include_package_data=True,
     license="AGPLv3",
@@ -26,17 +26,27 @@ setup(
     url="https://github.com/ZviBaratz/dicom_parser",
     author="Zvi Baratz",
     author_email="baratzz@pm.me",
-    keywords="dicom dcm mri neuroimaging",
-    python_requires=">=3.6",
+    keywords="dicom, dcm, mri, ct, radiology",
+    python_requires=">=3.6, <4",
     install_requires=requirements,
     extras_require={"dev": dev_requirements},
+    package_dir={"": "src"},
+    project_urls={
+        "Source": "https://github.com/ZviBaratz/dicom_parser/",
+        "Documentation": "https://dicom-parser.readthedocs.io/en/latest/",
+        "Bug Reports": "https://github.com/ZviBaratz/dicom_parser/issues/",
+    },
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Science/Research",
+        "Intended Audience :: Healthcare Industry",
         "License :: OSI Approved :: GNU Affero General Public License v3",
         "Operating System :: OS Independent",
+        "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3 :: Only",
     ],
 )
