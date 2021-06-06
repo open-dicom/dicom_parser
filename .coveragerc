@@ -3,6 +3,6 @@ omit = *tests*
     .tox/**
     venv/**
     setup.py
-
-source = .
+command_line = -m pytest tests/
+source = src
 branch = True

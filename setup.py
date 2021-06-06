@@ -17,7 +17,7 @@ with open("requirements-dev.txt") as fh:
 setup(
     name="dicom_parser",
     version="1.0.2",
-    packages=find_packages(),
+    packages=find_packages(where="src"),
     include_package_data=True,
     license="AGPLv3",
     description="DICOM files parser meant to facilitate data access.",
