@@ -15,13 +15,16 @@ jobs:
       - python/install-packages:
           app-dir: ~/dicom_parser
           pkg-manager: pip
-          cache-version: v2
+          cache-version: v3
           include-python-in-cache-key: false
       - run:
           name: Install libmagic
           command: |
             apt update
             apt install -y libmagic1
+      - run:
+          name: Upgrade pip version
+          command: pip install -U pip
       - run:
           name: Install tox
           command: pip install tox
