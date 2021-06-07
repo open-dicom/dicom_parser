@@ -12,12 +12,6 @@ jobs:
       - image: themattrix/tox
     steps:
       - checkout
-      - python/install-packages:
-          app-dir: ~/dicom_parser
-          pkg-manager: pip
-          pip-dependency-file:
-          cache-version: v3
-          include-python-in-cache-key: false
       - run:
           name: Install libmagic
           command: |
@@ -26,6 +20,9 @@ jobs:
       - run:
           name: Upgrade pip version
           command: pip install -U pip
+      - run:
+          name: Install package
+          command: pip install .[all]
       - run:
           name: Install tox
           command: pip install tox
