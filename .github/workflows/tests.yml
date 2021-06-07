@@ -8,6 +8,7 @@ on:
 
 jobs:
   build:
+    environment: Tests
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -40,7 +41,6 @@ jobs:
     - name: Generate coverage report
       run: coverage xml
     - name: Upload coverage to Codecov
-      env: Tests
       uses: codecov/codecov-action@v1
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
