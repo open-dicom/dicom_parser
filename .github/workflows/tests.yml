@@ -19,8 +19,8 @@ jobs:
     - name: Install libmagic
       run: |
         # Required for testing DICOM file generation by mime type
-        apt update
-        apt install -y libmagic1
+        sudo apt update
+        sudo apt install -y libmagic1
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
