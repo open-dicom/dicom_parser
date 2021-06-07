@@ -47,5 +47,3 @@ jobs:
         files: ./coverage.xml
         flags: unittests
         fail_ci_if_error: true
-        verbose: true
-
