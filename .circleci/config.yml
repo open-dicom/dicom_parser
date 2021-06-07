@@ -15,7 +15,6 @@ jobs:
       - python/install-packages:
           app-dir: ~/dicom_parser
           pkg-manager: pip
-          pip-dependency-file: requirements.txt
           cache-version: v2
           include-python-in-cache-key: false
       - run:
