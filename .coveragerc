@@ -4,5 +4,5 @@ omit = *tests*
     venv/**
     setup.py
 command_line = -m pytest tests/
-source = src
+source = src/
 branch = True
