@@ -12,10 +12,15 @@ article`_.
 from pathlib import Path
 from typing import Generator
 
-import magic
-
 #: DICOM file's expected mime type.
 DICOM_MIME_TYPE = "application/dicom"
+
+#: Message to show if python-magic is not installed.
+MUGGLES = """To generate files by mime type, python-magic must be installed.
+To install the required version of python-magic, simply run:
+
+pip install dicom_parser[magic]
+"""
 
 
 def generate_by_mime(
@@ -38,6 +43,10 @@ def generate_by_mime(
     GeneratorType
         Paths of the desired mime type
     """
+    try:
+        import magic
+    except ImportError:
+        raise ImportError(MUGGLES)
 
     for path in Path(root_path).rglob(pattern):
         path_mime = magic.from_file(str(path), mime=True)
