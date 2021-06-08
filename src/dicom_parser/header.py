@@ -275,7 +275,10 @@ class Header:
         return data_element
 
     def get_data_elements(
-        self, value_representation=None, exclude=None, private: bool = None,
+        self,
+        value_representation=None,
+        exclude=None,
+        private: bool = None,
     ) -> List[DataElement]:
         """
         Returns a list of data elements included in this header.
@@ -475,7 +478,8 @@ class Header:
         ----------
         data_elements : list, optional
             Data elements to include, by default None (include all)
-        value_representation : Union[ValueRepresentation, tuple, list], optional
+        value_representation : Union[ValueRepresentation, tuple, list],
+        optional
             Value representation (or iterable of such) to include, by default
             None (include all)
         exclude : Union[ValueRepresentation, tuple, list], optional

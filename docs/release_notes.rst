@@ -1,6 +1,11 @@
 Release Notes
 =============
 
+1.0.2
+-----
+  * Added *pyproject.toml* and *setup.cfg* files and created *src/* directory
+  * to conform with newer Python packaging standards.
+
 1.0.1
 -----
   * Fixed `ImportError` bug upon importing the `python-magic` library in
