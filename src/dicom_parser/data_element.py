@@ -1,7 +1,6 @@
 """
 Definition of the :class:`DataElement` class.
 """
-
 import re
 from typing import Any
 
@@ -19,11 +18,10 @@ class DataElement:
     :mod:`~dicom_parser.data_elements`.
 
     .. _pydicom: https://github.com/pydicom/pydicom
-
     """
 
     VALUE_REPRESENTATION: ValueRepresentation = None
-    PRIVATE_ELEMENT_DESCRIPTION_PATTERN = r"\[(.*)\]|Private Creator"
+    PRIVATE_ELEMENT_DESCRIPTION_PATTERN: str = r"\[(.*)\]|Private Creator"
 
     def __init__(self, raw: PydicomDataElement):
         """

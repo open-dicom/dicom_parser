@@ -46,6 +46,12 @@ SERIES_SPATIAL_RESOLUTION = (0.48828125, 0.48828125, 6.0)
 SOP_INSTANCE_UID = "1.3.12.2.1107.5.2.43.66024.2018050112252318571884482"
 STUDY_INSTANCE_UID = "1.3.12.2.1107.5.2.43.66024.30000018050107081466900000007"
 TEST_IMAGE_RELATIVE_PATH = Path(f"012345678/{SERIES_INSTANCE_UID}/1.dcm")
+TEST_DATA_ELEMENT_STRING = """tag                     (0010, 0020)
+keyword                    PatientID
+value_representation     Long String
+value_multiplicity                 1
+value                      012345678"""
+TEST_DATA_ELEMENT_BYTES_VALUE: str = "HC1-7;NC1"
 
 
 class ChoiceEnumDefinition(ChoiceEnum):
