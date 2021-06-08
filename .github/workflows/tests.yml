@@ -34,7 +34,7 @@ jobs:
     - name: "Run tox targets for ${{ matrix.python-version }}"
       run: python -m tox
     - name: Generate coverage report
-      run: python -m coverage xml
+      run: coverage xml
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1
       with:
