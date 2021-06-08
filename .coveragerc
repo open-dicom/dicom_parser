@@ -1,8 +1,0 @@
-[run]
-omit = *tests*
-    .tox/**
-    venv/**
-    setup.py
-command_line = -m pytest tests/
-source = src/
-branch = True
