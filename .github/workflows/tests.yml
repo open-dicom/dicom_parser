@@ -12,6 +12,7 @@ jobs:
     name: "Python ${{ matrix.python-version }}"
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         python-version: [3.6, 3.7, 3.8, 3.9]
 
@@ -29,13 +30,13 @@ jobs:
     - name: Install dependencies
       run: |
         python -m site
-        python -m pip install --upgrade pip
+        pip install --upgrade pip
         pip install --upgrade setuptools wheel coverage[toml] virtualenv tox tox-gh-actions
         pip install -e .[all]
     - name: "Run tox targets for ${{ matrix.python-version }}"
       run: python -m tox
     - name: Generate coverage report
-      run: coverage xml
+      run: python -m coverage xml
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1
       with:
