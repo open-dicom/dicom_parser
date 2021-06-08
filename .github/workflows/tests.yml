@@ -34,8 +34,8 @@ jobs:
         python -m pip install --upgrade pip setuptools wheels
         python -m pip install --upgrade coverage[toml] virtualenv tox tox-gh-actions
         python -m pip install -e .[all]
-    - name: Run tox targets for ${{ matrix.python-version }}
-        run: python -m tox -p
+    - name: "Run tox targets for ${{ matrix.python-version }}"
+      run: python -m tox -p
     - name: Generate coverage report
       run: coverage xml
     - name: Upload coverage to Codecov
