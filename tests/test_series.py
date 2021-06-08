@@ -68,12 +68,15 @@ class SeriesTestCase(TestCase):
         self.assertTupleEqual(series.data.shape, (512, 512, 11))
 
     def test_mosaic_series_returns_as_4d(self):
+        # Test that running on Windows raises the expected RuntimeError
         if RUNNING_ON_WINDOWS:
-            self.skipTest(MIME_SKIP)
-        series = Series(TEST_RSFMRI_SERIES_PATH, mime=True)
-        data = series.data
-        expected_shape = 96, 96, 64, 3
-        self.assertTupleEqual(data.shape, expected_shape)
+            with self.assertRaises(RuntimeError):
+                series = Series(TEST_RSFMRI_SERIES_PATH, mime=True)
+        else:
+            series = Series(TEST_RSFMRI_SERIES_PATH, mime=True)
+            data = series.data
+            expected_shape = 96, 96, 64, 3
+            self.assertTupleEqual(data.shape, expected_shape)
 
     def test_mosaic_series_data_same_as_nifti(self):
         if RUNNING_ON_WINDOWS:
