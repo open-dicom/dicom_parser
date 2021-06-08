@@ -68,4 +68,3 @@ html_static_path = ["_static"]
 
 # Solve ReadTheDocs build error (expects master file to be contents.rst)
 master_doc = "index"
-
