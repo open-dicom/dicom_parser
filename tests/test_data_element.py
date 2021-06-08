@@ -12,8 +12,8 @@ from tests.fixtures import (
 
 class HeaderTestCase(TestCase):
     TEST_ELEMENT_KEY: str = "PatientID"
-    TEST_PRIVATE_BYTES_ELEMENT: tuple = "0051", "100f"
-    TEST_SEQUENCE_ELEMENT: tuple = "0008", "1140"
+    TEST_PRIVATE_BYTES_ELEMENT: tuple = ("0051", "100f")
+    TEST_SEQUENCE_ELEMENT: tuple = ("0008", "1140")
 
     @classmethod
     def setUpClass(cls):
