@@ -1,9 +1,27 @@
-[build-system]
-requires = ["setuptools>=42", "wheel"]
-build-backend = "setuptools.build_meta"
+[tool.black]
+exclude = '''
+# Directories
+/(
+    \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | venv
+  | _build
+  | build
+  | dist
+)/
+'''
+line-length = 79
 
 [tool.coverage.run]
 source = ["src/"]
 branch = true
 omit = ["*tests*", ".tox/**", "venv/**", "setup.py"]
 command_line = "-m pytest tests/"
+
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
