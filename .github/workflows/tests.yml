@@ -25,13 +25,13 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
     - name: Install libmagic (Linux)
-      if: "${{ matrix.os }} == 'ubuntu-latest'"
+      if: "${{ matrix.os }} == ubuntu-latest"
       run: |
         # Required for testing DICOM file generation by mime type
         sudo apt update
         sudo apt install -y libmagic1
     - name: Install libmagic (macOS)
-      if: "${{ matrix.os }} == 'macos-latest'"
+      if: "${{ matrix.os }} == macos-latest"
       run: |
         brew install libmagic
     - name: Install dependencies
