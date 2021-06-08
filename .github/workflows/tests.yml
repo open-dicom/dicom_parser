@@ -42,7 +42,7 @@ jobs:
       run: python -m tox
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1
-      if: "contains(env.USING_COVERAGE, matrix.python-version)"
+      if: "contains(env.USING_COVERAGE, matrix.python-version) && matrix.os == 'ubuntu-latest'"
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         fail_ci_if_error: true

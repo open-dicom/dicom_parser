@@ -8,7 +8,7 @@ article`_.
 .. _this MDN article:
    https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types
 """
-
+import os
 from pathlib import Path
 from typing import Generator
 
@@ -20,6 +20,11 @@ MUGGLES = """To generate files by mime type, python-magic must be installed.
 To install the required version of python-magic, simply run:
 
 pip install dicom_parser[magic]
+"""
+
+#: Message to display if the user is trying to read mime types from Windows.
+WINDOWS = """Unfortunately, DICOM generation by mime type is not supported in
+Windows.
 """
 
 
@@ -43,6 +48,8 @@ def generate_by_mime(
     GeneratorType
         Paths of the desired mime type
     """
+    if os.name == "nt":
+        raise RuntimeError(WINDOWS)
     try:
         import magic
     except ImportError:
