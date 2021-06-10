@@ -1,12 +1,14 @@
 Release Notes
 =============
 
-1.0.2
+1.1.0
 -----
   * Updated project structure and packaging to conform with PEP517_ and
     PEP518_.
   * Migrated CI to `GitHub Actions`_.
-  * Fixed *dcm* generation by mime-type bug for nested directories.
+  * Fixed *dcm* generation by mime-type bug (`#30
+    <https://github.com/ZviBaratz/dicom_parser/issues/30>`_) for nested directories.
+  * Improved tests and increased coverage.
 
 1.0.1
 -----
