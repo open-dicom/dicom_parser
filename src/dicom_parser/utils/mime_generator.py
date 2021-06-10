@@ -48,7 +48,7 @@ def generate_by_mime(
     GeneratorType
         Paths of the desired mime type
     """
-    if os.name == "nt":
+    if os.name == "nt":  # pragma: no cover
         raise RuntimeError(WINDOWS)
     try:
         import magic
@@ -56,6 +56,10 @@ def generate_by_mime(
         raise ImportError(MUGGLES)
 
     for path in Path(root_path).rglob(pattern):
-        path_mime = magic.from_file(str(path), mime=True)
-        if path_mime == mime_type:
-            yield path
+        try:
+            path_mime = magic.from_file(str(path), mime=True)
+        except IsADirectoryError:
+            continue
+        else:
+            if path_mime == mime_type:
+                yield path

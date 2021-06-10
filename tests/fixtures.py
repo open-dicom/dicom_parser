@@ -9,6 +9,7 @@ TEST_FILES_PATH = os.path.join(TESTS_DIRECTORY, "files")
 TEST_IMAGE_PATH = os.path.join(TEST_FILES_PATH, "001.dcm")
 TEST_EP2D_IMAGE_PATH = os.path.join(TEST_FILES_PATH, "ep2d_image.dcm")
 TEST_RSFMRI_SERIES_PATH = os.path.join(TEST_FILES_PATH, "rsfmri")
+TEST_MIME_SERIES_PATH = os.path.join(TEST_FILES_PATH, "rsfmri_mime")
 TEST_RSFMRI_IMAGE_PATH = os.path.join(TEST_FILES_PATH, "rsfmri", "001.dcm")
 TEST_RSFMRI_IMAGE_VOLUME = os.path.join(
     TEST_FILES_PATH, "rsfmri", "volume.npy"

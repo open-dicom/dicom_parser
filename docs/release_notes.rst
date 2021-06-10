@@ -6,6 +6,7 @@ Release Notes
   * Updated project structure and packaging to conform with PEP517_ and
     PEP518_.
   * Migrated CI to `GitHub Actions`_.
+  * Fixed *dcm* generation by mime-type bug for nested directories.
 
 1.0.1
 -----
