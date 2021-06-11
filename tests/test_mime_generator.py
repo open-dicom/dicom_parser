@@ -27,11 +27,11 @@ class WindowsMimeGeneratorTestCase(TestCase):
     Windows-specific tests (where libmagic and python-magic are not available).
     """
 
-    def test_runtimeerror_raised(self):
+    def test_notimplemetederror_raised(self):
         """
         Tests generation by mime type on Windows raises a RuntimeError.
         """
-        with self.assertRaises(RuntimeError):
+        with self.assertRaises(NotImplementedError):
             generate_by_mime(TEST_MIME_SERIES_PATH)
 
 

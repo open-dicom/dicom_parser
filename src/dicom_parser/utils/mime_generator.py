@@ -24,13 +24,13 @@ def check_magic() -> None:
 
     Raises
     ------
-    RuntimeError
+    NotImplementedError
         Generation by mime type is not supported on Windows
     ImportError
         Dependency not installed
     """
     if platform.system() == "Windows":  # pragma: no cover
-        raise RuntimeError(WINDOWS)
+        raise NotImplementedError(WINDOWS)
     try:
         import magic  # noqa: F401
     except ModuleNotFoundError:
@@ -57,18 +57,14 @@ def generate_by_mime(
     GeneratorType
         Paths of the desired mime type
     """
-    try:
-        check_magic()
-    except (ImportError, RuntimeError):
-        raise
-    else:
-        import magic
+    check_magic()
+    import magic
 
-        for path in Path(root_path).rglob(pattern):
-            try:
-                path_mime = magic.from_file(str(path), mime=True)
-            except IsADirectoryError:
-                continue
-            else:
-                if path_mime == mime_type:
-                    yield path
+    for path in Path(root_path).rglob(pattern):
+        try:
+            path_mime = magic.from_file(str(path), mime=True)
+        except IsADirectoryError:
+            continue
+        else:
+            if path_mime == mime_type:
+                yield path
