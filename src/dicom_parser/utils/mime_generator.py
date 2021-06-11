@@ -29,10 +29,10 @@ def check_magic() -> None:
     ImportError
         Dependency not installed
     """
-    if RUNNING_ON_WINDOWS:
+    if RUNNING_ON_WINDOWS:  # pragma: no cover
         raise RuntimeError(WINDOWS)
     try:
-        import magic
+        import magic  # noqa: F401
     except ModuleNotFoundError:
         raise ImportError(MUGGLES)
 
