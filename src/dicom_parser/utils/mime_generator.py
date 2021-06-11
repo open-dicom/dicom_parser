@@ -20,10 +20,7 @@ DICOM_MIME_TYPE = "application/dicom"
 
 def check_magic() -> None:
     """
-    Checks whether `python-magic`_ is available.
-
-    .. _python-magic:
-       https://github.com/ahupp/python-magic
+    Checks whether python-magic is available.
 
     Raises
     ------
@@ -32,11 +29,11 @@ def check_magic() -> None:
     ImportError
         Dependency not installed
     """
-    if RUNNING_ON_WINDOWS:  # pragma: no cover
+    if RUNNING_ON_WINDOWS:
         raise RuntimeError(WINDOWS)
     try:
-        import magic  # noqa: F401
-    except ImportError:
+        import magic
+    except ModuleNotFoundError:
         raise ImportError(MUGGLES)
 
 
