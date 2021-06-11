@@ -1,6 +1,7 @@
 """
 Runtime information to check for conditionally supported functionality.
 """
+import os
 import platform
 
 
@@ -13,4 +14,4 @@ def is_windows() -> bool:
     bool
         Platform is Windows
     """
-    return platform.system() == "Windows"
+    return platform.system() == "Windows" or os.name == "nt"

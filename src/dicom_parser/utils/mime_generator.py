@@ -57,14 +57,18 @@ def generate_by_mime(
     GeneratorType
         Paths of the desired mime type
     """
-    check_magic()
-    import magic
+    try:
+        check_magic()
+    except (ImportError, RuntimeError):
+        raise
+    else:
+        import magic
 
-    for path in Path(root_path).rglob(pattern):
-        try:
-            path_mime = magic.from_file(str(path), mime=True)
-        except IsADirectoryError:
-            continue
-        else:
-            if path_mime == mime_type:
-                yield path
+        for path in Path(root_path).rglob(pattern):
+            try:
+                path_mime = magic.from_file(str(path), mime=True)
+            except IsADirectoryError:
+                continue
+            else:
+                if path_mime == mime_type:
+                    yield path
