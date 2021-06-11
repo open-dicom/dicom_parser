@@ -2,21 +2,17 @@
 Tests for the :func:`dicom_parser.utils.mime_generator.generate_by_mime`
 utility function.
 """
-import os
 from typing import Generator
 from unittest import TestCase
 
 import pytest
 from dicom_parser.utils.mime_generator import generate_by_mime
+from dicom_parser.utils.runtime import RUNNING_ON_WINDOWS
 
 from tests.fixtures import TEST_MIME_SERIES_PATH
 
-#: Check whether the current operating system is Windows.
-RUNNING_ON_WINDOWS: bool = os.name == "nt"
-
 #: Message to display for Linux and macOS tests.
 WINDOWS_RUN: str = "Mime type generation is not supported in Windows."
-
 
 #: Message to display for Windows only tests.
 NON_WINDOWS_RUN: str = "Windows-specific tests."

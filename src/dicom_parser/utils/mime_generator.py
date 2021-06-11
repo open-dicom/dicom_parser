@@ -8,24 +8,36 @@ article`_.
 .. _this MDN article:
    https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types
 """
-import os
 from pathlib import Path
 from typing import Generator
+
+from dicom_parser.utils.messages import MUGGLES, WINDOWS
+from dicom_parser.utils.runtime import RUNNING_ON_WINDOWS
 
 #: DICOM file's expected mime type.
 DICOM_MIME_TYPE = "application/dicom"
 
-#: Message to show if python-magic is not installed.
-MUGGLES = """To generate files by mime type, python-magic must be installed.
-To install the required version of python-magic, simply run:
 
-pip install dicom_parser[magic]
-"""
+def check_magic() -> None:
+    """
+    Checks whether `python-magic`_ is available.
 
-#: Message to display if the user is trying to read mime types from Windows.
-WINDOWS = """Unfortunately, DICOM generation by mime type is not supported in
-Windows.
-"""
+    .. _python-magic:
+       https://github.com/ahupp/python-magic
+
+    Raises
+    ------
+    RuntimeError
+        Generation by mime type is not supported on Windows
+    ImportError
+        Dependency not installed
+    """
+    if RUNNING_ON_WINDOWS:  # pragma: no cover
+        raise RuntimeError(WINDOWS)
+    try:
+        import magic  # noqa: F401
+    except ImportError:
+        raise ImportError(MUGGLES)
 
 
 def generate_by_mime(
@@ -48,12 +60,8 @@ def generate_by_mime(
     GeneratorType
         Paths of the desired mime type
     """
-    if os.name == "nt":  # pragma: no cover
-        raise RuntimeError(WINDOWS)
-    try:
-        import magic
-    except ImportError:
-        raise ImportError(MUGGLES)
+    check_magic()
+    import magic
 
     for path in Path(root_path).rglob(pattern):
         try:
