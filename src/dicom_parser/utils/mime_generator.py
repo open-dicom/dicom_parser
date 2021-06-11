@@ -18,25 +18,6 @@ from dicom_parser.utils.messages import MUGGLES, WINDOWS
 DICOM_MIME_TYPE = "application/dicom"
 
 
-def check_magic() -> None:
-    """
-    Checks whether python-magic is available.
-
-    Raises
-    ------
-    NotImplementedError
-        Generation by mime type is not supported on Windows
-    ImportError
-        Dependency not installed
-    """
-    if platform.system() == "Windows":  # pragma: no cover
-        raise NotImplementedError(WINDOWS)
-    try:
-        import magic  # noqa: F401
-    except ModuleNotFoundError:
-        raise ImportError(MUGGLES)
-
-
 def generate_by_mime(
     root_path: Path, pattern: str = "*", mime_type: str = DICOM_MIME_TYPE
 ) -> Generator:
@@ -57,8 +38,12 @@ def generate_by_mime(
     GeneratorType
         Paths of the desired mime type
     """
-    check_magic()
-    import magic
+    if platform.system() == "Windows":  # pragma: no cover
+        raise NotImplementedError(WINDOWS)
+    try:
+        import magic  # noqa: F401
+    except ModuleNotFoundError:
+        raise ImportError(MUGGLES)
 
     for path in Path(root_path).rglob(pattern):
         try:
