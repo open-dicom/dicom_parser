@@ -7,7 +7,7 @@ from unittest import TestCase
 
 import pytest
 from dicom_parser.utils.mime_generator import generate_by_mime
-from dicom_parser.utils.runtime import RUNNING_ON_WINDOWS
+from dicom_parser.utils.runtime import is_windows
 
 from tests.fixtures import TEST_MIME_SERIES_PATH
 
@@ -16,6 +16,8 @@ WINDOWS_RUN: str = "Mime type generation is not supported in Windows."
 
 #: Message to display for Windows only tests.
 NON_WINDOWS_RUN: str = "Windows-specific tests."
+
+RUNNING_ON_WINDOWS = is_windows()
 
 
 @pytest.mark.skipif(not RUNNING_ON_WINDOWS, reason=NON_WINDOWS_RUN)
