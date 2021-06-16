@@ -1,10 +1,8 @@
 """
 Definition of the :class:`Series` class.
-
 """
-
 from pathlib import Path
-from typing import Any, Generator
+from typing import Any, Generator, Tuple
 
 import numpy as np
 
@@ -22,7 +20,6 @@ class Series:
     """
     This class represents a complete collection of Image instances originating
     from a single directory and ordered by InstanceNumber.
-
     """
 
     def __init__(self, path: Path, mime: bool = False):
@@ -42,7 +39,6 @@ class Series:
             Whether to find DICOM images by file mime type instead of
             extension, defaults to False
         """
-
         self.path = self.check_path(path)
         self.images = self.get_images(mime)
         self._data = None
@@ -56,7 +52,6 @@ class Series:
         int
             Number of DICOM images in this series.
         """
-
         return len(self.images)
 
     def __getitem__(self, key):
@@ -78,7 +73,6 @@ class Series:
             Parsed header information of the given key or the image at the
             given index
         """
-
         if isinstance(key, (str, tuple)):
             return self.get(key, missing_ok=False)
         elif isinstance(key, (int, slice)) and not isinstance(key, bool):
@@ -107,7 +101,6 @@ class Series:
         ValueError
             If the provided path is not an existing directory
         """
-
         path = Path(path)
         if not path.is_dir():
             message = INVALID_SERIES_DIRECTORY.format(path=path)
@@ -134,7 +127,6 @@ class Series:
         FileNotFoundError
             No DICOM images found under provided directory
         """
-
         dcm_paths = (
             generate_by_mime(self.path) if mime else self.path.rglob("*.dcm")
         )
@@ -157,7 +149,6 @@ class Series:
             Whether to find DICOM images by file mime type instead of
             extension, defaults to False
         """
-
         images = [Image(dcm_path) for dcm_path in self.get_dcm_paths(mime)]
         return tuple(
             sorted(
@@ -190,7 +181,6 @@ class Series:
         Any
             The requested data element value for the entire series
         """
-
         values = [
             image.header.get(
                 tag_or_keyword,
@@ -203,7 +193,15 @@ class Series:
         unique_values = set(values)
         return values if len(unique_values) > 1 else unique_values.pop()
 
-    def get_spatial_resolution(self) -> tuple:
+    def get_spatial_resolution(self) -> Tuple[float]:
+        """
+        Returns the spatial resolution of the series in millimeters.
+
+        Returns
+        -------
+        Tuple[float]
+            Spatial resolution in millimeters
+        """
         sample_header = self[0].header
         pixel_spacing = list(sample_header.get("PixelSpacing"))
         slice_thickness = sample_header.get("SliceThickness")
@@ -221,7 +219,6 @@ class Series:
         np.ndarray
             Series 3D data
         """
-
         if not isinstance(self._data, np.ndarray):
             self._data = np.stack(
                 [image.data for image in self.images], axis=-1
@@ -238,5 +235,4 @@ class Series:
         tuple
             Spatial resolution
         """
-
         return self.get_spatial_resolution()
