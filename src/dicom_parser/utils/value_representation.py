@@ -2,7 +2,6 @@
 This file contains an *Enum* with the two-character codes of the various DICOM
 value-representations (VRs).
 """
-
 from dicom_parser.utils.choice_enum import ChoiceEnum
 from dicom_parser.utils.messages import INVALID_VR
 
@@ -80,7 +79,6 @@ def get_value_representation(key: str) -> ValueRepresentation:
     ValueRepresentationError
         Invalid value representation
     """
-
     try:
         return ValueRepresentation[key]
     except KeyError:
