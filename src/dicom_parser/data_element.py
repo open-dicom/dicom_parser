@@ -51,7 +51,6 @@ class DataElement:
         str
             This instance's string representation
         """
-
         return self.__str__()
 
     def __str__(self) -> str:
@@ -63,7 +62,6 @@ class DataElement:
         str
             This instance's string representation
         """
-
         return self.to_series().to_string()
 
     def get_private_element_keyword(self) -> str:
@@ -75,7 +73,6 @@ class DataElement:
         str
             Private data element keyword
         """
-
         pattern = self.PRIVATE_ELEMENT_DESCRIPTION_PATTERN
         description = self.raw.description()
         private_element_description = re.findall(pattern, description)
@@ -95,7 +92,6 @@ class DataElement:
         str
             This instance's keyword
         """
-
         if self.raw.keyword == "":
             return self.get_private_element_keyword()
         return self.raw.keyword
@@ -115,7 +111,6 @@ class DataElement:
         Any
             This instance's parsed value
         """
-
         if isinstance(value, bytes):
             try:
                 return value.decode("utf-8").strip()
@@ -132,7 +127,6 @@ class DataElement:
         Any
             This instance's parsed value or values
         """
-
         if self.value_multiplicity > 1:
             return tuple(self.parse_value(value) for value in self.raw.value)
         return self.parse_value(self.raw.value)
@@ -146,7 +140,6 @@ class DataElement:
         dict
             This instance as a dictionary
         """
-
         return {
             "tag": self.tag,
             "keyword": self.keyword,
@@ -164,7 +157,6 @@ class DataElement:
         pd.Series
             This instance as a :class:`Series`
         """
-
         d = self.to_dict()
         return pd.Series(d)
 
@@ -193,7 +185,6 @@ class DataElement:
         bool
             Whether this data element is private or not
         """
-
         # TODO: This should probably be changed to simply check if the tag's
         # group number is odd.
         pattern = self.PRIVATE_ELEMENT_DESCRIPTION_PATTERN
@@ -210,5 +201,4 @@ class DataElement:
         bool
             Whether this data element is public or not
         """
-
         return not self.is_private
