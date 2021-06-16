@@ -33,7 +33,6 @@ class Date(DataElement):
         ValueError
             Failure to parse date from raw value
         """
-
         try:
             return datetime.strptime(value, "%Y%m%d").date()
         except ValueError:

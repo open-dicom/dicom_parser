@@ -2,7 +2,6 @@
 Definition of the :class:`SequenceOfItems` class, representing a single "SQ"
 data element.
 """
-
 import pandas as pd
 from dicom_parser.data_element import DataElement
 from dicom_parser.data_elements.messages import INVALID_SEQUENCE_PARSING

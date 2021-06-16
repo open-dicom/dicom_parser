@@ -2,8 +2,6 @@
 Definition of the :class:`Unsigned64bitVeryLong` class, representing a single
 "UV" data element.
 """
-
-
 from dicom_parser.data_element import DataElement
 from dicom_parser.utils.value_representation import ValueRepresentation
 

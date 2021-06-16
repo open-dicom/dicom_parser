@@ -2,7 +2,6 @@
 Definition of the :class:`CodeString` class, representing a single "CS" data
 element.
 """
-
 import warnings
 from enum import Enum
 
@@ -44,7 +43,6 @@ class CodeString(DataElement):
         enum : enum.Enum
             An Enum representing the element's valid values
         """
-
         field_name = enum.__name__
         value = exception.args[0]
         warning = f"'{value}' is not a valid {field_name} value!"
@@ -68,7 +66,6 @@ class CodeString(DataElement):
         str
             Parsed "CS" data element value
         """
-
         try:
             return enum[value].value
         except KeyError as exception:
@@ -90,7 +87,6 @@ class CodeString(DataElement):
         str
             Parsed "CS" data element value
         """
-
         enum = self.TAG_TO_ENUM.get(self.tag)
         if enum:
             return self.parse_with_enum(value, enum)
