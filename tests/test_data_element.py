@@ -1,47 +1,59 @@
+"""
+Definition of the :class:`DataElementTestCase` class.
+"""
+from typing import Tuple, Union
 from unittest import TestCase
 
+import pydicom
+from dicom_parser.data_element import DataElement
 from dicom_parser.header import Header
 
-from tests.fixtures import (
-    TEST_DATA_ELEMENT_BYTES_VALUE,
-    TEST_DATA_ELEMENT_STRING,
-    TEST_IMAGE_PATH,
-    TEST_RSFMRI_IMAGE_PATH,
-)
+from tests.data_elements.fixtures import VR_TO_VALUES
+from tests.fixtures import TEST_IMAGE_PATH
 
 
-class HeaderTestCase(TestCase):
-    TEST_ELEMENT_KEY: str = "PatientID"
-    TEST_PRIVATE_BYTES_ELEMENT: tuple = ("0051", "100f")
-    TEST_SEQUENCE_ELEMENT: tuple = ("0008", "1140")
+class DataElementTestCase(TestCase):
+    SKIP_MESSAGE: str = "No expected parsed values found for comparison."
+    TEST_CLASS: DataElement = None
+    TEST_IMAGE: str = TEST_IMAGE_PATH
+    VALUES: dict = {}
+    SAMPLE_KEY: str = ""
+
+    raw_header: pydicom.dataset.FileDataset = None
+    raw_element: pydicom.dataelem.DataElement = None
 
     @classmethod
     def setUpClass(cls):
-        cls.header = Header(TEST_IMAGE_PATH)
-        cls.data_element = cls.header.get_data_element(cls.TEST_ELEMENT_KEY)
-        cls.bytes_element = cls.header.get_data_element(
-            cls.TEST_PRIVATE_BYTES_ELEMENT
+        cls.raw_header = pydicom.dcmread(
+            cls.TEST_IMAGE, stop_before_pixels=True
         )
-        cls.rsfmri_header = Header(TEST_RSFMRI_IMAGE_PATH)
-        cls.sequence_element = cls.rsfmri_header.get_data_element(
-            cls.TEST_SEQUENCE_ELEMENT
-        )
+        cls.header = Header(cls.TEST_IMAGE)
 
-    def test_str(self):
-        value = str(self.data_element)
-        expected = TEST_DATA_ELEMENT_STRING
-        self.assertEqual(value, expected)
+    def setUp(self):
+        if self.SAMPLE_KEY:
+            self.raw_element = self.raw_header.data_element(self.SAMPLE_KEY)
+
+    def get_raw_element(
+        self, key: Union[str, Tuple[int, int]]
+    ) -> pydicom.dataelem.DataElement:
+        return self.raw_header.data_element(key)
+
+    def get_values(self) -> dict:
+        vr = self.TEST_CLASS.VALUE_REPRESENTATION
+        fixture = VR_TO_VALUES.get(vr, {})
+        return self.VALUES if self.VALUES else fixture
+
+    def test_parse_value(self):
+        if self.TEST_CLASS is None:
+            self.skipTest(self.SKIP_MESSAGE)
+        values = self.get_values()
+        for key, expected in values.items():
+            raw = self.get_raw_element(key)
+            data_element = self.TEST_CLASS(raw)
+            self.assertEqual(data_element.value, expected)
 
     def test_repr(self):
-        value = repr(self.data_element)
-        expected = TEST_DATA_ELEMENT_STRING
-        self.assertEqual(value, expected)
-
-    def test_parse_private_bytes_value(self):
-        value = self.bytes_element.value
-        expected = TEST_DATA_ELEMENT_BYTES_VALUE
-        self.assertEqual(value, expected)
-
-    def test_sequence_parse_value_raises_not_implemented(self):
-        with self.assertRaises(NotImplementedError):
-            self.sequence_element.parse_value("anything")
+        if not self.SAMPLE_KEY:
+            self.skipTest("No sample key provided.")
+        element = self.header.get_data_element(self.SAMPLE_KEY)
+        self.assertEqual(repr(element), str(element))

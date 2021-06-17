@@ -47,5 +47,5 @@ class Time(DataElement):
             # If the value is empty string, simply return None
         except TypeError:
             # If the value is empty, simply return None, else raise TypeError
-            if value:
+            if value or value is False:
                 raise

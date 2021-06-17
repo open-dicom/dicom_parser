@@ -29,7 +29,6 @@ class SequenceOfItems(DataElement):
         NotImplementedError
             Invalid method
         """
-
         raise NotImplementedError(INVALID_SEQUENCE_PARSING)
 
     def __str__(self) -> str:
@@ -43,7 +42,6 @@ class SequenceOfItems(DataElement):
         str
             This instance's string representation
         """
-
         df = self.to_dataframe()
         info = f"Tag:\t\t{self.tag}\nKeyword:\t{self.keyword}\n\n"
         return info + format_header_df(df, max_colwidth=25) + "\n\n"
@@ -57,7 +55,6 @@ class SequenceOfItems(DataElement):
         pd.DataFrame
             This "SQ" data element's information
         """
-
         df = pd.concat(
             [subheader.to_dataframe() for subheader in self.value],
             keys=range(len(self.value)),

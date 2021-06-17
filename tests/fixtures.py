@@ -21,24 +21,12 @@ TEST_GE_LOCALIZER_PATH = os.path.join(TEST_FILES_PATH, "GE_localizer.dcm")
 TEST_SIEMENS_DWI_PATH = os.path.join(TEST_FILES_PATH, "siemens_dwi", "1.dcm")
 TEST_SERIES_PATH = os.path.join(TEST_FILES_PATH, "series")
 TEST_UTILS_DIRECTORY = os.path.join(TESTS_DIRECTORY, "utils")
-TEST_OW_ELEMENT = (0x00720069, "OW", b"Test")
-TEST_OW_EXPECTED = [v for v in TEST_OW_ELEMENT[-1]]
 
 
 TEST_FIELDS = {
-    "InstanceNumber": 1,
-    "StudyID": "1.3.12.2.1107.5.2.43.66024.30000018050107081466900000007",
-    "StudyDescription": "YA_lab^Assi",
     "StudyDate": datetime.strptime("20180501", "%Y%m%d").date(),
-    "StudyTime": datetime.strptime("12:21:56.958000", "%H:%M:%S.%f").time(),
-    "PixelSpacing": (0.48828125, 0.48828125),
-    "PatientAge": 27.0,
-    "SequenceVariant": ("Spoiled", "Oversampling Phase"),
-    "SelectorOWValue": TEST_OW_EXPECTED,
 }
 
-PARSED_B_MATRIX = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
-PARSED_DIFFUSTION_GRADIENT_DIRECTION = [0.57735026, 0.57735038, 0.57735032]
 
 SERIES_INSTANCE_UID = (
     "1.3.12.2.1107.5.2.43.66024.2018050112250992296484473.0.0.0"

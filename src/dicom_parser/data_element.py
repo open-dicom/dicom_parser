@@ -32,7 +32,6 @@ class DataElement:
         raw : PydicomDataElement
             pydicom's data element
         """
-
         self.raw: PydicomDataElement = raw
         self.tag: tuple = parse_tag(self.raw.tag)
         self.keyword: str = self.parse_keyword()

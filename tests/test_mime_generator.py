@@ -12,10 +12,10 @@ from dicom_parser.utils.mime_generator import generate_by_mime
 from tests.fixtures import TEST_MIME_SERIES_PATH
 
 #: Message to display for Linux and macOS tests.
-WINDOWS_RUN: str = "Mime type generation is not supported in Windows."
+NIX_RUN: str = "Mime type generation is supported in Linux and macOS."
 
 #: Message to display for Windows only tests.
-NON_WINDOWS_RUN: str = "Windows-specific tests."
+WINDOWS_TESTS: str = "Windows-specific tests."
 
 #: Whether the current platform OS is Windows or not.
 RUNNING_ON_WINDOWS: bool = platform.system() == "Windows"
@@ -24,7 +24,7 @@ RUNNING_ON_WINDOWS: bool = platform.system() == "Windows"
 # TODO: Fix windows test. For some reason NotImplementedError isn't raised
 # when tested with GitHub Actions.
 #
-# @pytest.mark.skipif(not RUNNING_ON_WINDOWS, reason=NON_WINDOWS_RUN)
+# @pytest.mark.skipif(not RUNNING_ON_WINDOWS, reason=WINDOWS_TESTS)
 # class WindowsMimeGeneratorTestCase(TestCase):
 #     """
 #     Windows-specific tests (where libmagic and python-magic are not
@@ -39,7 +39,7 @@ RUNNING_ON_WINDOWS: bool = platform.system() == "Windows"
 #             generate_by_mime(TEST_MIME_SERIES_PATH)
 
 
-@pytest.mark.skipif(RUNNING_ON_WINDOWS, reason=WINDOWS_RUN)
+@pytest.mark.skipif(RUNNING_ON_WINDOWS, reason=NIX_RUN)
 class MimeGeneratorTestCase(TestCase):
     """
     Tests for Linux and macOS.
