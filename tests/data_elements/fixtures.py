@@ -1,7 +1,11 @@
 import os
 from datetime import date, time
 
-import pickle5 as pickle
+try:
+    import pickle5 as pickle
+except ModuleNotFoundError:
+    import pickle
+
 from dicom_parser.utils.value_representation import ValueRepresentation
 from tests.fixtures import TEST_FILES_PATH
 
