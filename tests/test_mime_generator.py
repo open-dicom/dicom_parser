@@ -2,12 +2,13 @@
 Tests for the :func:`dicom_parser.utils.mime_generator.generate_by_mime`
 utility function.
 """
+import importlib.util
 import platform
 from typing import Generator
 from unittest import TestCase
 
 import pytest
-from dicom_parser.utils.mime_generator import generate_by_mime
+from dicom_parser.utils.mime_generator import check_magic, generate_by_mime
 
 from tests.fixtures import TEST_MIME_SERIES_PATH
 
@@ -19,6 +20,9 @@ WINDOWS_TESTS: str = "Windows-specific tests."
 
 #: Whether the current platform OS is Windows or not.
 RUNNING_ON_WINDOWS: bool = platform.system() == "Windows"
+
+#: Whether python-magic is installed or not.
+MAGIC = bool(importlib.util.find_spec("magic"))
 
 
 # TODO: Fix windows test. For some reason NotImplementedError isn't raised
@@ -32,6 +36,13 @@ class WindowsMimeGeneratorTestCase(TestCase):
     available).
     """
 
+    def test_check_magic(self):
+        """
+        Tests generation by mime type on Windows raises a RuntimeError.
+        """
+        with self.assertRaises(NotImplementedError):
+            check_magic()
+
     def test_notimplemetederror_raised(self):
         """
         Tests generation by mime type on Windows raises a RuntimeError.
@@ -40,7 +51,30 @@ class WindowsMimeGeneratorTestCase(TestCase):
             generate_by_mime(TEST_MIME_SERIES_PATH)
 
 
-@pytest.mark.skipif(RUNNING_ON_WINDOWS, reason=NIX_RUN)
+@pytest.mark.skipif(MAGIC or RUNNING_ON_WINDOWS, reason="Muggle tests.")
+class MugglesMimeGeneratorTestCase(TestCase):
+    """
+    Tests for installations without python-magic.
+    """
+
+    def test_check_magic(self):
+        """
+        Tests generation by mime type when python-magic isn't installed raises
+        ModuleNotFoundError.
+        """
+        with self.assertRaises(ImportError):
+            check_magic()
+
+    def test_modulenotfounderror_raised(self):
+        """
+        Tests generation by mime type when python-magic isn't installed raises
+        ModuleNotFoundError.
+        """
+        with self.assertRaises(ImportError):
+            generate_by_mime(TEST_MIME_SERIES_PATH)
+
+
+@pytest.mark.skipif(RUNNING_ON_WINDOWS or not MAGIC, reason=NIX_RUN)
 class MimeGeneratorTestCase(TestCase):
     """
     Tests for Linux and macOS.
