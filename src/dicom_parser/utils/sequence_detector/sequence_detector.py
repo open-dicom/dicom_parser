@@ -1,8 +1,6 @@
 """
 Definition of the :class:`SequenceDetector` class.
-
 """
-
 from dicom_parser.utils.sequence_detector.messages import (
     INVALID_MODALITY, WRONG_DEFINITION_TYPE)
 from dicom_parser.utils.sequence_detector.sequences import SEQUENCES
@@ -18,7 +16,6 @@ class SequenceDetector:
         sequences : dict, optional
             Dictionary of known sequences by modality, by default None
         """
-
         self.sequences = sequences or SEQUENCES
 
     def get_known_modality_sequences(self, modality: str) -> dict:
@@ -40,7 +37,6 @@ class SequenceDetector:
         NotImplementedError
             The `sequences` dictionary does not include the provided modality
         """
-
         try:
             return self.sequences[modality]
         except KeyError:
@@ -70,16 +66,15 @@ class SequenceDetector:
         TypeError
             Encountered a definition of an invalid type.
         """
+        if not values:
+            return None
 
         # Fix the values as returned from the header to comply with the
         # definition standards.
-        if values:
-            values = {
-                key: set(value) if isinstance(value, tuple) else {value}
-                for key, value in values.items()
-            }
-        else:
-            return None
+        values = {
+            key: set(value) if isinstance(value, tuple) else {value}
+            for key, value in values.items()
+        }
 
         if isinstance(definition, dict):
             return values == definition
@@ -106,7 +101,6 @@ class SequenceDetector:
         str
             The detected sequence name or None.
         """
-
         known_sequences = self.get_known_modality_sequences(modality)
         for sequence_name, sequence_definition in known_sequences.items():
             match = self.check_definition(sequence_definition, values)
