@@ -29,7 +29,7 @@ def check_magic() -> None:
     ImportError
         Dependency not installed
     """
-    if platform.system() == "Windows":  # pragma: no cover
+    if platform.system() == "Windows":
         raise NotImplementedError(WINDOWS)
     try:
         import magic  # noqa: F401
