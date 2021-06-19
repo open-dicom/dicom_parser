@@ -17,10 +17,13 @@ exclude = '''
 line-length = 79
 
 [tool.coverage.run]
-source = ["src/"]
+source = ["dicom_parser"]
 branch = true
-omit = ["*tests*", ".tox/**", "venv/**", "setup.py"]
-command_line = "-m pytest tests/"
+omit = ["*tests*", "venv/**", "setup.py"]
+command_line = "-m pytest tests"
+
+[tool.coverage.paths]
+source = ["src"]
 
 [build-system]
 requires = ["setuptools>=42", "wheel"]
