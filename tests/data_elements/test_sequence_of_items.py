@@ -31,3 +31,7 @@ class SequenceOfItemsTestCase(DataElementTestCase):
         header = self.sequence.value[0]
         self.assertIsInstance(header, Header)
         self.assertEqual(len(header.keys), 3)
+
+    def test_parse_value_raises_notimplementederror(self):
+        with self.assertRaises(NotImplementedError):
+            self.sequence.parse_value(self.sequence.raw)

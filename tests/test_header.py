@@ -1,3 +1,6 @@
+"""
+Definition of the :class:`HeaderTestCase` class.
+"""
 import json
 import warnings
 from pathlib import Path
@@ -6,7 +9,11 @@ from unittest import TestCase
 import pydicom
 from dicom_parser.header import Header
 from dicom_parser.utils.sequence_detector import SequenceDetector
-from dicom_parser.utils.value_representation import ValueRepresentation
+from dicom_parser.utils.value_representation import (
+    ValueRepresentation,
+    ValueRepresentationError,
+)
+from dicom_parser.utils.vr_to_data_element import get_data_element_class
 
 from tests.fixtures import (
     SERIES_INSTANCE_UID,
@@ -21,6 +28,11 @@ from tests.fixtures import (
 
 
 class HeaderTestCase(TestCase):
+    """
+    Tests for the :class:`~dicom_parser.header.Header` class.
+    """
+
+    #: Valid keywords and matching values to test against.
     KEYWORDS = {
         "PatientID": "012345678",
         "SeriesInstanceUID": SERIES_INSTANCE_UID,
@@ -28,7 +40,11 @@ class HeaderTestCase(TestCase):
         "StudyInstanceUID": STUDY_INSTANCE_UID,
         "StudyDate": "20180501",
     }
+
+    #: Invalid keywords.
     NON_KEYWORDS = ["ABC", "DEF", "GHI", "JKL"]
+
+    #: Valid tags and matching values to test against.
     TAGS = {
         (
             "0020",
@@ -43,12 +59,16 @@ class HeaderTestCase(TestCase):
             float, ["0.48828125", "0.48828125"]
         ),
     }
+
+    #: Invalid tags.
     NON_TAGS = [
         ("1111", "0000"),
         ("0000", "1111"),
         ("2222", "3333"),
         ("3333", "4444"),
     ]
+
+    #: Invalid types for data element query testing.
     BAD_DATA_ELEMENT_QUERY_VALUES = (
         0,
         ["1"],
@@ -58,10 +78,13 @@ class HeaderTestCase(TestCase):
         {1, 2, 3},
         None,
     )
+
+    #: Strings to test the number of returned data elements for a
+    #: `keyword_contains()` call.
     KEYWORD_CONTAINS = {"time": 10, "DATE": 7, "abcdef": 0}
 
     def setUp(self):
-        self.raw = pydicom.dcmread(TEST_IMAGE_PATH, stop_before_pixels=True)
+        self.raw = pydicom.dcmread(TEST_IMAGE_PATH)
         self.header = Header(self.raw)
         self.dwi_header = Header(TEST_SIEMENS_DWI_PATH)
 
@@ -283,7 +306,16 @@ class HeaderTestCase(TestCase):
         self.assertIsInstance(value, dict)
         self.assertDictEqual(value, expected)
 
+    def test_as_dict_is_cached(self):
+        result_1 = self.header.as_dict
+        result_2 = self.header.as_dict
+        self.assertIs(result_1, result_2)
+
     def test_keys(self):
         value = self.header.keys
         self.assertIsInstance(value, list)
         self.assertEqual(len(value), 119)
+
+    def test_unknown_value_representation(self):
+        with self.assertRaises(ValueRepresentationError):
+            get_data_element_class("invalid")

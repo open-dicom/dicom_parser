@@ -1,6 +1,10 @@
+"""
+Fixtures for data element tests.
+"""
 import os
 from datetime import date, time
 
+# pickle5 is required for to parse the pickled fixtures in Python before 3.8.
 try:
     import pickle5 as pickle
 except ModuleNotFoundError:
@@ -100,6 +104,7 @@ UNIQUE_IDENTIFIERS = {
     "SOPInstanceUID": "1.3.12.2.1107.5.2.43.66024.2018050112252318571884482",
 }
 
+#: Expected parsed values to test unsigned short (US) data elements with.
 UNSIGNED_SHORTS = {
     "AcquisitionMatrix": (0, 256, 233, 0),
     "SamplesPerPixel": 1,
@@ -114,7 +119,7 @@ UNSIGNED_SHORTS = {
 PRIVATE_DATA_ELEMENTS = {
     (0x19, 0x100F): "Normal",
     (0x51, 0x1019): "A2",
-    (0x0029, 0x1018): "MR",
+    (0x29, 0x1018): "MR",
 }
 
 #: Path of a pickled parsed CSA header.
@@ -149,6 +154,7 @@ SIEMENS_DWI_ELEMENTS = {
 TEST_OW_ELEMENT = (0x00720069, "OW", b"Test")
 TEST_OW_EXPECTED = [v for v in TEST_OW_ELEMENT[-1]]
 
+#: Dictionary of values to compare data element classes' parsed values against.
 VR_TO_VALUES = {
     ValueRepresentation.AS: AGE_STRINGS,
     ValueRepresentation.CS: CODE_STRINGS,
