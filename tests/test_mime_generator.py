@@ -23,20 +23,21 @@ RUNNING_ON_WINDOWS: bool = platform.system() == "Windows"
 
 # TODO: Fix windows test. For some reason NotImplementedError isn't raised
 # when tested with GitHub Actions.
-#
-# @pytest.mark.skipif(not RUNNING_ON_WINDOWS, reason=WINDOWS_TESTS)
-# class WindowsMimeGeneratorTestCase(TestCase):
-#     """
-#     Windows-specific tests (where libmagic and python-magic are not
-#     available).
-#     """
 
-#     def test_notimplemetederror_raised(self):
-#         """
-#         Tests generation by mime type on Windows raises a RuntimeError.
-#         """
-#         with self.assertRaises(NotImplementedError):
-#             generate_by_mime(TEST_MIME_SERIES_PATH)
+
+@pytest.mark.skipif(not RUNNING_ON_WINDOWS, reason=WINDOWS_TESTS)
+class WindowsMimeGeneratorTestCase(TestCase):
+    """
+    Windows-specific tests (where libmagic and python-magic are not
+    available).
+    """
+
+    def test_notimplemetederror_raised(self):
+        """
+        Tests generation by mime type on Windows raises a RuntimeError.
+        """
+        with self.assertRaises(NotImplementedError):
+            generate_by_mime(TEST_MIME_SERIES_PATH)
 
 
 @pytest.mark.skipif(RUNNING_ON_WINDOWS, reason=NIX_RUN)
