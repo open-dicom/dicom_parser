@@ -65,7 +65,6 @@ class Header:
            https://github.com/pydicom/pydicom/blob/master/pydicom/dataset.py
         .. _DICOM:
            https://www.dicomstandard.org/
-
         """
         self.sequence_detector = sequence_detector()
         self.raw = read_file(raw, read_data=False)
@@ -90,6 +89,14 @@ class Header:
         return self.get(key, missing_ok=False)
 
     def __str__(self) -> str:
+        """
+        Returns the string represetnation of this instance.
+
+        Returns
+        -------
+        str
+            String representation
+        """
         base = self.to_dataframe(exclude=ValueRepresentation.SQ, private=False)
         sequences = self.get_data_elements(
             value_representation=ValueRepresentation.SQ
@@ -111,6 +118,14 @@ class Header:
         return format_header_df(base) + sequences_string + privates_string
 
     def __repr__(self) -> str:
+        """
+        Returns the string represetnation of this instance.
+
+        Returns
+        -------
+        str
+            String representation
+        """
         return self.__str__()
 
     def detect_sequence(self) -> str:
