@@ -41,7 +41,12 @@ def generate_by_mime(
     root_path: Path, pattern: str = "*", mime_type: str = DICOM_MIME_TYPE
 ) -> Generator:
     """
-    Yields files with the provided *mime_type*.
+    Wrapper around the :func:`_generate_by_mime` generator function.
+
+    Note
+    ----
+    This wrapper is required in order to execute :func:`check_magic` before
+    the iteration itself.
 
     Parameters
     ----------
@@ -58,7 +63,30 @@ def generate_by_mime(
         Paths of the desired mime type
     """
     check_magic()
-    import magic
+    return _generate_by_mime(root_path, pattern, mime_type)
+
+
+def _generate_by_mime(
+    root_path: Path, pattern: str = "*", mime_type: str = DICOM_MIME_TYPE
+) -> Generator:
+    """
+    Yields files with the provided *mime_type*.
+
+    Parameters
+    ----------
+    root_path : Path
+        Base directory path to recursively iterate
+    pattern : str, optional
+        The glob pattern used to iterate files, by default "*"
+    mime_type : str, optional
+        Desired file mime type, by default DICOM_MIME_TYPE
+
+    Yields
+    -------
+    GeneratorType
+        Paths of the desired mime type
+    """
+    import magic  # noqa: F401
 
     for path in Path(root_path).rglob(pattern):
         try:
