@@ -65,9 +65,7 @@ class Header:
            https://github.com/pydicom/pydicom/blob/master/pydicom/dataset.py
         .. _DICOM:
            https://www.dicomstandard.org/
-
         """
-
         self.sequence_detector = sequence_detector()
         self.raw = read_file(raw, read_data=False)
         self.manufacturer = self.get("Manufacturer")
@@ -88,10 +86,17 @@ class Header:
         Any
             Parsed header information of the given key or keys
         """
-
         return self.get(key, missing_ok=False)
 
     def __str__(self) -> str:
+        """
+        Returns the string represetnation of this instance.
+
+        Returns
+        -------
+        str
+            String representation
+        """
         base = self.to_dataframe(exclude=ValueRepresentation.SQ, private=False)
         sequences = self.get_data_elements(
             value_representation=ValueRepresentation.SQ
@@ -113,6 +118,14 @@ class Header:
         return format_header_df(base) + sequences_string + privates_string
 
     def __repr__(self) -> str:
+        """
+        Returns the string represetnation of this instance.
+
+        Returns
+        -------
+        str
+            String representation
+        """
         return self.__str__()
 
     def detect_sequence(self) -> str:
@@ -125,7 +138,6 @@ class Header:
         str
             Imaging sequence name
         """
-
         modality = self.get("Modality")
         sequence_identifiers = self.sequence_identifiers.get(modality)
         sequence_identifying_values = self.get(sequence_identifiers)
@@ -158,7 +170,6 @@ class Header:
         PydicomDataElement
             The requested data element
         """
-
         value = self.raw.data_element(keyword)
         if isinstance(value, PydicomDataElement):
             return value
@@ -188,7 +199,6 @@ class Header:
         PydicomDataElement
             The requested data element
         """
-
         value = self.raw.get(tag)
         if isinstance(value, PydicomDataElement):
             return value
@@ -220,7 +230,6 @@ class Header:
         PydicomDataElement
             The requested data element
         """
-
         # By keyword
         if type(tag_or_keyword) is str:
             return self.get_raw_element_by_keyword(tag_or_keyword)
@@ -268,6 +277,7 @@ class Header:
             raw_element = tag_or_keyword
         DataElementClass = get_data_element_class(raw_element.VR)
         data_element = DataElementClass(raw_element)
+        # This prevents a circular import but it's far from optimal.
         if data_element.VALUE_REPRESENTATION == ValueRepresentation.SQ:
             data_element._value = [
                 Header(raw_header) for raw_header in raw_element.value
@@ -344,7 +354,6 @@ class Header:
         type
             The raw value of the data element
         """
-
         element = self.get_raw_element(tag_or_keyword)
         return element.value
 
@@ -366,7 +375,6 @@ class Header:
         Any
             Parsed data element value
         """
-
         data_element = self.get_data_element(tag_or_keyword)
         return data_element.value
 
@@ -387,7 +395,6 @@ class Header:
         tuple
             Private data element tag
         """
-
         if keyword != "Manufacturer":
             manufacturer_private_tags = PRIVATE_TAGS.get(self.manufacturer, {})
             return manufacturer_private_tags.get(keyword)
@@ -420,7 +427,6 @@ class Header:
         Any
             The requested data element value (or a dict for multiple values)
         """
-
         # Assignes the required method based on the `parsed` parameter's value
         get_method = self.get_parsed_value if parsed else self.get_raw_value
 

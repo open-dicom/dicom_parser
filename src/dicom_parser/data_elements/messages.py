@@ -1,7 +1,6 @@
 """
 Strings and string formatting templates used in this module.
 """
-
 #: Message displayed when a failure occurs to parse a "DA" data element's raw
 #: value.
 DATE_PARSING_FAILURE = "Failed to parse '{value}' into a valid date object"

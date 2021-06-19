@@ -1,7 +1,6 @@
 """
 Definition of the :class:`Time` class, representing a single "TM" data element.
 """
-
 from datetime import datetime
 
 from dicom_parser.data_element import DataElement
@@ -34,7 +33,6 @@ class Time(DataElement):
         ValueError
             Failure to parse time from raw value
         """
-
         try:
             # Try to parse according to the default time representation
             return datetime.strptime(value, "%H%M%S.%f").time()
@@ -49,5 +47,5 @@ class Time(DataElement):
             # If the value is empty string, simply return None
         except TypeError:
             # If the value is empty, simply return None, else raise TypeError
-            if value:
+            if value or value is False:
                 raise

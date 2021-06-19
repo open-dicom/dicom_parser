@@ -2,7 +2,6 @@
 Definition of the :class:`AgeString` class, representing a single "AS" data
 element.
 """
-
 from dicom_parser.data_element import DataElement
 from dicom_parser.utils.value_representation import ValueRepresentation
 
@@ -30,7 +29,6 @@ class AgeString(DataElement):
         float
             Age in years
         """
-
         try:
             duration = float(value[:-1])
             units = value[-1]

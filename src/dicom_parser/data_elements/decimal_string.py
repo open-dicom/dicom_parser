@@ -2,7 +2,6 @@
 Definition of the :class:`DecimalString` class, representing a single "DS" data
 element.
 """
-
 from dicom_parser.data_element import DataElement
 from dicom_parser.utils.value_representation import ValueRepresentation
 
@@ -30,7 +29,6 @@ class DecimalString(DataElement):
         float
             Parsed decimal
         """
-
         try:
             return float(value)
         except (TypeError, ValueError):

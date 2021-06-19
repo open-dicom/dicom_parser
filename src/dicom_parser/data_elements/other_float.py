@@ -2,7 +2,6 @@
 Definition of the :class:`OtherFloat` class, representing a single "OF" data
 element.
 """
-
 from dicom_parser.data_element import DataElement
 from dicom_parser.utils.value_representation import ValueRepresentation
 

@@ -8,27 +8,65 @@ article`_.
 .. _this MDN article:
    https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types
 """
-import os
+import platform
 from pathlib import Path
 from typing import Generator
+
+from dicom_parser.utils.messages import MUGGLES, WINDOWS
 
 #: DICOM file's expected mime type.
 DICOM_MIME_TYPE = "application/dicom"
 
-#: Message to show if python-magic is not installed.
-MUGGLES = """To generate files by mime type, python-magic must be installed.
-To install the required version of python-magic, simply run:
 
-pip install dicom_parser[magic]
-"""
+def check_magic() -> None:
+    """
+    Checks whether python-magic is available.
 
-#: Message to display if the user is trying to read mime types from Windows.
-WINDOWS = """Unfortunately, DICOM generation by mime type is not supported in
-Windows.
-"""
+    Raises
+    ------
+    NotImplementedError
+        Generation by mime type is not supported on Windows
+    ImportError
+        Dependency not installed
+    """
+    if platform.system() == "Windows":
+        raise NotImplementedError(WINDOWS)
+    try:
+        import magic  # noqa: F401
+    except ModuleNotFoundError:
+        raise ImportError(MUGGLES)
 
 
 def generate_by_mime(
+    root_path: Path, pattern: str = "*", mime_type: str = DICOM_MIME_TYPE
+) -> Generator:
+    """
+    Wrapper around the :func:`_generate_by_mime` generator function.
+
+    Note
+    ----
+    This wrapper is required in order to execute :func:`check_magic` before
+    the iteration itself.
+
+    Parameters
+    ----------
+    root_path : Path
+        Base directory path to recursively iterate
+    pattern : str, optional
+        The glob pattern used to iterate files, by default "*"
+    mime_type : str, optional
+        Desired file mime type, by default DICOM_MIME_TYPE
+
+    Yields
+    -------
+    GeneratorType
+        Paths of the desired mime type
+    """
+    check_magic()
+    return _generate_by_mime(root_path, pattern, mime_type)
+
+
+def _generate_by_mime(
     root_path: Path, pattern: str = "*", mime_type: str = DICOM_MIME_TYPE
 ) -> Generator:
     """
@@ -48,14 +86,13 @@ def generate_by_mime(
     GeneratorType
         Paths of the desired mime type
     """
-    if os.name == "nt":
-        raise RuntimeError(WINDOWS)
-    try:
-        import magic
-    except ImportError:
-        raise ImportError(MUGGLES)
+    import magic  # noqa: F401
 
     for path in Path(root_path).rglob(pattern):
-        path_mime = magic.from_file(str(path), mime=True)
-        if path_mime == mime_type:
-            yield path
+        try:
+            path_mime = magic.from_file(str(path), mime=True)
+        except IsADirectoryError:
+            continue
+        else:
+            if path_mime == mime_type:
+                yield path

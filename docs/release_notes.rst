@@ -1,10 +1,14 @@
 Release Notes
 =============
 
-1.0.2
+1.1.0
 -----
-  * Added *pyproject.toml* and *setup.cfg* files and created *src/* directory
-  * to conform with newer Python packaging standards.
+  * Updated project structure and packaging to conform with PEP517_ and
+    PEP518_.
+  * Migrated CI to `GitHub Actions`_.
+  * Fixed *dcm* generation by mime-type bug (`#30
+    <https://github.com/ZviBaratz/dicom_parser/issues/30>`_) for nested directories.
+  * Improved tests and increased coverage.
 
 1.0.1
 -----
@@ -120,12 +124,25 @@ First release!
     :class:`~dicom_parser.utils.siemens.csa.header.CsaHeader` class.
 
 
-.. _CSA Headers: https://nipy.org/nibabel/dicom/siemens_csa.html
-.. _dcm2niix: https://github.com/rordenlab/dcm2niix
-.. _django_dicom: https://github.com/TheLabbingProject/django_dicom
-.. _isort: https://pycqa.github.io/isort/
-.. _NIfTI: https://nifti.nimh.nih.gov/
-.. _pydicom: https://github.com/pydicom/pydicom
-.. _Siemens mosaic: https://nipy.org/nibabel/dicom/dicom_mosaic.html
+.. _CSA Headers:
+   https://nipy.org/nibabel/dicom/siemens_csa.html
+.. _dcm2niix:
+   https://github.com/rordenlab/dcm2niix
+.. _django_dicom:
+   https://github.com/TheLabbingProject/django_dicom
+.. _GitHub Actions:
+   https://github.com/ZviBaratz/dicom_parser/actions/workflows/tests.yml
+.. _isort:
+   https://pycqa.github.io/isort/
+.. _NIfTI:
+   https://nifti.nimh.nih.gov/
+.. _PEP517:
+   https://www.python.org/dev/peps/pep-0517/
+.. _PEP518:
+   https://www.python.org/dev/peps/pep-0518/
+.. _pydicom:
+   https://github.com/pydicom/pydicom
+.. _Siemens mosaic:
+   https://nipy.org/nibabel/dicom/dicom_mosaic.html
 .. _value-representation (VR):
    http://dicom.nema.org/medical/dicom/current/output/chtml/part05/sect_6.2.html

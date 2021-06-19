@@ -2,9 +2,7 @@
 Definition of the :class:`Image` class, representing a single pair of
 :class:`~dicom_parser.header.Header` and data (3D `NumPy <https://numpy.org>`_
 array).
-
 """
-
 import warnings
 from pathlib import Path
 from typing import Union
@@ -22,7 +20,6 @@ class Image:
     """
     This class represents a single DICOM image (i.e. `.dcm` file) and provides
     unified access to it's header information and data.
-
     """
 
     def __init__(self, raw: Union[FileDataset, str, Path]):
@@ -39,7 +36,6 @@ class Image:
         raw : Union[pydicom.dataset.FileDataset, str, pathlib.Path]
             A single DICOM image
         """
-
         self.raw = read_file(raw, read_data=True)
         self.header = Header(self.raw)
         self.warnings = []
@@ -54,7 +50,6 @@ class Image:
         np.ndarray
             Pixel array data
         """
-
         try:
             return self.raw.pixel_array
         except (AttributeError, ValueError) as exception:
@@ -72,7 +67,6 @@ class Image:
         np.ndarray
             Pixel array data
         """
-
         if self.is_mosaic:
             mosaic = Mosaic(self._data, self.header)
             return mosaic.fold()
@@ -97,7 +91,6 @@ class Image:
         bool
             Whether the image is a mosaic encoded volume
         """
-
         return "MOSAIC" in self.header.get("ImageType")
 
     @property
@@ -110,7 +103,6 @@ class Image:
         bool
             Whether this image represents fMRI data
         """
-
         return self.header.detected_sequence == "fMRI"
 
     @property

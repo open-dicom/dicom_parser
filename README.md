@@ -1,7 +1,7 @@
 [![PyPI version](https://img.shields.io/pypi/v/dicom_parser.svg)](https://pypi.python.org/pypi/pylabber/)
 [![PyPI status](https://img.shields.io/pypi/status/dicom_parser.svg)](https://pypi.python.org/pypi/pylabber/)
 [![GitHub Actions](https://github.com/ZviBaratz/dicom_parser/actions/workflows/tests.yml/badge.svg)](https://github.com/ZviBaratz/dicom_parser/actions/workflows/tests.yml)
-[![codecov.io](https://codecov.io/gh/ZviBaratz/dicom_parser/coverage.svg?branch=master)](https://codecov.io/github/ZviBaratzabbingProject/dicom_parser?branch=master)
+[![codecov.io](https://codecov.io/gh/ZviBaratz/dicom_parser/coverage.svg?branch=master)](https://codecov.io/github/ZviBaratz/dicom_parser?branch=master)
 [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/ZviBaratz/dicom_parser.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/ZviBaratz/dicom_parser/context:python)
 [![Documentation Status](https://readthedocs.org/projects/dicom-parser/badge/?version=latest)](http://dicom-parser.readthedocs.io/?badge=latest)
 

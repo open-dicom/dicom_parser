@@ -2,18 +2,20 @@
 Definition of the :class:`PrivateDataElement` class, representing a single "UN"
 data element.
 """
-
 from types import FunctionType
 from typing import Any
 
-from pydicom.dataelem import DataElement as PydicomDataElement
-
 from dicom_parser.data_element import DataElement
 from dicom_parser.utils.siemens.private_tags import (
-    parse_siemens_b_matrix, parse_siemens_bandwith_per_pixel_phase_encode,
-    parse_siemens_csa_header, parse_siemens_gradient_direction,
-    parse_siemens_number_of_slices_in_mosaic, parse_siemens_slice_timing)
+    parse_siemens_b_matrix,
+    parse_siemens_bandwith_per_pixel_phase_encode,
+    parse_siemens_csa_header,
+    parse_siemens_gradient_direction,
+    parse_siemens_number_of_slices_in_mosaic,
+    parse_siemens_slice_timing,
+)
 from dicom_parser.utils.value_representation import ValueRepresentation
+from pydicom.dataelem import DataElement as PydicomDataElement
 
 #: A dictionary matching private data elements to their appropriate parsing
 #: method.
@@ -45,7 +47,6 @@ class PrivateDataElement(DataElement):
         raw : PydicomDataElement
             pydicom's representation of this data element
         """
-
         super().__init__(raw)
         self.definition = TAG_TO_DEFINITION.get(self.tag, {})
         self.update_from_definition()
@@ -55,7 +56,6 @@ class PrivateDataElement(DataElement):
         Update this data element's value_representation using a custom
         definition.
         """
-
         self.value_representation = self.definition.get(
             "value_representation", self.VALUE_REPRESENTATION
         )
@@ -75,7 +75,6 @@ class PrivateDataElement(DataElement):
         Any
             Parsed private data element value
         """
-
         # Try to call a custom method
         method: FunctionType = self.definition.get("method")
         if method:

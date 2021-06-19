@@ -1,4 +1,3 @@
-import os
 from pathlib import Path
 from unittest import TestCase
 
@@ -15,9 +14,6 @@ from tests.fixtures import (
     TEST_SERIES_PATH,
     TEST_UTILS_DIRECTORY,
 )
-
-MIME_SKIP = "Mime type generation is not supported in Windows."
-RUNNING_ON_WINDOWS = os.name == "nt"
 
 
 class SeriesTestCase(TestCase):
@@ -68,24 +64,18 @@ class SeriesTestCase(TestCase):
         self.assertTupleEqual(series.data.shape, (512, 512, 11))
 
     def test_mosaic_series_returns_as_4d(self):
-        if RUNNING_ON_WINDOWS:
-            self.skipTest(MIME_SKIP)
-        series = Series(TEST_RSFMRI_SERIES_PATH, mime=True)
+        series = Series(TEST_RSFMRI_SERIES_PATH)
         data = series.data
         expected_shape = 96, 96, 64, 3
         self.assertTupleEqual(data.shape, expected_shape)
 
     def test_mosaic_series_data_same_as_nifti(self):
-        if RUNNING_ON_WINDOWS:
-            self.skipTest(MIME_SKIP)
-        series = Series(TEST_RSFMRI_SERIES_PATH, mime=True)
+        series = Series(TEST_RSFMRI_SERIES_PATH)
         nii_data = np.asanyarray(nib.load(TEST_RSFMRI_SERIES_NIFTI).dataobj)
         self.assertTrue(np.array_equal(series.data, nii_data))
 
     def test_len(self):
-        if RUNNING_ON_WINDOWS:
-            self.skipTest(MIME_SKIP)
-        rsfmri = Series(TEST_RSFMRI_SERIES_PATH, mime=True)
+        rsfmri = Series(TEST_RSFMRI_SERIES_PATH)
         self.assertEqual(len(self.localizer), 11)
         self.assertEqual(len(rsfmri), 3)
 
