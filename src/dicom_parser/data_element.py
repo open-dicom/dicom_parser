@@ -110,6 +110,7 @@ class DataElement:
         Any
             This instance's parsed value
         """
+        # pylint: disable=no-self-use
         if isinstance(value, bytes):
             try:
                 return value.decode("utf-8").strip()
