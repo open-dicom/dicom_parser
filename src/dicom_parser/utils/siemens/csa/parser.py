@@ -30,8 +30,9 @@ class CsaParser:
 
         self.parsed = destination if isinstance(destination, dict) else {}
 
+    @staticmethod
     def update_existing_element_list(
-        self, part_name: str, index: int, destination: dict
+        part_name: str, index: int, destination: dict
     ) -> dict:
         """
         If an array part (part containing the `[<index>]` pattern) exists as
@@ -62,9 +63,8 @@ class CsaParser:
             destination[part_name].append({})
             return destination[part_name][-1]
 
-    def create_new_element_list(
-        self, part_name: str, destination: dict
-    ) -> dict:
+    @staticmethod
+    def create_new_element_list(part_name: str, destination: dict) -> dict:
         """
         If an array part (part containing the `[<index>]` pattern) exists as
         any part of the listed key except for the last, it indicates a list of
@@ -88,6 +88,89 @@ class CsaParser:
 
         destination[part_name] = [{}]
         return destination[part_name][0]
+
+    @staticmethod
+    def assign_list_element(part: str, value, destination: dict):
+        """
+        Appends to an existing list value or creates a new list instance for
+        it.
+
+        Parameters
+        ----------
+        part : str
+            Last part's name
+        value : Any
+            The
+            :class:`~dicom_parser.utils.siemens.csa.data_element.CsaDataElement`'s
+            value
+        destination : dict
+            A pointer to the appropriate destination with the parsed dictionary
+        """
+
+        part_name = part.split("[")[0]
+        try:
+            destination[part_name].append(value)
+        except (KeyError, AttributeError):
+            destination[part_name] = [value]
+
+    @staticmethod
+    def scaffold_dict_part(part: str, destination: dict) -> dict:
+        """
+        Returns the destination of a given key's dict part within the parsed
+        dictionary.
+
+        Parameters
+        ----------
+        part : str
+            List part's name
+        destination : dict
+            The current level of scaffolding within the parsed dictionary
+
+        Returns
+        -------
+        dict
+            The next level of the key's scaffolding within the parsed
+            dictionary
+        """
+
+        if isinstance(destination.get(part), dict):
+            return destination[part]
+        else:
+            destination[part] = {}
+            return destination[part]
+
+    @staticmethod
+    def fix_value(value):
+        """
+        Covert a CSA header element's value to float or int if possible.
+        Also cleans up redundant quotation marks and decodes hexadecimal
+        values.
+
+        Parameters
+        ----------
+        value : Any
+            Some CSA header element value
+
+        Returns
+        -------
+        str, int, or float
+            Fixed (converted) value
+        """
+
+        try:
+            return (
+                int(value.split(".")[0])
+                if float(value).is_integer()
+                else float(value)
+            )
+        except ValueError:
+            # Decode hexadecimal string
+            try:
+                return int(value, 16)
+            except ValueError:
+                # Remove extra quotes from strings
+                # e.g. '""Siemens""' -> 'Siemens'
+                return value.strip('"')
 
     def scaffold_list_part(
         self, part: str, index: int, destination: dict
@@ -120,31 +203,6 @@ class CsaParser:
             )
         else:
             return self.create_new_element_list(part_name, destination)
-
-    def scaffold_dict_part(self, part: str, destination: dict) -> dict:
-        """
-        Returns the destination of a given key's dict part within the parsed
-        dictionary.
-
-        Parameters
-        ----------
-        part : str
-            List part's name
-        destination : dict
-            The current level of scaffolding within the parsed dictionary
-
-        Returns
-        -------
-        dict
-            The next level of the key's scaffolding within the parsed
-            dictionary
-        """
-
-        if isinstance(destination.get(part), dict):
-            return destination[part]
-        else:
-            destination[part] = {}
-            return destination[part]
 
     def scaffold_part(
         self, csa_data_element: CsaDataElement, part: str, destination: dict
@@ -207,29 +265,6 @@ class CsaParser:
             )
         return destination
 
-    def assign_list_element(self, part: str, value, destination: dict):
-        """
-        Appends to an existing list value or creates a new list instance for
-        it.
-
-        Parameters
-        ----------
-        part : str
-            Last part's name
-        value : Any
-            The
-            :class:`~dicom_parser.utils.siemens.csa.data_element.CsaDataElement`'s
-            value
-        destination : dict
-            A pointer to the appropriate destination with the parsed dictionary
-        """
-
-        part_name = part.split("[")[0]
-        try:
-            destination[part_name].append(value)
-        except (KeyError, AttributeError):
-            destination[part_name] = [value]
-
     def assign_listed_element(
         self, csa_data_element: CsaDataElement, destination: dict
     ):
@@ -254,38 +289,6 @@ class CsaParser:
             self.assign_list_element(last_part, value, destination)
         else:
             destination[last_part] = value
-
-    def fix_value(self, value):
-        """
-        Covert a CSA header element's value to float or int if possible.
-        Also cleans up redundant quotation marks and decodes hexadecimal
-        values.
-
-        Parameters
-        ----------
-        value : Any
-            Some CSA header element value
-
-        Returns
-        -------
-        str, int, or float
-            Fixed (converted) value
-        """
-
-        try:
-            return (
-                int(value.split(".")[0])
-                if float(value).is_integer()
-                else float(value)
-            )
-        except ValueError:
-            # Decode hexadecimal string
-            try:
-                return int(value, 16)
-            except ValueError:
-                # Remove extra quotes from strings
-                # e.g. '""Siemens""' -> 'Siemens'
-                return value.strip('"')
 
     def parse(self, csa_data_element: CsaDataElement):
         """

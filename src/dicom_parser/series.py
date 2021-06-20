@@ -81,7 +81,8 @@ class Series:
             message = INVALID_INDEXING_OPERATOR.format(key=key)
             raise TypeError(message)
 
-    def check_path(self, path) -> Path:
+    @staticmethod
+    def check_path(path) -> Path:
         """
         Converts to a :class:`~pathlib.Path` instance if required and checks
         that it represents an existing directory.

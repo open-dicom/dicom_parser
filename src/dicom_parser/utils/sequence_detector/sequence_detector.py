@@ -2,7 +2,9 @@
 Definition of the :class:`SequenceDetector` class.
 """
 from dicom_parser.utils.sequence_detector.messages import (
-    INVALID_MODALITY, WRONG_DEFINITION_TYPE)
+    INVALID_MODALITY,
+    WRONG_DEFINITION_TYPE,
+)
 from dicom_parser.utils.sequence_detector.sequences import SEQUENCES
 
 
@@ -18,32 +20,8 @@ class SequenceDetector:
         """
         self.sequences = sequences or SEQUENCES
 
-    def get_known_modality_sequences(self, modality: str) -> dict:
-        """
-        Returns a dictionary of imaging sequence definitions.
-
-        Parameters
-        ----------
-        modality : str
-            The modality for which to return imaging sequence defitions
-
-        Returns
-        -------
-        dict
-            Imaging sequence definitions
-
-        Raises
-        ------
-        NotImplementedError
-            The `sequences` dictionary does not include the provided modality
-        """
-        try:
-            return self.sequences[modality]
-        except KeyError:
-            message = INVALID_MODALITY.format(modality=modality)
-            raise NotImplementedError(message)
-
-    def check_definition(self, definition, values: dict) -> bool:
+    @staticmethod
+    def check_definition(definition, values: dict) -> bool:
         """
         Checks whether the specified header information values satisfy the
         provided definition.
@@ -83,6 +61,31 @@ class SequenceDetector:
         raise TypeError(
             WRONG_DEFINITION_TYPE.format(definition_type=type(definition))
         )
+
+    def get_known_modality_sequences(self, modality: str) -> dict:
+        """
+        Returns a dictionary of imaging sequence definitions.
+
+        Parameters
+        ----------
+        modality : str
+            The modality for which to return imaging sequence defitions
+
+        Returns
+        -------
+        dict
+            Imaging sequence definitions
+
+        Raises
+        ------
+        NotImplementedError
+            The `sequences` dictionary does not include the provided modality
+        """
+        try:
+            return self.sequences[modality]
+        except KeyError:
+            message = INVALID_MODALITY.format(modality=modality)
+            raise NotImplementedError(message)
 
     def detect(self, modality: str, values: dict) -> str:
         """
