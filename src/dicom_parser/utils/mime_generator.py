@@ -32,6 +32,7 @@ def check_magic() -> None:
     if platform.system() == "Windows":
         raise NotImplementedError(WINDOWS)
     try:
+        # pylint: disable=unused-import
         import magic  # noqa: F401
     except ModuleNotFoundError:
         raise ImportError(MUGGLES)
@@ -86,7 +87,7 @@ def _generate_by_mime(
     GeneratorType
         Paths of the desired mime type
     """
-    import magic  # noqa: F401
+    import magic
 
     for path in Path(root_path).rglob(pattern):
         try:

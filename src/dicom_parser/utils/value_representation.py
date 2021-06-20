@@ -56,8 +56,6 @@ class ValueRepresentationError(Exception):
     Custom execption indicating a data element has an invalid VR value.
     """
 
-    pass
-
 
 def get_value_representation(key: str) -> ValueRepresentation:
     """
