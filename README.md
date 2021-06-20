@@ -186,7 +186,8 @@ Similarly to the `Image` class, we can also use the indexing operator:
     KeyError: "The keyword: 'MissingKey' does not exist in the header!"
 ```
 
-Another useful feature of the indexing operator is for querying an `Image` instance based on its index in the series:
+Another useful feature of the indexing operator is for querying an `Image`
+instance based on its index in the series:
 
 ```python
     >>> series[6]
