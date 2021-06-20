@@ -35,7 +35,7 @@ To install the latest version of `dicom_parser`, simply run:
 
 ## Quickstart
 
-The most basic usage case is reading a single DICOM image (_.dcm_ file) as
+The most basic usage case is reading a single DICOM image (*.dcm* file) as
 an [Image](https://dicom-parser.readthedocs.io/en/latest/modules/dicom_parser.html#dicom_parser.image.Image)
 instance.
 
@@ -46,14 +46,14 @@ instance.
 
 ### Coversion to Python's native types
 
-_dicom_parser_ provides _dict_-like access to the parsed values of the
+*dicom_parser* provides *dict*-like access to the parsed values of the
 [header](https://dcm4che.atlassian.net/wiki/spaces/d2/pages/1835038/A+Very+Basic+DICOM+Introduction)'s
 data-elements. The raw values as read by *[pydicom][]* remain accessible
 through the *raw* attribute.
 
 #### Examples
 
-Decimal String (DS) to _float_ using the [`Header`][header] class's
+Decimal String (DS) to *float* using the [`Header`][header] class's
 [get](https://dicom-parser.readthedocs.io/en/latest/modules/dicom_parser.html#dicom_parser.header.Header.get)
 method:
 
@@ -71,7 +71,7 @@ method:
     float
 ```
 
-Age String (AS) to _float_:
+Age String (AS) to *float*:
 
 ```python
     >>> raw_value = image.header.raw['PatientAge'].value
@@ -122,7 +122,7 @@ Code String (CS) to a verbose value or set of values:
 
 Et cetera.
 
-> The _dict_-like functionality also includes safe getting:
+> The *dict*-like functionality also includes safe getting:
 >
 > ```python
 >     >>> image.header.get('MissingKey')
@@ -147,8 +147,8 @@ Another useful class this package offers is the `Series` class:
     >>> series = Series('/some/dicom/series/')
 ```
 
-The `Series` instance allows us to easily
-query the underlying images' headers using its `get` method:
+The `Series` instance allows us to easily query the underlying images' headers
+using its `get` method:
 
 ```python
     # Single value
