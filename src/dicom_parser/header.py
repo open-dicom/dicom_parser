@@ -231,10 +231,10 @@ class Header:
             The requested data element
         """
         # By keyword
-        if type(tag_or_keyword) is str:
+        if isinstance(tag_or_keyword, str):
             return self.get_raw_element_by_keyword(tag_or_keyword)
         # By tag
-        elif type(tag_or_keyword) is tuple:
+        elif isinstance(tag_or_keyword, tuple):
             return self.get_raw_element_by_tag(tag_or_keyword)
 
         # If not a keyword or a tag, raise a TypeError

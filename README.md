@@ -1,22 +1,26 @@
+# dicom_parser
+
 [![PyPI version](https://img.shields.io/pypi/v/dicom_parser.svg)](https://pypi.python.org/pypi/pylabber/)
 [![PyPI status](https://img.shields.io/pypi/status/dicom_parser.svg)](https://pypi.python.org/pypi/pylabber/)
 [![GitHub Actions](https://github.com/ZviBaratz/dicom_parser/actions/workflows/tests.yml/badge.svg)](https://github.com/ZviBaratz/dicom_parser/actions/workflows/tests.yml)
-[![codecov.io](https://codecov.io/gh/ZviBaratz/dicom_parser/coverage.svg?branch=master)](https://codecov.io/github/ZviBaratz/dicom_parser?branch=master)
-[![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/ZviBaratz/dicom_parser.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/ZviBaratz/dicom_parser/context:python)
 [![Documentation Status](https://readthedocs.org/projects/dicom-parser/badge/?version=latest)](http://dicom-parser.readthedocs.io/?badge=latest)
 
-# dicom_parser
+[![codecov.io](https://codecov.io/gh/ZviBaratz/dicom_parser/coverage.svg?branch=master)](https://codecov.io/github/ZviBaratz/dicom_parser?branch=master)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/c8d047121709494a94f612e183922121)](https://www.codacy.com/gh/ZviBaratz/dicom_parser/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ZviBaratz/dicom_parser&amp;utm_campaign=Badge_Grade)
+[![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/ZviBaratz/dicom_parser.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/ZviBaratz/dicom_parser/context:python)
+[![CodeFactor](https://www.codefactor.io/repository/github/zvibaratz/dicom_parser/badge)](https://www.codefactor.io/repository/github/zvibaratz/dicom_parser)
 
-_dicom_parser_ is a utility python package meant to facilitate access to
-[DICOM](https://www.dicomstandard.org/) header information by extending the functionality of _[pydicom]_.
+*dicom_parser* is a utility python package meant to facilitate access to
+[DICOM](https://www.dicomstandard.org/) header information by extending the
+functionality of *[pydicom][]*.
 
-Essentially, _dicom_parser_ uses DICOM's
+Essentially, *dicom_parser* uses DICOM's
 [data-element](https://northstar-www.dartmouth.edu/doc/idl/html_6.2/DICOM_Attributes.html)
 [value-representation (VR)](http://dicom.nema.org/medical/dicom/current/output/chtml/part05/sect_6.2.html),
 as well as prior knowledge on vendor-specific private tags or encoding schemes,
 in order to transform them to more "pythonic" data structures when possible.
 
-For more information, please see [the documentation].
+For more information, please see [the documentation][].
 
 ---
 
@@ -32,7 +36,7 @@ To install the latest version of `dicom_parser`, simply run:
 
 ## Quickstart
 
-The most basic usage case is reading a single DICOM image (_.dcm_ file) as
+The most basic usage case is reading a single DICOM image (*.dcm* file) as
 an [Image](https://dicom-parser.readthedocs.io/en/latest/modules/dicom_parser.html#dicom_parser.image.Image)
 instance.
 
@@ -43,13 +47,14 @@ instance.
 
 ### Coversion to Python's native types
 
-_dicom_parser_ provides _dict_-like access to the parsed values of the
+*dicom_parser* provides *dict*-like access to the parsed values of the
 [header](https://dcm4che.atlassian.net/wiki/spaces/d2/pages/1835038/A+Very+Basic+DICOM+Introduction)'s
-data-elements. The raw values as read by _[pydicom]_ remain accessible through the _raw_ attribute.
+data-elements. The raw values as read by *[pydicom][]* remain accessible
+through the *raw* attribute.
 
 #### Examples
 
-Decimal String (DS) to _float_ using the [Header] class's
+Decimal String (DS) to *float* using the [`Header`][header] class's
 [get](https://dicom-parser.readthedocs.io/en/latest/modules/dicom_parser.html#dicom_parser.header.Header.get)
 method:
 
@@ -67,7 +72,7 @@ method:
     float
 ```
 
-Age String (AS) to _float_:
+Age String (AS) to *float*:
 
 ```python
     >>> raw_value = image.header.raw['PatientAge'].value
@@ -83,8 +88,8 @@ Age String (AS) to _float_:
     float
 ```
 
-Date String (DA) to _[datetime.date]_ using the [Header] class's
-indexing operator/subscript notation:
+Date String (DA) to [`datetime.date`][datetime.date] using the
+[`Header`][header] class's indexing operator/subscript notation:
 
 ```python
     >>> raw_value = image.header.raw['PatientBirthDate'].value
@@ -118,7 +123,7 @@ Code String (CS) to a verbose value or set of values:
 
 Et cetera.
 
-> The _dict_-like functionality also includes safe getting:
+> The *dict*-like functionality also includes safe getting:
 >
 > ```python
 >     >>> image.header.get('MissingKey')
@@ -143,8 +148,8 @@ Another useful class this package offers is the `Series` class:
     >>> series = Series('/some/dicom/series/')
 ```
 
-The `Series` instance allows us to easily
-query the underlying images' headers using its `get` method:
+The `Series` instance allows us to easily query the underlying images' headers
+using its `get` method:
 
 ```python
     # Single value
@@ -182,7 +187,8 @@ Similarly to the `Image` class, we can also use the indexing operator:
     KeyError: "The keyword: 'MissingKey' does not exist in the header!"
 ```
 
-Another useful feature of the indexing operator is for querying an `Image` instance based on its index in the series:
+Another useful feature of the indexing operator is for querying an `Image`
+instance based on its index in the series:
 
 ```python
     >>> series[6]
@@ -215,5 +221,4 @@ is also supported:
 [datetime.date]: https://docs.python.org/3/library/datetime.html#available-types
 [header]: https://dicom-parser.readthedocs.io/en/latest/modules/dicom_parser.html#dicom_parser.header.Header
 [pydicom]: https://pydicom.github.io/
-[series]: https://dicom-parser.readthedocs.io/en/latest/modules/dicom_parser.html#dicom_parser.series.Series
 [the documentation]: http://dicom-parser.readthedocs.io/?badge=latest

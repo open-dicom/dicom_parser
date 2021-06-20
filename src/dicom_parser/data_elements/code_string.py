@@ -30,8 +30,9 @@ class CodeString(DataElement):
         ("0010", "0040"): Sex,
     }
 
+    @staticmethod
     def warn_invalid_code_string_value(
-        self, exception: KeyError, enum: Enum
+        exception: KeyError, enum: Enum
     ) -> None:
         """
         Displays a warning for invalid Code String (CS) values.
