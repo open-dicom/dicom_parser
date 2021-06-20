@@ -47,13 +47,13 @@ instance.
 ### Coversion to Python's native types
 
 _dicom_parser_ provides _dict_-like access to the parsed values of the
-[header](https://dcm4che.atlassian.net/wiki/spaces/d2/pages/1835038/A+Very+Basic+DICOM+Introduction)'s data-elements.
-The raw values as read by _[pydicom][]_ remain accessible through the _raw_
-attribute.
+[header](https://dcm4che.atlassian.net/wiki/spaces/d2/pages/1835038/A+Very+Basic+DICOM+Introduction)'s
+data-elements. The raw values as read by _[pydicom][]_ remain accessible
+through the _raw_ attribute.
 
 #### Examples
 
-Decimal String (DS) to _float_ using the [Header][] class's
+Decimal String (DS) to _float_ using the [`Header`][header] class's
 [get](https://dicom-parser.readthedocs.io/en/latest/modules/dicom_parser.html#dicom_parser.header.Header.get)
 method:
 
@@ -87,8 +87,8 @@ Age String (AS) to _float_:
     float
 ```
 
-Date String (DA) to _[datetime.date][]_ using the [Header][] class's
-indexing operator/subscript notation:
+Date String (DA) to [`datetime.date`][datetime.date] using the
+[`Header`][header] class's indexing operator/subscript notation:
 
 ```python
     >>> raw_value = image.header.raw['PatientBirthDate'].value
@@ -217,6 +217,6 @@ is also supported:
 ```
 
 [datetime.date]: https://docs.python.org/3/library/datetime.html#available-types
-[Header]: https://dicom-parser.readthedocs.io/en/latest/modules/dicom_parser.html#dicom_parser.header.Header
+[header]: https://dicom-parser.readthedocs.io/en/latest/modules/dicom_parser.html#dicom_parser.header.Header
 [pydicom]: https://pydicom.github.io/
 [the documentation]: http://dicom-parser.readthedocs.io/?badge=latest
