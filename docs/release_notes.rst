@@ -1,6 +1,11 @@
 Release Notes
 =============
 
+1.1.1
+-----
+  * Added Codacity and CodeFactor integrations to improve code quality and
+    implemented suggestions.
+
 1.1.0
 -----
   * Updated project structure and packaging to conform with PEP517_ and
