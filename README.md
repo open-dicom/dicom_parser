@@ -10,7 +10,7 @@
 # dicom_parser
 
 _dicom_parser_ is a utility python package meant to facilitate access to
-[DICOM](https://www.dicomstandard.org/) header information by extending the functionality of _[pydicom]_.
+[DICOM](https://www.dicomstandard.org/) header information by extending the functionality of _[pydicom][]_.
 
 Essentially, _dicom_parser_ uses DICOM's
 [data-element](https://northstar-www.dartmouth.edu/doc/idl/html_6.2/DICOM_Attributes.html)
@@ -18,7 +18,7 @@ Essentially, _dicom_parser_ uses DICOM's
 as well as prior knowledge on vendor-specific private tags or encoding schemes,
 in order to transform them to more "pythonic" data structures when possible.
 
-For more information, please see [the documentation].
+For more information, please see [the documentation][].
 
 ---
 
@@ -47,11 +47,11 @@ instance.
 
 _dicom_parser_ provides _dict_-like access to the parsed values of the
 [header](https://dcm4che.atlassian.net/wiki/spaces/d2/pages/1835038/A+Very+Basic+DICOM+Introduction)'s
-data-elements. The raw values as read by _[pydicom]_ remain accessible through the _raw_ attribute.
+data-elements. The raw values as read by _[pydicom][]_ remain accessible through the _raw_ attribute.
 
 #### Examples
 
-Decimal String (DS) to _float_ using the [Header] class's
+Decimal String (DS) to _float_ using the [Header][] class's
 [get](https://dicom-parser.readthedocs.io/en/latest/modules/dicom_parser.html#dicom_parser.header.Header.get)
 method:
 
@@ -85,7 +85,7 @@ Age String (AS) to _float_:
     float
 ```
 
-Date String (DA) to _[datetime.date]_ using the [Header] class's
+Date String (DA) to _[datetime.date][]_ using the [Header][] class's
 indexing operator/subscript notation:
 
 ```python
@@ -215,6 +215,6 @@ is also supported:
 ```
 
 [datetime.date]: https://docs.python.org/3/library/datetime.html#available-types
-[header]: https://dicom-parser.readthedocs.io/en/latest/modules/dicom_parser.html#dicom_parser.header.Header
+[Header]: https://dicom-parser.readthedocs.io/en/latest/modules/dicom_parser.html#dicom_parser.header.Header
 [pydicom]: https://pydicom.github.io/
 [the documentation]: http://dicom-parser.readthedocs.io/?badge=latest
