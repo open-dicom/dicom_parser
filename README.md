@@ -1,3 +1,5 @@
+# dicom_parser
+
 [![PyPI version](https://img.shields.io/pypi/v/dicom_parser.svg)](https://pypi.python.org/pypi/pylabber/)
 [![PyPI status](https://img.shields.io/pypi/status/dicom_parser.svg)](https://pypi.python.org/pypi/pylabber/)
 [![GitHub Actions](https://github.com/ZviBaratz/dicom_parser/actions/workflows/tests.yml/badge.svg)](https://github.com/ZviBaratz/dicom_parser/actions/workflows/tests.yml)
@@ -6,8 +8,6 @@
 [![codecov.io](https://codecov.io/gh/ZviBaratz/dicom_parser/coverage.svg?branch=master)](https://codecov.io/github/ZviBaratz/dicom_parser?branch=master)
 [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/ZviBaratz/dicom_parser.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/ZviBaratz/dicom_parser/context:python)
 [![CodeFactor](https://www.codefactor.io/repository/github/zvibaratz/dicom_parser/badge)](https://www.codefactor.io/repository/github/zvibaratz/dicom_parser)
-
-# dicom_parser
 
 *dicom_parser* is a utility python package meant to facilitate access to
 [DICOM](https://www.dicomstandard.org/) header information by extending the
