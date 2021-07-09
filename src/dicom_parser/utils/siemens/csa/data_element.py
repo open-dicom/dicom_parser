@@ -1,9 +1,7 @@
 """
 Definition of a single CSA header data element. These elements are parsed from
 the full string header using new line characters.
-
 """
-
 import re
 
 
@@ -11,7 +9,6 @@ class CsaDataElement:
     """
     Represents a single CSA header data element as extracted from the raw
     header information.
-
     """
 
     # The element's key parts are often prefixed with lowercase characters that
@@ -31,7 +28,6 @@ class CsaDataElement:
         raw_element : str
             CSA header data element as string
         """
-
         self.raw_element = raw_element
         self.key, self.value = self.split()
 
@@ -49,7 +45,6 @@ class CsaDataElement:
         str
             Prefix-omitted part name
         """
-
         key_pattern = re.search(self.CLEAN_PART_PATTERN, part)
         return key_pattern.group() if key_pattern else part
 
@@ -68,7 +63,6 @@ class CsaDataElement:
         list
             Clean and listed representation of the provided key
         """
-
         return [self.clean_part(part) for part in chained_key.split(".")]
 
     def split(self) -> tuple:
@@ -80,7 +74,6 @@ class CsaDataElement:
         tuple
             key, value
         """
-
         tab_split = self.raw_element.split("\t")
         key = self.key_to_list(tab_split[0])
         return key, tab_split[-1]
@@ -100,6 +93,5 @@ class CsaDataElement:
         int
             The value's index if array pattern found, else None
         """
-
         match = re.search(self.LIST_PART_PATTERN, part)
         return int(match.group()[1:-1]) if match else None
