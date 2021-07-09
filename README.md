@@ -19,7 +19,12 @@ Essentially, *dicom_parser* uses DICOM's
 as well as prior knowledge on vendor-specific private tags or encoding schemes,
 in order to transform them to more "pythonic" data structures when possible.
 
-For more information, please see [the documentation][].
+* [Installation](#installation)
+* [Quickstart](#quickstart)
+* [Documentation](#documentation)
+* [Tests](#tests)
+
+For more information, please see [the documentation site][].
 
 ---
 
@@ -223,7 +228,7 @@ is also supported:
 
 ### Dependencies
 
-The [documentation site][the documentation] is built using [Sphinx][sphinx], to
+The [documentation site][the documentation site] is built using [Sphinx][sphinx], to
 build the HTML pages locally, make sure you have the required dependencies by
 using the *docs* modifier for the installation. Assuming you have cloned the
 repository and created a virtual environment, run:
@@ -300,5 +305,5 @@ Open *\<root\>/htmlcov/index.html* in the browser to view the report.
 [pydicom]: https://pydicom.github.io/
 [pytest]: https://docs.pytest.org/
 [sphinx]: https://www.sphinx-doc.org/en/master/
-[the documentation]: http://dicom-parser.readthedocs.io/?badge=latest
+[the documentation site]: http://dicom-parser.readthedocs.io/?badge=latest
 [tox]: https://tox.readthedocs.io/
