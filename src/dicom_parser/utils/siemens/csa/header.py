@@ -22,7 +22,6 @@ class CsaHeader:
        https://github.com/icometrix/dicom2nifti
     .. _this module:
        https://github.com/icometrix/dicom2nifti/blob/6722420a7673d36437e4358ce3cb2a7c77c91820/dicom2nifti/convert_siemens.py#L342
-
     """
 
     # The header's ASCII-based character encoding.
