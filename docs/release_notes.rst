@@ -5,6 +5,9 @@ Release Notes
 -----
   * Added Codacity and CodeFactor integrations to improve code quality and
     implemented suggestions.
+  * Added issue templates, code of conduct, and RTD configuration file.
+  * Added documentation building and test execution instructions in the
+    project's README.
 
 1.1.0
 -----

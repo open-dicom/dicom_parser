@@ -245,8 +245,8 @@ make html
 
 from within the *\<root\>/docs/* directory.
 
-The generated HTML will be found under *\<root\>/docs/_build/html*. Open *index.html* in
-your browser to view the site.
+The generated HTML will be found under *\<root\>/docs/_build/html*. Open
+*index.html* in your browser to view the site.
 
 ---
 
@@ -280,7 +280,7 @@ pytest tests
 To run the tests in a number of dedicated virtual environments, simply execute
 the `tox` command from within the project's root directory. This will test all
 supported Python versions, and therefore will only be successful in an
-environment in which all supported Python versions are installed. 
+environment in which all supported Python versions are installed.
 
 Use `tox -p` to run the tests in parallel, and `tox -e py3?,py3?` to run a
 subset of environments (replace `?` with the desired version number).
@@ -289,7 +289,7 @@ subset of environments (replace `?` with the desired version number).
 
 To check code coverage using `coverage`, simply run:
 
-```
+```bash
 coverage run && coverage html
 ```
 
