@@ -8,3 +8,4 @@ Siemens-specific header and parsing information.
    :caption: Contents:
 
    csa_headers
+   mosaic
