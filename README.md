@@ -19,10 +19,10 @@ Essentially, *dicom_parser* uses DICOM's
 as well as prior knowledge on vendor-specific private tags or encoding schemes,
 in order to transform them to more "pythonic" data structures when possible.
 
-  * [Installation](#installation)
-  * [Quickstart](#quickstart)
-  * [Documentation](#documentation)
-  * [Tests](#tests)
+* [Installation](#installation)
+* [Quickstart](#quickstart)
+* [Documentation](#documentation)
+* [Tests](#tests)
 
 For more information, please see [the documentation site][].
 
