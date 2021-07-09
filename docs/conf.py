@@ -19,7 +19,7 @@ sys.path.insert(0, os.path.abspath("../src/"))
 # -- Project information -----------------------------------------------------
 
 project = "dicom_parser"
-copyright = "2021, Zvi Baratz"
+copyright = "2020, Zvi Baratz"
 author = "Zvi Baratz"
 
 # The full version, including alpha/beta/rc tags
