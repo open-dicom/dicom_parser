@@ -3,9 +3,7 @@ Definition of parser that accepts
 :class:`~dicom_parser.utils.siemens.data_element.CsaDataElement`
 instances to be parsed and keeps a pointer to a dictionary that
 may aggregate the results.
-
 """
-
 from dicom_parser.utils.siemens.csa.data_element import CsaDataElement
 
 
@@ -14,7 +12,6 @@ class CsaParser:
     Parses CSA header data elements given as
     :class:`~dicom_parser.utils.siemens.data_element.CsaDataElement`
     instances into a public dictionary.
-
     """
 
     def __init__(self, destination: dict = None):
@@ -27,7 +24,6 @@ class CsaParser:
             Dictionary instance to update with the parsed values, by default
             None
         """
-
         self.parsed = destination if isinstance(destination, dict) else {}
 
     @staticmethod
@@ -56,7 +52,6 @@ class CsaParser:
             The next level of the key's scaffolding within the parsed
             dictionary
         """
-
         try:
             return destination[part_name][index]
         except IndexError:
@@ -85,7 +80,6 @@ class CsaParser:
             The next level of the key's scaffolding within the parsed
             dictionary
         """
-
         destination[part_name] = [{}]
         return destination[part_name][0]
 
@@ -106,7 +100,6 @@ class CsaParser:
         destination : dict
             A pointer to the appropriate destination with the parsed dictionary
         """
-
         part_name = part.split("[")[0]
         try:
             destination[part_name].append(value)
@@ -132,7 +125,6 @@ class CsaParser:
             The next level of the key's scaffolding within the parsed
             dictionary
         """
-
         if isinstance(destination.get(part), dict):
             return destination[part]
         else:
@@ -156,7 +148,6 @@ class CsaParser:
         str, int, or float
             Fixed (converted) value
         """
-
         try:
             return (
                 int(value.split(".")[0])
@@ -194,7 +185,6 @@ class CsaParser:
             The next level of the key's scaffolding within the parsed
             dictionary
         """
-
         part_name = part.split("[")[0]
         existing_list = isinstance(destination.get(part_name), list)
         if existing_list:
@@ -226,7 +216,6 @@ class CsaParser:
             The next level of the key's scaffolding within the parsed
             dictionary
         """
-
         list_index = csa_data_element.search_array_pattern(part)
         if list_index is not None:
             return self.scaffold_list_part(part, list_index, destination)
@@ -257,7 +246,6 @@ class CsaParser:
             :class:`~dicom_parser.utils.siemens.csa.data_element.CsaDataElement`'s
             value
         """
-
         destination = destination if isinstance(destination, dict) else {}
         for part in csa_data_element.key[:-1]:
             destination = self.scaffold_part(
@@ -281,7 +269,6 @@ class CsaParser:
         destination : dict
             The appropriate destination within the parsed values dictionary
         """
-
         last_part = csa_data_element.key[-1]
         value = self.fix_value(csa_data_element.value)
         list_match = csa_data_element.search_array_pattern(last_part)
@@ -300,7 +287,6 @@ class CsaParser:
         csa_data_element : CsaDataElement
             CSA header element to be parsed
         """
-
         destination = self.scaffold_listed_key(csa_data_element, self.parsed)
         self.assign_listed_element(csa_data_element, destination)
         return self.parsed
