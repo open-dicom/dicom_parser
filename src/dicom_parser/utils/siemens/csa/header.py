@@ -3,10 +3,7 @@ Definition of the :class:`~dicom_parser.utils.siemens.csa.header.CsaHeader`
 class which handles the parsing of
 `CSA header <https://nipy.org/nibabel/dicom/siemens_csa.html>`_ values
 returned by `pydicom <https://github.com/pydicom/pydicom>`_ as bytes.
-
 """
-
-
 import re
 
 from dicom_parser.utils.siemens.csa.data_element import CsaDataElement
@@ -48,7 +45,6 @@ class CsaHeader:
         header : bytes
             Raw CSA header information as returned by *pydicom*
         """
-
         self.raw = header
         self.decoded = self.get_header_information()
 
@@ -66,7 +62,6 @@ class CsaHeader:
         str
             Decoded information
         """
-
         return self.raw.decode(self.ENCODING)
 
     def get_header_information(self) -> str:
@@ -79,7 +74,6 @@ class CsaHeader:
         str
             Decoded clean header information
         """
-
         decoded = self.decode()
         matches = re.findall(self.CSA_HEADER_PATTERN, decoded, flags=re.DOTALL)
         return matches[0] if matches else ""
@@ -95,7 +89,6 @@ class CsaHeader:
         list
             CSA data elements in raw string format
         """
-
         return re.findall(self.ELEMENT_PATTERN, self.decoded)[1:]
 
     def create_csa_data_elements(self, raw_elements: list = None) -> list:
@@ -115,7 +108,6 @@ class CsaHeader:
             :class:`~dicom_parser.utils.siemens.csa.data_element.CsaDataElement`
             instances.
         """
-
         raw_elements = raw_elements or self.raw_elements
         return [CsaDataElement(raw_element) for raw_element in raw_elements]
 
@@ -136,7 +128,6 @@ class CsaHeader:
         dict
             Header information as a dictionary
         """
-
         csa_data_elements = csa_data_elements or self.csa_data_elements
         parser = CsaParser()
         for element in csa_data_elements:
@@ -153,7 +144,6 @@ class CsaHeader:
         list
             Raw CSA header data elements
         """
-
         if not self._raw_elements:
             self._raw_elements = self.get_raw_data_elements()
         return self._raw_elements
@@ -171,7 +161,6 @@ class CsaHeader:
             :class:`~dicom_parser.utils.siemens.csa.data_element.CsaDataElement`
             instances
         """
-
         if not self._csa_data_elements:
             self._csa_data_elements = self.create_csa_data_elements()
         return self._csa_data_elements
@@ -186,7 +175,6 @@ class CsaHeader:
         dict
             Header information as dictionary
         """
-
         if not self._parsed:
             self._parsed = self.parse()
         return self._parsed
@@ -201,5 +189,4 @@ class CsaHeader:
         int
             Number of slices encoded as a 2D mosaic
         """
-
         return self.parsed["SliceArray"]["Size"]
