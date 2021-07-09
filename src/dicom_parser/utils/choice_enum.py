@@ -1,7 +1,6 @@
 """
 Definition of the :class:`ChoiceEnum` class.
 """
-
 from enum import Enum
 from typing import Tuple
 
@@ -28,5 +27,4 @@ class ChoiceEnum(Enum):
         Tuple[Tuple[str, str], ...]
             Tuple of (name, value) tuples
         """
-
         return tuple([(item.name, item.value) for item in cls])

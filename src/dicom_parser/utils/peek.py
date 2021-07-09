@@ -1,9 +1,7 @@
 """
 Based on `this <https://stackoverflow.com/a/664239/4416932>`_
 StackOverflow answer.
-
 """
-
 import itertools
 from types import GeneratorType
 
@@ -27,7 +25,6 @@ def peek(iterable: GeneratorType) -> tuple:
         A tuple containing the first item and the original generator, unless
         it is empty, then (None, None)
     """
-
     try:
         first = next(iterable)
     except StopIteration:

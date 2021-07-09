@@ -1,3 +1,6 @@
+"""
+Definition of the :class:`Modality` class.
+"""
 from dicom_parser.utils.choice_enum import ChoiceEnum
 
 

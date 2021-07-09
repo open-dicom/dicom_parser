@@ -6,16 +6,13 @@ volumes used by Siemens. For more information read `this
 `here
 <https://discovery.ucl.ac.uk/id/eprint/1495621/1/Li%20et%20al%20The%20first%20step%20for%20neuroimaging%20data%20analysis%20-%20DICOM%20to%20NIfTI%20conversion.pdf>`_.
 """
-
 import numpy as np
-
 from dicom_parser.header import Header
 
 
 class Mosaic:
     """
     A Siemens mosaic of 2D images representing a single volume.
-
     """
 
     def __init__(self, mosaic_array: np.ndarray, header: Header):
@@ -30,7 +27,6 @@ class Mosaic:
         header : Header
             The image's header information
         """
-
         self.mosaic_array = mosaic_array
         self.header = header
         self.series_header_info = self.header.get("CSASeriesHeaderInfo")
@@ -47,7 +43,6 @@ class Mosaic:
         tuple
             x_dim, y_dim, z_dim
         """
-
         acquisition_matrix = self.header.get("AcquisitionMatrix")
         x, y = acquisition_matrix[0], acquisition_matrix[-1]
         z = self.series_header_info["SliceArray"]["Size"]
@@ -62,7 +57,6 @@ class Mosaic:
         tuple
             n_rows, n_columns
         """
-
         n_rows = self.header.get("Rows") // self.volume_shape[0]
         n_columns = self.header.get("Columns") // self.volume_shape[1]
         return n_rows, n_columns
@@ -83,7 +77,6 @@ class Mosaic:
         np.ndarray
             A single tile at the (i_row, i_column) position
         """
-
         x_start = self.volume_shape[0] * i_row
         x_end = self.volume_shape[0] * (i_row + 1)
         y_start = self.volume_shape[1] * i_column
@@ -99,7 +92,6 @@ class Mosaic:
         list
             Tiles collected by row
         """
-
         n_rows = self.mosaic_dimensions[0]
         n_columns = self.mosaic_dimensions[1]
         return [
@@ -122,7 +114,6 @@ class Mosaic:
         np.ndarray
             Orientation-fixed volume
         """
-
         if not self.ascending:
             tiles = tiles[::-1]
         volume = np.stack(tiles, axis=-1).transpose((1, 0, 2))
@@ -137,6 +128,5 @@ class Mosaic:
         np.ndarray
             3D volume
         """
-
         tiles = self.get_tiles()
         return self.tiles_to_volume(tiles)

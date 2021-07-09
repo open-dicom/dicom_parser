@@ -1,7 +1,6 @@
 """
 Utility functions used to parse DICOM data element tags.
 """
-
 from pydicom.tag import Tag as PydicomTag
 
 
@@ -19,7 +18,6 @@ def int_to_tag_hex(value: int) -> str:
     str
         Hexadecimal string representation
     """
-
     return format(value, "x").zfill(4)
 
 
@@ -37,5 +35,4 @@ def parse_tag(tag: PydicomTag) -> tuple:
     tuple
         Formatted tag representation
     """
-
     return int_to_tag_hex(tag.group), int_to_tag_hex(tag.element)
