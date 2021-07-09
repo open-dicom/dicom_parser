@@ -2,7 +2,6 @@
 Definition of the :func:`format_header_df` utility function, used to display
 a formatted version of a single DICOM header's information dataframe.
 """
-
 import functools
 
 import pandas as pd
@@ -25,7 +24,6 @@ def format_header_df(df: pd.DataFrame, max_colwidth: int = 28) -> str:
     str
         Formatted dataframe information
     """
-
     formatters = {}
     for column_name in df.columns:
         form = None

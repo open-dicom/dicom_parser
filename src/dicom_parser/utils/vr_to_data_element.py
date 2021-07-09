@@ -2,7 +2,6 @@
 Utilities to associate a given data element with its appropriate
 :class:`dicom_parser.data_element.DataElement` subclass.
 """
-
 from dicom_parser.data_element import DataElement
 from dicom_parser.data_elements.age_string import AgeString
 from dicom_parser.data_elements.application_entity import ApplicationEntity
@@ -106,6 +105,5 @@ def get_data_element_class(key: str) -> DataElement:
     DataElement
         Some subclass of DataElement
     """
-
     vr = get_value_representation(key)
     return VR_TO_DATA_ELEMENT[vr]

@@ -2,7 +2,6 @@
 Strings and string formatting templates used in this module.
 """
 
-
 DATA_READ_FAILURE = (
     "Failed to read image data with the following exception:\n{exception}"
 )

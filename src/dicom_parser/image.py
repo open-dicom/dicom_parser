@@ -116,7 +116,6 @@ class Image:
         np.ndarray
             Pixel data array
         """
-
         return self.fix_data()
 
     @property

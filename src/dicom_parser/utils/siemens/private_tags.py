@@ -1,7 +1,6 @@
 """
 Siemens specific private tags they may not be accessible by keyword using
 `pydicom <https://github.com/pydicom/pydicom>`_.
-
 """
 import array
 
@@ -27,7 +26,6 @@ def parse_siemens_slice_timing(value: bytes) -> list:
     list
         Slice times in milliseconds
     """
-
     return [
         round(slice_time, 5) for slice_time in list(array.array("d", value))
     ]
@@ -51,7 +49,6 @@ def parse_siemens_gradient_direction(value: bytes) -> list:
     list
         Gradient directions (B-vector)
     """
-
     return [float(value) for value in list(array.array("d", value))]
 
 

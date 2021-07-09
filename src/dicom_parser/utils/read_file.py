@@ -1,14 +1,12 @@
 """
 Definition of the :func:`read_file` function.
 """
-
 from pathlib import Path
 from typing import Union
 
 import pydicom
-from pydicom.dataset import FileDataset
-
 from dicom_parser.utils.messages import BAD_FILE_INPUT
+from pydicom.dataset import FileDataset
 
 
 def read_file(
@@ -34,7 +32,6 @@ def read_file(
     :class:`~pydicom.dataset.FileDataset`
         Image data
     """
-
     if isinstance(raw_input, pydicom.Dataset):
         return raw_input
     elif isinstance(raw_input, (str, Path)):

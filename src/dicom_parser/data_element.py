@@ -170,7 +170,6 @@ class DataElement:
         Any
             This instance's parsed value or values
         """
-
         if self._value is None:
             self._value = self.parse_values()
         return self._value
