@@ -224,29 +224,82 @@ is also supported:
 
 ### Dependencies
 
-The [documentation site][the documentation] is built using [Sphinx][sphinx], to build
-the HTML pages locally, make sure you have the required dependencies by using
-the *docs* modifier for the installation:
+The [documentation site][the documentation] is built using [Sphinx][sphinx], to
+build the HTML pages locally, make sure you have the required dependencies by
+using the *docs* modifier for the installation. Assuming you have cloned the
+repository and created a virtual environment, run:
 
 ```bash
-pip install dicom_parser[docs]
+pip install -e .[docs]
 ```
+
+from within your cloned project's root.
 
 ### Build
 
-Once installed, build the site by running:
+Build the site by running:
 
 ```bash
 make html
 ```
 
-from within the *docs/* directory.
+from within the *\<root\>/docs/* directory.
 
-The generated HTML will be found under *docs/_build/html*. Open *index.html* in
+The generated HTML will be found under *\<root\>/docs/_build/html*. Open *index.html* in
 your browser to view the site.
 
+---
+
+## Tests
+
+### Dependencies
+
+Tests are executed using [pytest][] and [tox][], and coverage is measured using
+the [coverage][] package. Make sure you have the required dependencies by
+using the *test* modifier for the installation. Assuming you have cloned the
+repository and created a virtual environment, run:
+
+```bash
+pip install -e .[test]
+```
+
+from within your cloned project's root.
+
+### Execution
+
+#### pytest
+
+To run the tests within your virtual environment, run:
+
+```bash
+pytest tests
+```
+
+#### tox
+
+To run the tests in a number of dedicated virtual environments, simply execute
+the `tox` command from within the project's root directory. This will test all
+supported Python versions, and therefore will only be successful in an
+environment in which all supported Python versions are installed. 
+
+Use `tox -p` to run the tests in parallel, and `tox -e py3?,py3?` to run a
+subset of environments (replace `?` with the desired version number).
+
+### Coverage
+
+To check code coverage using `coverage`, simply run:
+
+```
+coverage run && coverage html
+```
+
+Open *\<root\>/htmlcov/index.html* in the browser to view the report.
+
+[coverage]: https://coverage.readthedocs.io/
 [datetime.date]: https://docs.python.org/3/library/datetime.html#available-types
 [header]: https://dicom-parser.readthedocs.io/en/latest/modules/dicom_parser.html#dicom_parser.header.Header
 [pydicom]: https://pydicom.github.io/
-[the documentation]: http://dicom-parser.readthedocs.io/?badge=latest
+[pytest]: https://docs.pytest.org/
 [sphinx]: https://www.sphinx-doc.org/en/master/
+[the documentation]: http://dicom-parser.readthedocs.io/?badge=latest
+[tox]: https://tox.readthedocs.io/
