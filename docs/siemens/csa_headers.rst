@@ -21,9 +21,9 @@ information as a :obj:`dict`:
 .. code:: python
 
     >>> from dicom_parser import Image
-    >>> image = Image('/path/to/siemens/csa.dcm')
-    >>> csa = image.header.get('CSASeriesHeaderInfo')
-    >>> csa['SliceAcceleration']['MultiBandFactor']
+    >>> image = Image("/path/to/siemens/csa.dcm")
+    >>> csa = image.header.get("CSASeriesHeaderInfo")
+    >>> csa["SliceAcceleration"]["MultiBandFactor"]
     3
 
 `dicom_parser` uses the :class:`~dicom_parser.utils.siemens.csa.header.CsaHeader`
@@ -38,7 +38,7 @@ pydicom_:
 .. code:: python
 
     >>> from dicom_parser.utils.siemens.csa.header import CsaHeader
-    >>> raw_csa = image.header.get('CSASeriesHeaderInfo', parsed=False)
+    >>> raw_csa = image.header.get("CSASeriesHeaderInfo", parsed=False)
     >>> type(raw_csa)
     bytes
     >>> raw_csa[:35]
@@ -57,9 +57,9 @@ the raw header:
     dict
 
     # (we can also use the `parsed` property)
-    >>> csa_header.parsed['SliceArray']['Size']
+    >>> csa_header.parsed["SliceArray"]["Size"]
     60
 
-    >>> instance_number = image.header.get('InstanceNumber')
+    >>> instance_number = image.header.get("InstanceNumber")
     >>> parsed_csa["SliceArray"]["Slice"][instance_number]["Position"]["Tra"]
     -58.1979682425
