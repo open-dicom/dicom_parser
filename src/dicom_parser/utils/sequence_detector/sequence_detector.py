@@ -10,7 +10,7 @@ from dicom_parser.utils.sequence_detector.sequences import SEQUENCES
 
 class SequenceDetector:
     """
-    Default sequence detector implementation.    
+    Default sequence detector implementation.
     """
     def __init__(self, sequences: dict = None):
         """
