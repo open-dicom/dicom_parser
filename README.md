@@ -218,7 +218,35 @@ is also supported:
     (96, 96, 64, 200)
 ```
 
+---
+
+## Documentation
+
+### Dependencies
+
+The [documentation site][the documentation] is built using [Sphinx][sphinx], to build
+the HTML pages locally, make sure you have the required dependencies by using
+the *docs* modifier for the installation:
+
+```bash
+pip install dicom_parser[docs]
+```
+
+### Build
+
+Once installed, build the site by running:
+
+```bash
+make html
+```
+
+from within the *docs/* directory.
+
+The generated HTML will be found under *docs/_build/html*. Open *index.html* in
+your browser to view the site.
+
 [datetime.date]: https://docs.python.org/3/library/datetime.html#available-types
 [header]: https://dicom-parser.readthedocs.io/en/latest/modules/dicom_parser.html#dicom_parser.header.Header
 [pydicom]: https://pydicom.github.io/
 [the documentation]: http://dicom-parser.readthedocs.io/?badge=latest
+[sphinx]: https://www.sphinx-doc.org/en/master/
