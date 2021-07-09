@@ -228,10 +228,11 @@ is also supported:
 
 ### Dependencies
 
-The [documentation site][the documentation site] is built using [Sphinx][sphinx], to
-build the HTML pages locally, make sure you have the required dependencies by
-using the *docs* modifier for the installation. Assuming you have cloned the
-repository and created a virtual environment, run:
+The [documentation site][the documentation site] is built using
+[Sphinx][sphinx], to build the HTML pages locally, make sure you
+have the required dependencies by using the *docs* modifier for
+the installation. Assuming you have cloned the repository and
+created a virtual environment, run:
 
 ```bash
 pip install -e .[docs]
