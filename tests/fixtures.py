@@ -17,6 +17,9 @@ TEST_RSFMRI_IMAGE_VOLUME = os.path.join(
 TEST_RSFMRI_SERIES_NIFTI = os.path.join(
     TEST_RSFMRI_SERIES_PATH, "converted.nii.gz"
 )
+TEST_RSFMRI_SERIES_PIXEL_ARRAY = os.path.join(
+    TEST_RSFMRI_SERIES_PATH, "rsfmri.npy"
+)
 TEST_GE_LOCALIZER_PATH = os.path.join(TEST_FILES_PATH, "GE_localizer.dcm")
 TEST_SIEMENS_DWI_PATH = os.path.join(TEST_FILES_PATH, "siemens_dwi", "1.dcm")
 TEST_SERIES_PATH = os.path.join(TEST_FILES_PATH, "series")

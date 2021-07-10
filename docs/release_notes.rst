@@ -1,6 +1,10 @@
 Release Notes
 =============
 
+1.2.0
+-----
+  * Removed NiBabel from requirements (added NumPy to fill the gap).
+
 1.1.1
 -----
   * Added Codacity and CodeFactor integrations to improve code quality and

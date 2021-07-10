@@ -1,12 +1,13 @@
 from unittest import TestCase
 
-import nibabel as nib
 import numpy as np
-
 from dicom_parser.image import Image
 from dicom_parser.utils.siemens.mosaic import Mosaic
-from tests.fixtures import (TEST_RSFMRI_IMAGE_PATH, TEST_RSFMRI_IMAGE_VOLUME,
-                            TEST_RSFMRI_SERIES_NIFTI)
+from tests.fixtures import (
+    TEST_RSFMRI_IMAGE_PATH,
+    TEST_RSFMRI_IMAGE_VOLUME,
+    TEST_RSFMRI_SERIES_PIXEL_ARRAY,
+)
 
 
 class MosaicTestCase(TestCase):
@@ -45,6 +46,6 @@ class MosaicTestCase(TestCase):
 
     def test_folded_data_is_same_as_nifti(self):
         volume = self.mosaic.fold()
-        nii_data = np.asanyarray(nib.load(TEST_RSFMRI_SERIES_NIFTI).dataobj)
+        nii_data = np.load(TEST_RSFMRI_SERIES_PIXEL_ARRAY)
         nii_volume = nii_data[:, :, :, 0]
         self.assertTrue(np.array_equal(volume, nii_volume))
