@@ -1,7 +1,6 @@
 from pathlib import Path
 from unittest import TestCase
 
-import nibabel as nib
 import numpy as np
 from dicom_parser.image import Image
 from dicom_parser.series import Series
@@ -9,8 +8,8 @@ from dicom_parser.series import Series
 from tests.fixtures import (
     SERIES_SPATIAL_RESOLUTION,
     TEST_IMAGE_PATH,
-    TEST_RSFMRI_SERIES_NIFTI,
     TEST_RSFMRI_SERIES_PATH,
+    TEST_RSFMRI_SERIES_PIXEL_ARRAY,
     TEST_SERIES_PATH,
     TEST_UTILS_DIRECTORY,
 )
@@ -71,7 +70,7 @@ class SeriesTestCase(TestCase):
 
     def test_mosaic_series_data_same_as_nifti(self):
         series = Series(TEST_RSFMRI_SERIES_PATH)
-        nii_data = np.asanyarray(nib.load(TEST_RSFMRI_SERIES_NIFTI).dataobj)
+        nii_data = np.load(TEST_RSFMRI_SERIES_PIXEL_ARRAY)
         self.assertTrue(np.array_equal(series.data, nii_data))
 
     def test_len(self):
