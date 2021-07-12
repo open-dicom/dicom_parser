@@ -96,3 +96,15 @@ class ImageTestCase(TestCase):
         value = self.image.image_orientation_patient
         self.assertIsNone(value)
         self.image.header.raw["ImageOrientationPatient"].value = original_value
+
+    def test_slice_normal(self):
+        value = self.image.slice_normal
+        expected = np.array([1.0, -0.0, 0.0])
+        self.assertTrue(np.array_equal(value, expected))
+
+    def test_slice_normal_missing(self):
+        original_value = self.image.header.raw["ImageOrientationPatient"].value
+        self.image.header.raw["ImageOrientationPatient"].value = None
+        value = self.image.slice_normal
+        self.assertIsNone(value)
+        self.image.header.raw["ImageOrientationPatient"].value = original_value

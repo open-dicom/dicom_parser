@@ -91,6 +91,10 @@ class Image:
         """
         Returns the image shape based on header metadata.
 
+        See Also
+        --------
+        * :func:`image_shape`
+
         Returns
         -------
         Tuple[int, int]
@@ -108,6 +112,9 @@ class Image:
         ----------
         * https://dicom.innolitics.com/ciods/mr-image/image-plane/00200037
 
+        See Also
+        --------
+        * :func:`image_orientation_patient`
 
         Returns
         -------
@@ -117,6 +124,23 @@ class Image:
         values = self.header.get("ImageOrientationPatient")
         if values is not None:
             return np.array(values).reshape(2, 3).T
+
+    def get_slice_normal(self) -> np.array:
+        """
+        Returns the slice normal.
+
+        See Also
+        --------
+        * :func:`slice_normal`
+
+        Returns
+        -------
+        np.array
+            Slice normal
+        """
+        iop = self.image_orientation_patient
+        if iop is not None:
+            return np.cross(iop[:, 1], iop[:, 0])
 
     @property
     def image_shape(self) -> Tuple[int, int]:
@@ -143,13 +167,28 @@ class Image:
         --------
         * :func:`get_image_orientation_patient`
 
-
         Returns
         -------
         np.array
             Parsed image orientation (patient) attribute information
         """
         return self.get_image_orientation_patient()
+
+    @property
+    def slice_normal(self) -> np.array:
+        """
+        Returns the slice normal.
+
+        See Also
+        --------
+        * :func:`get_slice_normal`
+
+        Returns
+        -------
+        np.array
+            Slice normal
+        """
+        return self.get_slice_normal()
 
     @property
     def is_mosaic(self) -> bool:

@@ -6,10 +6,10 @@ Release Notes
   * Removed NiBabel from requirements.
   * Made pandas an optional requirement.
   * Added new :class:`~dicom_parser.image.Image` properties:
-    * :func:`~dicom_parser.image.Image.image_shape`: Image shape based on
-      header metadata.
-    * :func:`~dicom_parser.image.Image.image_orientation_patient`:
-      ImageOrientationPatient_ parsed as a :class:`numpy.array`.
+
+    * :func:`~dicom_parser.image.Image.image_shape`
+    * :func:`~dicom_parser.image.Image.image_orientation_patient`
+    * :func:`~dicom_parser.image.Image.slice_normal`
 
 1.1.1
 -----
