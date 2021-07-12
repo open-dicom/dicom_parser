@@ -5,7 +5,7 @@ array).
 """
 import warnings
 from pathlib import Path
-from typing import Union
+from typing import Tuple, Union
 
 import numpy as np
 from pydicom.dataset import FileDataset
@@ -73,10 +73,48 @@ class Image:
         return self._data
 
     def get_default_relative_path(self) -> Path:
+        """
+        Returns the default relative path for this image within a DICOM
+        archive.
+
+        Returns
+        -------
+        Path
+            Default relative path for this image
+        """
         patient_uid = self.header.get("PatientID")
         series_uid = self.header.get("SeriesInstanceUID")
         name = str(self.header.get("InstanceNumber", 0)) + ".dcm"
         return Path(patient_uid, series_uid, name)
+
+    def get_image_shape(self) -> Tuple[int, int]:
+        """
+        Returns the image shape based on header metadata.
+
+        Returns
+        -------
+        Tuple[int, int]
+            Rows, columns
+        """
+        shape_dict = self.header.get(["Rows", "Columns"])
+        shape = tuple(shape_dict.values())
+        return None if None in shape else shape
+
+    @property
+    def image_shape(self) -> Tuple[int, int]:
+        """
+        Returns the image shape based on header metadata.
+
+        See Also
+        --------
+        * :func:`get_image_shape`
+
+        Returns
+        -------
+        Tuple[int, int]
+            Rows, columns
+        """
+        return self.get_image_shape()
 
     @property
     def is_mosaic(self) -> bool:

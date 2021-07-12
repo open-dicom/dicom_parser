@@ -73,3 +73,14 @@ class ImageTestCase(TestCase):
         value = self.image.default_relative_path
         expected = TEST_IMAGE_RELATIVE_PATH
         self.assertEqual(value, expected)
+
+    def test_image_shape(self):
+        value = self.image.image_shape
+        expected = (512, 512)
+        self.assertTupleEqual(value, expected)
+
+    def test_image_shape_with_missing(self):
+        self.image.header.raw["Rows"].value = None
+        value = self.image.image_shape
+        self.assertIsNone(value)
+        self.image.header.raw["Rows"].value = 512
