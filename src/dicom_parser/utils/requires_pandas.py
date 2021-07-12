@@ -2,7 +2,7 @@ from collections.abc import Callable
 
 try:
     # pylint: disable=unused-import
-    import pandas as pd  # noqa: F401
+    import pandas as pd  # noqa: F401; lgtm [py/unused-import]
 except ImportError:
     _has_pandas = False
 else:
