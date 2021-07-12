@@ -5,6 +5,11 @@ Release Notes
 -----
   * Removed NiBabel from requirements.
   * Made pandas an optional requirement.
+  * Added new :class:`~dicom_parser.image.Image` properties:
+    * :func:`~dicom_parser.image.Image.image_shape`: Image shape based on
+      header metadata.
+    * :func:`~dicom_parser.image.Image.image_orientation_patient`:
+      ImageOrientationPatient_ parsed as a :class:`numpy.array`.
 
 1.1.1
 -----
@@ -145,6 +150,8 @@ First release!
    https://github.com/TheLabbingProject/django_dicom
 .. _GitHub Actions:
    https://github.com/ZviBaratz/dicom_parser/actions/workflows/tests.yml
+.. _ImageOrientationPatient:
+   https://dicom.innolitics.com/ciods/mr-image/image-plane/00200037
 .. _isort:
    https://pycqa.github.io/isort/
 .. _NIfTI:

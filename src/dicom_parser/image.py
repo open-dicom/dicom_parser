@@ -133,7 +133,7 @@ class Image:
             Rows, columns
         """
         return self.get_image_shape()
-    
+
     @property
     def image_orientation_patient(self) -> np.array:
         """
@@ -148,7 +148,7 @@ class Image:
         -------
         np.array
             Parsed image orientation (patient) attribute information
-        """        
+        """
         return self.get_image_orientation_patient()
 
     @property
