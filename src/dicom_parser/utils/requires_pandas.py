@@ -12,7 +12,7 @@ else:
 REQUIRES_PANDAS: str = """Pandas could not be imported!
 Please install pandas by running:
 
-pip install pandas
+pip install dicom_parser[pandas]
 """
 
 
