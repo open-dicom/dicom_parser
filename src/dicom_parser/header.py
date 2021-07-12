@@ -4,17 +4,16 @@ Definition of the :class:`Header` class.
 import json
 from pathlib import Path
 from types import GeneratorType
-from typing import Any, List, Union
+from typing import Any, Iterable, List, Union
 
-import pandas as pd
 from pydicom.dataelem import DataElement as PydicomDataElement
 from pydicom.dataset import FileDataset
 
 from dicom_parser.data_element import DataElement
 from dicom_parser.messages import INVALID_ELEMENT_IDENTIFIER
+from dicom_parser.utils import read_file, requires_pandas
 from dicom_parser.utils.format_header_df import format_header_df
 from dicom_parser.utils.private_tags import PRIVATE_TAGS
-from dicom_parser.utils.read_file import read_file
 from dicom_parser.utils.sequence_detector.sequence_detector import (
     SequenceDetector,
 )
@@ -33,14 +32,31 @@ class Header:
        https://github.com/pydicom/pydicom
     .. _FileDataset:
        https://github.com/pydicom/pydicom/blob/master/pydicom/dataset.py
-
     """
 
+    #: Header fields to pass to
+    #: :class:`~dicom_parser.utils.sequence_detector.sequence_detector.SequenceDetector`.
     sequence_identifiers = {
         "Magnetic Resonance": ["ScanningSequence", "SequenceVariant"]
     }
-    DATAFRAME_COLUMNS = "Tag", "Keyword", "VR", "VM", "Value"
-    DATAFRAME_INDEX = "Tag"
+
+    #: Column names to use when converting to dataframe.
+    DATAFRAME_COLUMNS: Iterable[str] = ("Tag", "Keyword", "VR", "VM", "Value")
+
+    #: Name of column to be used as an index when converting to dataframe.
+    DATAFRAME_INDEX: str = "Tag"
+
+    #: Will be prepended to the sequences section when printing the header.
+    _SEQUENCES_SECTION_TITLE: str = "\n\nSequences\n=========\n"
+
+    #: A string that will be used to separate sequence of items subheaders.
+    _SEQUENCE_SEPERATOR: str = "_" * 100 + "\n\n"
+
+    #: Will be prepended to the private data elements section when printing the
+    #: header.
+    _PRIVATE_SECTION_TITLE: str = (
+        "\n\nPrivate Data Elements\n=====================\n"
+    )
 
     def __init__(
         self,
@@ -97,25 +113,41 @@ class Header:
         str
             String representation
         """
-        base = self.to_dataframe(exclude=ValueRepresentation.SQ, private=False)
+        base_elements = self.get_data_elements(
+            exclude=ValueRepresentation.SQ, private=False
+        )
         sequences = self.get_data_elements(
             value_representation=ValueRepresentation.SQ
         )
-        privates = self.to_dataframe(private=True)
-        sequences_string = ""
-        if sequences:
-            sequences_string = "\n\nSequences\n=========\n"
-            separator = "_" * 100 + "\n\n"
-            sequences_string += separator.join(
-                [str(sequence) for sequence in sequences]
+        privates = self.get_data_elements(private=True)
+        # Try to use pandas to format the table nicely
+        try:
+            base = self.to_dataframe(base_elements)
+        # If pandas isn't installed, simlpy return the data elements' string
+        # representation as provided by pydicom.
+        except ImportError:
+            if sequences:
+                base_elements += [self._SEQUENCES_SECTION_TITLE, *sequences]
+            if privates:
+                base_elements += [self._PRIVATE_SECTION_TITLE, *privates]
+            return "\n".join(
+                [str(data_element) for data_element in base_elements]
             )
-        privates_string = "\n\nPrivate Data Elements\n=====================\n"
-        privates_string = (
-            privates_string + format_header_df(privates)
-            if not privates.empty
-            else ""
-        )
-        return format_header_df(base) + sequences_string + privates_string
+        # Otherwise, format using pandas.
+        else:
+            sequences_string = ""
+            if sequences:
+                sequences_string = self._SEQUENCES_SECTION_TITLE
+                sequences_string += self._SEQUENCE_SEPERATOR.join(
+                    [str(sequence) for sequence in sequences]
+                )
+            privates_df = self.to_dataframe(privates)
+            privates_string = (
+                self._PRIVATE_SECTION_TITLE + format_header_df(privates_df)
+                if not privates_df.empty
+                else ""
+            )
+            return format_header_df(base) + sequences_string + privates_string
 
     def __repr__(self) -> str:
         """
@@ -470,13 +502,14 @@ class Header:
             for data_element in self.data_elements
         }
 
+    @requires_pandas
     def to_dataframe(
         self,
         data_elements: list = None,
         value_representation=None,
         exclude=None,
         private: bool = None,
-    ) -> pd.DataFrame:
+    ):
         """
         Returns a DataFrame representation of this instance.
 
@@ -500,6 +533,8 @@ class Header:
         pd.DataFrame
             DataFrame representation of this instance
         """
+        import pandas as pd
+
         data_elements = (
             data_elements
             if data_elements is not None
@@ -523,10 +558,10 @@ class Header:
 
     def keyword_contains(
         self, query: str, exact: bool = False
-    ) -> pd.DataFrame:
+    ) -> List[DataElement]:
         """
-        Returns a dataframe containing only data elements in which the keyword
-        contains the specified provided string.
+        Returns a list of data elements in which the keyword contains the
+        specified provided string.
 
         Parameters
         ----------
@@ -538,7 +573,7 @@ class Header:
 
         Returns
         -------
-        pd.DataFrame
+        List[DataElement]
             Data elements containing the provided string in their keyword
         """
         query = query if exact else query.lower()
@@ -548,7 +583,7 @@ class Header:
             keyword = keyword if exact else keyword.lower()
             if query in keyword:
                 matches.append(data_element)
-        return self.to_dataframe(data_elements=matches)
+        return matches
 
     @property
     def data_elements(self) -> GeneratorType:

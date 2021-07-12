@@ -8,6 +8,7 @@ from unittest import TestCase
 
 import pydicom
 from dicom_parser.header import Header
+from dicom_parser.utils.requires_pandas import _has_pandas
 from dicom_parser.utils.sequence_detector import SequenceDetector
 from dicom_parser.utils.value_representation import (
     ValueRepresentation,
@@ -294,6 +295,25 @@ class HeaderTestCase(TestCase):
         result = self.header.get_data_elements(exclude=exclude)
         self.assertIsInstance(result, list)
         self.assertEqual(len(result), 120)
+
+    def test_to_dataframe(self):
+        if _has_pandas:
+            import pandas as pd
+
+            df = self.header.to_dataframe()
+            self.assertIsInstance(df, pd.DataFrame)
+        else:
+            self.skipTest("pandas not installed")
+
+    def test_to_dataframe_with_no_elements(self):
+        if _has_pandas:
+            import pandas as pd
+
+            df = self.header.to_dataframe([])
+            self.assertIsInstance(df, pd.DataFrame)
+            self.assertTrue(df.empty)
+        else:
+            self.skipTest("pandas not installed")
 
     def test_to_dict(self):
         value = self.header.to_dict()

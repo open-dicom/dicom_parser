@@ -4,10 +4,9 @@ Definition of the :class:`DataElement` class.
 import re
 from typing import Any
 
-import pandas as pd
 from pydicom.dataelem import DataElement as PydicomDataElement
 
-from dicom_parser.utils.parse_tag import parse_tag
+from dicom_parser.utils import parse_tag, requires_pandas
 from dicom_parser.utils.value_representation import ValueRepresentation
 
 
@@ -61,7 +60,10 @@ class DataElement:
         str
             This instance's string representation
         """
-        return self.to_series().to_string()
+        try:
+            return self.to_series().to_string()
+        except ImportError:
+            return str(self.raw)
 
     def get_private_element_keyword(self) -> str:
         """
@@ -148,7 +150,8 @@ class DataElement:
             "value": self.value,
         }
 
-    def to_series(self) -> pd.Series:
+    @requires_pandas
+    def to_series(self):
         """
         Create a :class:`Series` representation of this instance.
 
@@ -157,6 +160,8 @@ class DataElement:
         pd.Series
             This instance as a :class:`Series`
         """
+        import pandas as pd
+
         d = self.to_dict()
         return pd.Series(d)
 

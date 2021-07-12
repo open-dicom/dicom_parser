@@ -3,7 +3,8 @@ Release Notes
 
 1.2.0
 -----
-  * Removed NiBabel from requirements (added NumPy to fill the gap).
+  * Removed NiBabel from requirements.
+  * Made pandas an optional requirement.
 
 1.1.1
 -----
