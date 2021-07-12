@@ -4,12 +4,13 @@ a formatted version of a single DICOM header's information dataframe.
 """
 import functools
 
-import pandas as pd
+from dicom_parser.utils import requires_pandas
 
 
-def format_header_df(df: pd.DataFrame, max_colwidth: int = 28) -> str:
+@requires_pandas
+def format_header_df(df, max_colwidth: int = 28) -> str:
     """
-    Formats a raw DIOCM header's dataframe to display the contained information
+    Formats a raw DICOM header's dataframe to display the contained information
     more conveniently.
 
     Parameters
@@ -24,6 +25,8 @@ def format_header_df(df: pd.DataFrame, max_colwidth: int = 28) -> str:
     str
         Formatted dataframe information
     """
+    import pandas as pd
+
     formatters = {}
     for column_name in df.columns:
         form = None
