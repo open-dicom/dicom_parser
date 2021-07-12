@@ -41,7 +41,7 @@ class Header:
     }
 
     #: Column names to use when converting to dataframe.
-    DATAFRAME_COLUMNS: Iterable[str] = "Tag", "Keyword", "VR", "VM", "Value"
+    DATAFRAME_COLUMNS: Iterable[str] = ("Tag", "Keyword", "VR", "VM", "Value")
 
     #: Name of column to be used as an index when converting to dataframe.
     DATAFRAME_INDEX: str = "Tag"
