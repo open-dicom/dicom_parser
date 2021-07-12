@@ -5,12 +5,16 @@ Release Notes
 -----
   * Removed NiBabel from requirements.
   * Made pandas an optional requirement.
-  * Added new :class:`~dicom_parser.image.Image` properties:
+  * Added new :class:`~dicom_parser.image.Image` attributes and properties:
 
+    * :func:`~dicom_parser.image.Image.affine`
     * :func:`~dicom_parser.image.Image.image_shape`
     * :func:`~dicom_parser.image.Image.image_orientation_patient`
-    * :func:`~dicom_parser.image.Image.slice_normal`
+    * :func:`~dicom_parser.image.Image.number`
+    * :func:`~dicom_parser.image.Image.position`
     * :func:`~dicom_parser.image.Image.rotation_matrix`
+    * :func:`~dicom_parser.image.Image.slice_normal`
+    * :func:`~dicom_parser.image.Image.spatial_resolution`
 
 1.1.1
 -----

@@ -40,6 +40,35 @@ class ImageTestCase(TestCase):
         with self.assertWarns(Warning):
             Image(dataset)
 
+    def test_image_position(self):
+        value = self.image.position
+        expected = (-39.605327606201, -148.57835578918, 94.533727645874)
+        self.assertAlmostEqual(value, expected)
+
+    def test_image_number(self):
+        value = self.image.number
+        expected = 1
+        self.assertEqual(value, expected)
+
+    def test_affine(self):
+        value = self.image.affine
+        expected = np.array(
+            [
+                [0.0, 0.0, 6.0, -39.60532761],
+                [0.0, 0.48828125, -0.0, -148.57835579],
+                [-0.48828125, 0.0, 0.0, 94.53372765],
+                [0.0, 0.0, 0.0, 1.0],
+            ]
+        )
+        self.assertTrue(np.allclose(value, expected))
+
+    def test_affine_with_missing(self):
+        original_value = self.image.header.raw["ImageOrientationPatient"].value
+        self.image.header.raw["ImageOrientationPatient"].value = None
+        value = self.image.affine
+        self.assertIsNone(value)
+        self.image.header.raw["ImageOrientationPatient"].value = original_value
+
     def test_is_rsfmri_property(self):
         self.assertFalse(self.image.is_fmri)
         self.assertTrue(self.rsfmri_image.is_fmri)
@@ -120,3 +149,16 @@ class ImageTestCase(TestCase):
         value = self.image.rotation_matrix
         self.assertIsNone(value)
         self.image.header.raw["ImageOrientationPatient"].value = original_value
+
+    def test_spatial_resolution(self):
+        value = self.image.spatial_resolution
+        expected = (0.48828125, 0.48828125, 6.0)
+        self.assertTupleEqual(value, expected)
+
+    def test_spatial_resolution_without_thickness(self):
+        original_value = self.image.header.raw["SliceThickness"].value
+        self.image.header.raw["SliceThickness"].value = None
+        value = self.image.spatial_resolution
+        expected = (0.48828125, 0.48828125)
+        self.assertTupleEqual(value, expected)
+        self.image.header.raw["SliceThickness"].value = original_value

@@ -42,6 +42,9 @@ class Image:
         self.warnings = []
         self._data = self.read_raw_data()
 
+        self.number = self.header.get("InstanceNumber")
+        self.position = self.header.get("ImagePositionPatient")
+
     def read_raw_data(self) -> np.ndarray:
         """
         Reads the pixel array data as returned by pydicom.
@@ -77,6 +80,10 @@ class Image:
         """
         Returns the default relative path for this image within a DICOM
         archive.
+
+        See Also
+        --------
+        * :func:`default_relative_path`
 
         Returns
         -------
@@ -175,6 +182,48 @@ class Image:
             raise PrecisionError(messages.BAD_ROTATION_MATRIX)
         return rotation
 
+    def get_spatial_resolution(self) -> Tuple[float]:
+        """
+        Returns the spatial resolution of the image in millimeters.
+
+        See Also
+        --------
+        * :func:`spatial_resolution`
+
+        Returns
+        -------
+        Tuple[float]
+            Spatial resolution in millimeters
+        """
+        pixel_spacing = list(self.header.get("PixelSpacing"))
+        slice_thickness = self.header.get("SliceThickness")
+        if slice_thickness:
+            pixel_spacing.append(slice_thickness)
+        return tuple(pixel_spacing)
+
+    def get_affine(self) -> np.array:
+        """
+        Returns the affine transformation of this image.
+
+        See Also
+        --------
+        * :func:`affine`
+
+        Returns
+        -------
+        np.array
+            Affine transformation matrix
+        """
+        rotation = self.rotation_matrix
+        resolution = self.spatial_resolution
+        required = (rotation, resolution, self.position)
+        if any([value is None for value in required]):
+            return None
+        affine = np.eye(4)
+        affine[:3, :3] = rotation * np.array(resolution)
+        affine[:3, 3] = self.position
+        return affine
+
     @property
     def image_shape(self) -> Tuple[int, int]:
         """
@@ -240,6 +289,38 @@ class Image:
         return self.get_rotation_matrix()
 
     @property
+    def spatial_resolution(self) -> Tuple[float]:
+        """
+        Returns the spatial resolution of the image in millimeters.
+
+        See Also
+        --------
+        * :func:`get_spatial_resolution`
+
+        Returns
+        -------
+        Tuple[float]
+            Spatial resolution in millimeters
+        """
+        return self.get_spatial_resolution()
+
+    @property
+    def affine(self) -> np.array:
+        """
+        Returns the affine transformation of this image.
+
+        See Also
+        --------
+        * :func:`get_affine`
+
+        Returns
+        -------
+        np.array
+            Affine transformation matrix
+        """
+        return self.get_affine()
+
+    @property
     def is_mosaic(self) -> bool:
         """
         Checks whether a 3D volume is encoded as a 2D Mosaic.
@@ -281,4 +362,17 @@ class Image:
 
     @property
     def default_relative_path(self) -> Path:
+        """
+        Returns the default relative path for this image within a DICOM
+        archive.
+
+        See Also
+        --------
+        * :func:`get_default_relative_path`
+
+        Returns
+        -------
+        Path
+            Default relative path for this image
+        """
         return self.get_default_relative_path()
