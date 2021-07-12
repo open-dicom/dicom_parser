@@ -108,3 +108,15 @@ class ImageTestCase(TestCase):
         value = self.image.slice_normal
         self.assertIsNone(value)
         self.image.header.raw["ImageOrientationPatient"].value = original_value
+
+    def test_rotation_matrix(self):
+        value = self.image.rotation_matrix
+        expected = [[0, 0, 1], [0, 1, -0.0], [-1, 0, 0]]
+        self.assertTrue(np.array_equal(value, expected))
+
+    def test_rotation_matrix_missing(self):
+        original_value = self.image.header.raw["ImageOrientationPatient"].value
+        self.image.header.raw["ImageOrientationPatient"].value = None
+        value = self.image.rotation_matrix
+        self.assertIsNone(value)
+        self.image.header.raw["ImageOrientationPatient"].value = original_value

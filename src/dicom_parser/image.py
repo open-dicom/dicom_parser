@@ -12,6 +12,7 @@ from pydicom.dataset import FileDataset
 
 from dicom_parser import messages
 from dicom_parser.header import Header
+from dicom_parser.utils.exceptions import PrecisionError
 from dicom_parser.utils.read_file import read_file
 from dicom_parser.utils.siemens.mosaic import Mosaic
 
@@ -142,6 +143,38 @@ class Image:
         if iop is not None:
             return np.cross(iop[:, 1], iop[:, 0])
 
+    def get_rotation_matrix(self) -> np.array:
+        """
+        Returns the rotation matrix between array indices and mm.
+
+        References
+        ----------
+        * https://nipy.org/nibabel/dicom/dicom_orientation.html
+
+        Returns
+        -------
+        np.array
+            Rotation matrix
+
+        Raises
+        ------
+        PrecisionError
+            Unorthogonal rotation matrix
+        """
+        iop = self.image_orientation_patient
+        s_norm = self.slice_normal
+        if iop is None or s_norm is None:
+            return None
+        rotation = np.eye(3)
+        rotation[:, :2] = np.fliplr(iop)
+        rotation[:, 2] = s_norm
+        precision = np.allclose(
+            np.eye(3), np.dot(rotation, rotation.T), atol=5e-5
+        )
+        if not precision:
+            raise PrecisionError(messages.BAD_ROTATION_MATRIX)
+        return rotation
+
     @property
     def image_shape(self) -> Tuple[int, int]:
         """
@@ -189,6 +222,22 @@ class Image:
             Slice normal
         """
         return self.get_slice_normal()
+
+    @property
+    def rotation_matrix(self) -> np.array:
+        """
+        Returns the rotation matrix between array indices and mm.
+
+        See Also
+        --------
+        * :func:`get_rotation_matrix`
+
+        Returns
+        -------
+        np.array
+            Rotation matrix
+        """
+        return self.get_rotation_matrix()
 
     @property
     def is_mosaic(self) -> bool:

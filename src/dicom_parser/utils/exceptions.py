@@ -1,0 +1,2 @@
+class PrecisionError(Exception):
+    pass

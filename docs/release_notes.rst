@@ -10,6 +10,7 @@ Release Notes
     * :func:`~dicom_parser.image.Image.image_shape`
     * :func:`~dicom_parser.image.Image.image_orientation_patient`
     * :func:`~dicom_parser.image.Image.slice_normal`
+    * :func:`~dicom_parser.image.Image.rotation_matrix`
 
 1.1.1
 -----
