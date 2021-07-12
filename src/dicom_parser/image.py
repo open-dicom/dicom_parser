@@ -100,6 +100,24 @@ class Image:
         shape = tuple(shape_dict.values())
         return None if None in shape else shape
 
+    def get_image_orientation_patient(self) -> np.array:
+        """
+        Returns the image position and orientation.
+
+        References
+        ----------
+        * https://dicom.innolitics.com/ciods/mr-image/image-plane/00200037
+
+
+        Returns
+        -------
+        np.array
+            Parsed image orientation (patient) attribute information
+        """
+        values = self.header.get("ImageOrientationPatient")
+        if values is not None:
+            return np.array(values).reshape(2, 3).T
+
     @property
     def image_shape(self) -> Tuple[int, int]:
         """
@@ -115,6 +133,23 @@ class Image:
             Rows, columns
         """
         return self.get_image_shape()
+    
+    @property
+    def image_orientation_patient(self) -> np.array:
+        """
+        Returns the image position and orientation.
+
+        See Also
+        --------
+        * :func:`get_image_orientation_patient`
+
+
+        Returns
+        -------
+        np.array
+            Parsed image orientation (patient) attribute information
+        """        
+        return self.get_image_orientation_patient()
 
     @property
     def is_mosaic(self) -> bool:

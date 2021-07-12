@@ -84,3 +84,15 @@ class ImageTestCase(TestCase):
         value = self.image.image_shape
         self.assertIsNone(value)
         self.image.header.raw["Rows"].value = 512
+
+    def test_image_orientation_patient(self):
+        value = self.image.image_orientation_patient
+        expected = np.array([[0, 0], [1, 0], [0, -1]])
+        self.assertTrue(np.array_equal(value, expected))
+
+    def test_image_orientation_patient_missing(self):
+        original_value = self.image.header.raw["ImageOrientationPatient"].value
+        self.image.header.raw["ImageOrientationPatient"].value = None
+        value = self.image.image_orientation_patient
+        self.assertIsNone(value)
+        self.image.header.raw["ImageOrientationPatient"].value = original_value
