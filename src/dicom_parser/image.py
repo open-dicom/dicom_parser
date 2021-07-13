@@ -27,6 +27,8 @@ class Image:
     unified access to it's header information and data.
     """
 
+    _mosaic: Mosaic = None
+
     def __init__(self, raw: Union[FileDataset, str, Path]):
         """
         The Image class should be initialized with either a string or a
@@ -105,8 +107,7 @@ class Image:
             Fixed pixel array data
         """
         if self.is_mosaic:
-            mosaic = Mosaic(self._data, self.header)
-            return mosaic.fold()
+            return self.mosaic.fold()
         return self.rescale_data(self._data)
 
     def get_default_relative_path(self) -> Path:
@@ -141,6 +142,8 @@ class Image:
         Tuple[int, int]
             Rows, columns
         """
+        if self.is_mosaic:
+            return self.mosaic.get_volume_shape()
         shape_dict = self.header.get(["Rows", "Columns"])
         shape = tuple(shape_dict.values())
         return None if None in shape else shape
@@ -618,3 +621,9 @@ class Image:
             B vector
         """
         return self.get_b_vector()
+
+    @property
+    def mosaic(self) -> Mosaic:
+        if self.is_mosaic and self._mosaic is None:
+            self._mosaic = Mosaic(self._data, self.header)
+        return self._mosaic
