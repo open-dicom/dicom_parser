@@ -62,19 +62,48 @@ class Image:
             if warning not in self.warnings:
                 self.warnings.append(warning)
 
+    def rescale_data(self, data: np.array) -> np.array:
+        """
+        Rescales the provided *data* pixel array using the `Rescale Slope`_ and
+        `Rescale Intercept`_ header fields.
+
+        .. _Rescale Intercept:
+           https://dicom.innolitics.com/ciods/enhanced-mr-image/enhanced-mr-image-multi-frame-functional-groups/52009229/00289145/00281052
+        .. _Rescale Slope:
+           https://dicom.innolitics.com/ciods/enhanced-mr-color-image/enhanced-mr-color-image-multi-frame-functional-groups/52009229/00289145/00281053
+
+        Parameters
+        ----------
+        data : np.array
+            Pixel array
+
+        Returns
+        -------
+        np.array
+            Fixed pixel array
+        """
+        slope = self.header.get("RescaleSlope", 1)
+        intercept = self.header.get("RescaleIntercept", 0)
+        return data * slope + intercept
+
     def fix_data(self) -> np.ndarray:
         """
         Applies any required transformation to the data.
 
+        See Also
+        --------
+        * :func:`rescale_data`
+        * :class:`~dicom_parser.utils.siemens.mosaic.Mosaic`
+
         Returns
         -------
         np.ndarray
-            Pixel array data
+            Fixed pixel array data
         """
         if self.is_mosaic:
             mosaic = Mosaic(self._data, self.header)
             return mosaic.fold()
-        return self._data
+        return self.rescale_data(self._data)
 
     def get_default_relative_path(self) -> Path:
         """

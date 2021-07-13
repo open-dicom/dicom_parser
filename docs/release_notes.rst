@@ -15,6 +15,13 @@ Release Notes
     * :func:`~dicom_parser.image.Image.rotation_matrix`
     * :func:`~dicom_parser.image.Image.slice_normal`
     * :func:`~dicom_parser.image.Image.spatial_resolution`
+  
+  * :func:`~dicom_parser.image.Image.data` now also applies rescaling as (and
+    if) defined by the `Rescale Slope`_ and `Rescale Intercept`_ header fields.
+    See:
+      
+    * :func:`~dicom_parser.image.Image.rescale_data`
+    * :func:`~dicom_parser.image.Image.fix_data`
 
 1.1.1
 -----
@@ -167,6 +174,10 @@ First release!
    https://www.python.org/dev/peps/pep-0518/
 .. _pydicom:
    https://github.com/pydicom/pydicom
+.. _Rescale Intercept:
+   https://dicom.innolitics.com/ciods/enhanced-mr-image/enhanced-mr-image-multi-frame-functional-groups/52009229/00289145/00281052
+.. _Rescale Slope:
+   https://dicom.innolitics.com/ciods/enhanced-mr-color-image/enhanced-mr-color-image-multi-frame-functional-groups/52009229/00289145/00281053
 .. _Siemens mosaic:
    https://nipy.org/nibabel/dicom/dicom_mosaic.html
 .. _value-representation (VR):
