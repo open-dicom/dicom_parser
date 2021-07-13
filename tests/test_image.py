@@ -197,3 +197,12 @@ class ImageTestCase(TestCase):
     def test_q_vector_with_missing(self):
         value = self.image.q_vector
         self.assertIsNone(value)
+
+    def test_b_vector(self):
+        value = self.siemens_dwi.b_vector
+        expected = np.array([0.55826306, -0.55729188, -0.61462844])
+        self.assertTrue(np.allclose(value, expected))
+
+    def test_b_vector_with_missing(self):
+        value = self.image.b_vector
+        self.assertIsNone(value)

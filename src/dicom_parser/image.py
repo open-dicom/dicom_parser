@@ -261,7 +261,7 @@ class Image:
 
     def get_b_matrix(self) -> np.ndarray:
         """
-        Returns the B matrix of Siemens scans.
+        Returns the B matrix of Siemens DWI scans.
 
         See Also
         --------
@@ -274,6 +274,21 @@ class Image:
             B matrix
         """
         return self.header.get("B_matrix")
+
+    def get_b_value(self) -> float:
+        """
+        Returns the B value of Siemens DWI scans.
+
+        See Also
+        --------
+        :func:`b_value`
+
+        Returns
+        -------
+        float
+            B value
+        """
+        return self.header.get("B_value")
 
     def get_q_vector(self) -> np.ndarray:
         """
@@ -309,6 +324,49 @@ class Image:
         if not (rotation is None or b_matrix is None):
             b_matrix = np.dot(rotation.T, np.dot(b_matrix, rotation))
             return nearest_pos_semi_def(b_matrix)
+
+    def get_voxel_space_b_value(self, tol: float = 1e-5) -> float:
+        """
+        Returns the B value in voxel space (rather than patient space).
+
+        See Also
+        --------
+        * :func:`voxel_space_b_value`
+
+        Parameters
+        ----------
+        tol : float, optional
+            Norm tolerance, by default 1e-5
+
+        Returns
+        -------
+        float
+            Adjusted B value
+        """
+        q = self.q_vector
+        if q is not None:
+            norm = np.sqrt(np.sum(q * q))
+            return norm if norm > tol else 0
+
+    def get_b_vector(self) -> np.ndarray:
+        """
+        Returns the B vector of a Siemens DWI image.
+
+        See Also
+        --------
+        * :func:`b_vector`
+
+        Returns
+        -------
+        np.ndarray
+            B vector
+        """
+        q_vector = self.q_vector
+        b_value = self.voxel_space_b_value
+        if q_vector is not None and b_value is not None:
+            if b_value == 0:
+                return np.zeros((3,))
+            return q_vector / b_value
 
     @property
     def image_shape(self) -> Tuple[int, int]:
@@ -481,6 +539,22 @@ class Image:
         return self.get_b_matrix()
 
     @property
+    def b_value(self) -> float:
+        """
+        Returns the B matrix of Siemens scans.
+
+        See Also
+        --------
+        :func:`get_b_value`
+
+        Returns
+        -------
+        float
+            B value
+        """
+        return self.get_b_value()
+
+    @property
     def q_vector(self) -> np.ndarray:
         """
         Calculates Siemens DWI q-vector in voxel space.
@@ -512,3 +586,35 @@ class Image:
             Rotated B matrix
         """
         return self.get_voxel_space_b_matrix()
+
+    @property
+    def voxel_space_b_value(self) -> float:
+        """
+        Returns the B value in voxel space (rather than patient space).
+
+        See Also
+        --------
+        * :func:`get_voxel_space_b_value`
+
+        Returns
+        -------
+        float
+            Adjusted B value
+        """
+        return self.get_voxel_space_b_value()
+
+    @property
+    def b_vector(self) -> np.ndarray:
+        """
+        Returns the B vector of a Siemens DWI image.
+
+        See Also
+        --------
+        * :func:`b_vector`
+
+        Returns
+        -------
+        np.ndarray
+            B vector
+        """
+        return self.get_b_vector()
