@@ -147,7 +147,7 @@ class Image:
         shape_dict = self.header.get(["Rows", "Columns"])
         shape = tuple(shape_dict.values())
         return None if None in shape else shape
-    
+
     def get_image_position(self) -> np.ndarray:
         position = self.header.get("ImagePositionPatient")
         if self.is_mosaic:
@@ -158,7 +158,6 @@ class Image:
             # TODO: Fix image position for mosaic.
             # https://github.com/nipy/nibabel/blob/62aea04248e70d7c4529954ca41685d7f75a0b1e/nibabel/nicom/dicomwrappers.py#L866
         return position
-        
 
     def get_image_orientation_patient(self) -> np.array:
         """
