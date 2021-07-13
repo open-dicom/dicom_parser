@@ -43,7 +43,7 @@ class ImageTestCase(TestCase):
             Image(dataset)
 
     def test_image_position(self):
-        value = self.image.position
+        value = self.image.image_position
         expected = (-39.605327606201, -148.57835578918, 94.533727645874)
         self.assertAlmostEqual(value, expected)
 

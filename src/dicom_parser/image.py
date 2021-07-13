@@ -49,7 +49,6 @@ class Image:
         self._data = self.read_raw_data()
 
         self.number = self.header.get("InstanceNumber")
-        self.position = self.header.get("ImagePositionPatient")
 
     def read_raw_data(self) -> np.ndarray:
         """
@@ -149,6 +148,18 @@ class Image:
         return None if None in shape else shape
 
     def get_image_position(self) -> np.ndarray:
+        """
+        Returns the position of the first voxel in the data block.
+
+        See Also
+        --------
+        * :func:`image_position`
+
+        Returns
+        -------
+        np.ndarray
+            First voxel position
+        """
         position = self.header.get("ImagePositionPatient")
         if self.is_mosaic:
             iop = self.image_orientation_patient
@@ -265,12 +276,13 @@ class Image:
         """
         rotation = self.rotation_matrix
         resolution = self.spatial_resolution
-        required = (rotation, resolution, self.position)
+        position = self.image_position
+        required = (rotation, resolution, position)
         if any([value is None for value in required]):
             return None
         affine = np.eye(4)
         affine[:3, :3] = rotation * np.array(resolution)
-        affine[:3, 3] = self.position
+        affine[:3, 3] = position
         return affine
 
     def get_b_matrix(self) -> np.ndarray:
@@ -632,6 +644,22 @@ class Image:
             B vector
         """
         return self.get_b_vector()
+
+    @property
+    def image_position(self) -> Tuple[float]:
+        """
+        Returns the position of the first voxel in the data block.
+
+        See Also
+        --------
+        * :func:`get_image_position`
+
+        Returns
+        -------
+        np.ndarray
+            First voxel position
+        """
+        return self.get_image_position()
 
     @property
     def mosaic(self) -> Mosaic:
