@@ -4,6 +4,8 @@ Fixtures for data element tests.
 import os
 from datetime import date, time
 
+import numpy as np
+
 # pickle5 is required for to parse the pickled fixtures in Python before 3.8.
 try:
     import pickle5 as pickle
@@ -135,7 +137,9 @@ SIEMENS_DWI_ELEMENTS = {
     (0x19, 0x100B): 77000.0,
     (0x19, 0x100C): 0,
     (0x19, 0x100E): [0.57735026, 0.57735038, 0.57735032],
-    (0x19, 0x1027): [1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
+    (0x19, 0x1027): np.array(
+        [[1.0, 1.0, 1.0], [1.0, 1.0, 1.0], [1.0, 1.0, 1.0]]
+    ),
     (0x19, 0x1028): 22.321,
     (0x19, 0x1029): [
         0.0,

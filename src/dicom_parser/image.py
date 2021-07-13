@@ -15,6 +15,10 @@ from dicom_parser.header import Header
 from dicom_parser.utils.exceptions import PrecisionError
 from dicom_parser.utils.read_file import read_file
 from dicom_parser.utils.siemens.mosaic import Mosaic
+from dicom_parser.utils.siemens.private_tags import (
+    b_matrix_to_q_vector,
+    nearest_pos_semi_def,
+)
 
 
 class Image:
@@ -178,6 +182,8 @@ class Image:
         iop = self.image_orientation_patient
         if iop is not None:
             return np.cross(iop[:, 1], iop[:, 0])
+        # TODO: Implement Siemens fix for slice normal?
+        # https://github.com/nipy/nibabel/blob/62aea04248e70d7c4529954ca41685d7f75a0b1e/nibabel/nicom/dicomwrappers.py#L710
 
     def get_rotation_matrix(self) -> np.array:
         """
@@ -252,6 +258,57 @@ class Image:
         affine[:3, :3] = rotation * np.array(resolution)
         affine[:3, 3] = self.position
         return affine
+
+    def get_b_matrix(self) -> np.ndarray:
+        """
+        Returns the B matrix of Siemens scans.
+
+        See Also
+        --------
+        :func:`~dicom_parser.utils.siemens.private_tags.parse_siemens_b_matrix`
+        :func:`b_matrix`
+
+        Returns
+        -------
+        np.ndarray
+            B matrix
+        """
+        return self.header.get("B_matrix")
+
+    def get_q_vector(self) -> np.ndarray:
+        """
+        Calculates Siemens DWI q-vector in voxel space.
+
+        See Also
+        --------
+        * :func:`~dicom_parser.utils.siemens.private_tags.b_matrix_to_q_vector`
+        * :func:`q_vector`
+
+        Returns
+        -------
+        np.ndarray
+            q-vector
+        """
+        return b_matrix_to_q_vector(self.voxel_space_b_matrix)
+
+    def get_voxel_space_b_matrix(self) -> np.ndarray:
+        """
+        Returns the B matrix in voxel space (rather than patient space).
+
+        See Also
+        --------
+        * :func:`voxel_space_b_matrix`
+
+        Returns
+        -------
+        np.ndarray
+            Rotated B matrix
+        """
+        rotation = self.rotation_matrix
+        b_matrix = self.b_matrix
+        if not (rotation is None or b_matrix is None):
+            b_matrix = np.dot(rotation.T, np.dot(b_matrix, rotation))
+            return nearest_pos_semi_def(b_matrix)
 
     @property
     def image_shape(self) -> Tuple[int, int]:
@@ -405,3 +462,53 @@ class Image:
             Default relative path for this image
         """
         return self.get_default_relative_path()
+
+    @property
+    def b_matrix(self) -> np.ndarray:
+        """
+        Returns the B matrix of Siemens scans.
+
+        See Also
+        --------
+        :func:`~dicom_parser.utils.siemens.private_tags.parse_siemens_b_matrix`
+        :func:`get_b_matrix`
+
+        Returns
+        -------
+        np.ndarray
+            B matrix
+        """
+        return self.get_b_matrix()
+
+    @property
+    def q_vector(self) -> np.ndarray:
+        """
+        Calculates Siemens DWI q-vector in voxel space.
+
+        See Also
+        --------
+        * :func:`~dicom_parser.utils.siemens.private_tags.b_matrix_to_q_vector`
+        * :func:`get_q_vector`
+
+        Returns
+        -------
+        np.ndarray
+            q-vector
+        """
+        return self.get_q_vector()
+
+    @property
+    def voxel_space_b_matrix(self) -> np.ndarray:
+        """
+        Returns the B matrix in voxel space (rather than patient space).
+
+        See Also
+        --------
+        * :func:`voxel_space_b_matrix`
+
+        Returns
+        -------
+        np.ndarray
+            Rotated B matrix
+        """
+        return self.get_voxel_space_b_matrix()

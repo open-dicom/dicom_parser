@@ -299,6 +299,10 @@ class Header:
             Invalid data element identifier
         """
         if isinstance(tag_or_keyword, (tuple, str)):
+            if isinstance(tag_or_keyword, str):
+                tag_or_keyword = (
+                    self.get_private_tag(tag_or_keyword) or tag_or_keyword
+                )
             raw_element = self.get_raw_element(tag_or_keyword)
         elif not isinstance(tag_or_keyword, PydicomDataElement):
             message = INVALID_ELEMENT_IDENTIFIER.format(
@@ -479,9 +483,9 @@ class Header:
         except (KeyError, TypeError):
             if not missing_ok:
                 raise
-        if value and as_json:
+        if value is not None and as_json:
             value = json.dumps(value, indent=4, sort_keys=True, default=str)
-        return value or default
+        return value if value is not None else default
 
     def to_dict(self, parsed: bool = True) -> dict:
         """

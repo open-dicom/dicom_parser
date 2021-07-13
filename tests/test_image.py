@@ -10,6 +10,7 @@ from tests.fixtures import (
     TEST_IMAGE_PATH,
     TEST_IMAGE_RELATIVE_PATH,
     TEST_RSFMRI_IMAGE_PATH,
+    TEST_SIEMENS_DWI_PATH,
 )
 
 
@@ -18,6 +19,7 @@ class ImageTestCase(TestCase):
     def setUpClass(cls):
         cls.image = Image(TEST_IMAGE_PATH)
         cls.rsfmri_image = Image(TEST_RSFMRI_IMAGE_PATH)
+        cls.siemens_dwi = Image(TEST_SIEMENS_DWI_PATH)
 
     def test_initialization_with_string_path(self):
         image = Image(TEST_IMAGE_PATH)
@@ -162,3 +164,36 @@ class ImageTestCase(TestCase):
         expected = (0.48828125, 0.48828125)
         self.assertTupleEqual(value, expected)
         self.image.header.raw["SliceThickness"].value = original_value
+
+    def test_b_matrix(self):
+        value = self.siemens_dwi.b_matrix
+        expected = np.array([[1, 1, 1], [1, 1, 1], [1, 1, 1]])
+        self.assertTrue(np.array_equal(value, expected))
+
+    def test_b_matrix_with_missing(self):
+        value = self.image.b_matrix
+        self.assertIsNone(value)
+
+    def test_voxel_space_b_matrix(self):
+        value = self.siemens_dwi.voxel_space_b_matrix
+        expected = np.array(
+            [
+                [0.93497292, -0.93334641, -1.02937305],
+                [-0.93334641, 0.93172273, 1.02758232],
+                [-1.02937305, 1.02758232, 1.13330435],
+            ]
+        )
+        self.assertTrue(np.allclose(value, expected))
+
+    def test_voxel_space_b_matrix_with_missing(self):
+        value = self.image.voxel_space_b_matrix
+        self.assertIsNone(value)
+
+    def test_q_vector(self):
+        value = self.siemens_dwi.q_vector
+        expected = np.array([1.67478917, -1.67187565, -1.84388531])
+        self.assertTrue(np.allclose(value, expected))
+
+    def test_q_vector_with_missing(self):
+        value = self.image.q_vector
+        self.assertIsNone(value)
