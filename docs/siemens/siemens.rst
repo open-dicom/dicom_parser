@@ -7,5 +7,6 @@ Siemens-specific header and parsing information.
    :maxdepth: 2
    :caption: Contents:
 
+   private_tags
    csa_headers
    mosaic
