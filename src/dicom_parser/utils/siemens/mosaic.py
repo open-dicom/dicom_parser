@@ -8,6 +8,7 @@ volumes used by Siemens. For more information read `this
 """
 import numpy as np
 from dicom_parser.header import Header
+from dicom_parser.utils.siemens import messages
 
 
 class Mosaic:
@@ -30,9 +31,25 @@ class Mosaic:
         self.mosaic_array = mosaic_array
         self.header = header
         self.series_header_info = self.header.get("CSASeriesHeaderInfo")
+        self.n_images = self.get_n_images()
+        self.size = int(np.ceil(np.sqrt(self.n_images)))
         self.volume_shape = self.get_volume_shape()
         self.mosaic_dimensions = self.get_mosaic_dimensions()
         self.ascending = "Asc" in self.series_header_info["SliceArray"]
+
+    def get_n_images(self) -> int:
+        """
+        Returns the number of images encoded in the mosaic.
+
+        Returns
+        -------
+        int
+            Number of images encoded in mosaic
+        """
+        try:
+            return self.header["NumberOfImagesInMosaic"]
+        except KeyError:
+            raise KeyError(messages.MISSING_NUMBER_OF_IMAGES)
 
     def get_volume_shape(self) -> tuple:
         """
@@ -43,10 +60,13 @@ class Mosaic:
         tuple
             x_dim, y_dim, z_dim
         """
-        acquisition_matrix = self.header.get("AcquisitionMatrix")
-        x, y = acquisition_matrix[0], acquisition_matrix[-1]
+        x = self.header.get("Rows")
+        y = self.header.get("Columns")
         z = self.series_header_info["SliceArray"]["Size"]
-        return x, y, z
+        shape = (x, y, z)
+        if None in shape:
+            return None
+        return (x // self.size, y // self.size, z)
 
     def get_mosaic_dimensions(self) -> tuple:
         """

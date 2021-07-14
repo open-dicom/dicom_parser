@@ -10,3 +10,9 @@ B_MATRIX_NOT_SYMMETRIC: str = "B matrix must be symmetric. Value:\n{b_matrix}"
 INVALID_B_MATRIX: str = (
     "B matrix not positive semi-definite. Value:\n{b_matrix}"
 )
+
+#: Message to display if the NumberOfImagesInMosaic field is not set.
+MISSING_NUMBER_OF_IMAGES: str = "NumberOfImagesInMosaic header must be set for mosaic type pixel array data."
+
+
+# flake8: noqa: E501
