@@ -20,6 +20,14 @@ Subpackages
 Submodules
 ----------
 
+dicom\_parser.utils.siemens.mosaic module
+-----------------------------------------
+
+.. automodule:: dicom_parser.utils.siemens.mosaic
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 dicom\_parser.utils.siemens.private\_tags module
 ------------------------------------------------
 
