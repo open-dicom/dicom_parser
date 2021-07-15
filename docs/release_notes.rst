@@ -11,8 +11,7 @@ Release Notes
     * :func:`~dicom_parser.image.Image.image_orientation_patient`
     * :func:`~dicom_parser.image.Image.image_position`
     * :func:`~dicom_parser.image.Image.image_shape`
-    * :func:`~dicom_parser.image.Image.number`
-    * :func:`~dicom_parser.image.Image.position`
+    * :attr:`~dicom_parser.image.Image.number`
     * :func:`~dicom_parser.image.Image.rotation_matrix`
     * :func:`~dicom_parser.image.Image.slice_normal`
     * :func:`~dicom_parser.image.Image.spatial_resolution`
