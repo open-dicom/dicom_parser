@@ -160,15 +160,11 @@ class Image:
         np.ndarray
             First voxel position
         """
-        position = self.header.get("ImagePositionPatient")
-        if self.is_mosaic:
+        ipp = self.header.get("ImagePositionPatient")
+        if ipp is not None and self.is_mosaic:
             iop = self.image_orientation_patient
-            pixel_spacing = self.header.get("PixelSpacing")
-            if iop is None or pixel_spacing is None:
-                return None
-            # TODO: Fix image position for mosaic.
-            # https://github.com/nipy/nibabel/blob/62aea04248e70d7c4529954ca41685d7f75a0b1e/nibabel/nicom/dicomwrappers.py#L866
-        return position
+            return self.mosaic.get_image_position(iop)
+        return ipp
 
     def get_image_orientation_patient(self) -> np.array:
         """
@@ -187,9 +183,9 @@ class Image:
         np.array
             Parsed image orientation (patient) attribute information
         """
-        values = self.header.get("ImageOrientationPatient")
-        if values is not None:
-            return np.array(values).reshape(2, 3).T
+        iop = self.header.get("ImageOrientationPatient")
+        if iop is not None:
+            return np.array(iop).reshape(2, 3).T
 
     def get_slice_normal(self) -> np.array:
         """

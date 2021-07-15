@@ -47,6 +47,11 @@ class ImageTestCase(TestCase):
         expected = (-39.605327606201, -148.57835578918, 94.533727645874)
         self.assertAlmostEqual(value, expected)
 
+    def test_mosaic_image_position(self):
+        value = self.siemens_dwi.image_position
+        expected = np.array([-15.45403804, -107.76991802, 80.05488457])
+        self.assertTrue(np.allclose(value, expected))
+
     def test_image_number(self):
         value = self.image.number
         expected = 1
@@ -116,6 +121,11 @@ class ImageTestCase(TestCase):
         self.assertIsNone(value)
         self.image.header.raw["Rows"].value = 512
 
+    def test_mosaic_image_shape(self):
+        value = self.siemens_dwi.image_shape
+        expected = (128, 128, 9)
+        self.assertTupleEqual(value, expected)
+
     def test_image_orientation_patient(self):
         value = self.image.image_orientation_patient
         expected = np.array([[0, 0], [1, 0], [0, -1]])
@@ -127,6 +137,17 @@ class ImageTestCase(TestCase):
         value = self.image.image_orientation_patient
         self.assertIsNone(value)
         self.image.header.raw["ImageOrientationPatient"].value = original_value
+
+    def test_mosaic_image_orientation_patient(self):
+        value = self.siemens_dwi.image_orientation_patient
+        expected = np.array(
+            [
+                [-3.41585276e-02, 3.14874388e-02],
+                [9.99416427e-01, 1.07615111e-03],
+                [-4.14689430e-08, -9.99503568e-01],
+            ]
+        )
+        self.assertTrue(np.allclose(value, expected))
 
     def test_slice_normal(self):
         value = self.image.slice_normal
