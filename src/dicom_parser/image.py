@@ -105,9 +105,10 @@ class Image:
         np.ndarray
             Fixed pixel array data
         """
+        data = self._data
         if self.is_mosaic:
-            return self.mosaic.fold()
-        return self.rescale_data(self._data)
+            data = self.mosaic.fold()
+        return self.rescale_data(data)
 
     def get_default_relative_path(self) -> Path:
         """
