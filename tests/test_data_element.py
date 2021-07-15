@@ -4,6 +4,7 @@ Definition of the :class:`DataElementTestCase` class.
 from typing import Tuple, Union
 from unittest import TestCase
 
+import numpy as np
 import pydicom
 from dicom_parser.data_element import DataElement
 from dicom_parser.header import Header
@@ -49,11 +50,26 @@ class DataElementTestCase(TestCase):
         values = self.get_values()
         for key, expected in values.items():
             raw = self.get_raw_element(key)
-            data_element = self.TEST_CLASS(raw)
-            self.assertEqual(data_element.value, expected)
+            value = self.TEST_CLASS(raw).value
+            if isinstance(value, np.ndarray):
+                self.assertTrue(np.array_equal(value, expected))
+            else:
+                self.assertEqual(value, expected)
 
     def test_repr(self):
         if not self.SAMPLE_KEY:
             self.skipTest("No sample key provided.")
         element = self.header.get_data_element(self.SAMPLE_KEY)
         self.assertEqual(repr(element), str(element))
+
+    def test_is_public(self):
+        if self.TEST_CLASS is None or self.SAMPLE_KEY == "":
+            self.skipTest(self.SKIP_MESSAGE)
+        element = self.TEST_CLASS(self.raw_element)
+        self.assertTrue(element.is_public)
+
+    def test_is_private(self):
+        if self.TEST_CLASS is None or self.SAMPLE_KEY == "":
+            self.skipTest(self.SKIP_MESSAGE)
+        element = self.TEST_CLASS(self.raw_element)
+        self.assertFalse(element.is_private)

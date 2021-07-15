@@ -203,12 +203,7 @@ class Series:
         Tuple[float]
             Spatial resolution in millimeters
         """
-        sample_header = self[0].header
-        pixel_spacing = list(sample_header.get("PixelSpacing"))
-        slice_thickness = sample_header.get("SliceThickness")
-        if slice_thickness:
-            pixel_spacing.append(slice_thickness)
-        return tuple(pixel_spacing)
+        return self.images[0].spatial_resolution
 
     @property
     def data(self) -> np.ndarray:

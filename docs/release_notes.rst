@@ -5,6 +5,24 @@ Release Notes
 -----
   * Removed NiBabel from requirements.
   * Made pandas an optional requirement.
+  * Added new :class:`~dicom_parser.image.Image` attributes and properties:
+
+    * :func:`~dicom_parser.image.Image.affine`
+    * :func:`~dicom_parser.image.Image.image_orientation_patient`
+    * :func:`~dicom_parser.image.Image.image_position`
+    * :func:`~dicom_parser.image.Image.image_shape`
+    * :func:`~dicom_parser.image.Image.number`
+    * :func:`~dicom_parser.image.Image.position`
+    * :func:`~dicom_parser.image.Image.rotation_matrix`
+    * :func:`~dicom_parser.image.Image.slice_normal`
+    * :func:`~dicom_parser.image.Image.spatial_resolution`
+  
+  * :func:`~dicom_parser.image.Image.data` now also applies rescaling as (and
+    if) defined by the `Rescale Slope`_ and `Rescale Intercept`_ header fields.
+    See:
+      
+    * :func:`~dicom_parser.image.Image.rescale_data`
+    * :func:`~dicom_parser.image.Image.fix_data`
 
 1.1.1
 -----
@@ -145,6 +163,8 @@ First release!
    https://github.com/TheLabbingProject/django_dicom
 .. _GitHub Actions:
    https://github.com/ZviBaratz/dicom_parser/actions/workflows/tests.yml
+.. _ImageOrientationPatient:
+   https://dicom.innolitics.com/ciods/mr-image/image-plane/00200037
 .. _isort:
    https://pycqa.github.io/isort/
 .. _NIfTI:
@@ -155,6 +175,10 @@ First release!
    https://www.python.org/dev/peps/pep-0518/
 .. _pydicom:
    https://github.com/pydicom/pydicom
+.. _Rescale Intercept:
+   https://dicom.innolitics.com/ciods/enhanced-mr-image/enhanced-mr-image-multi-frame-functional-groups/52009229/00289145/00281052
+.. _Rescale Slope:
+   https://dicom.innolitics.com/ciods/enhanced-mr-color-image/enhanced-mr-color-image-multi-frame-functional-groups/52009229/00289145/00281053
 .. _Siemens mosaic:
    https://nipy.org/nibabel/dicom/dicom_mosaic.html
 .. _value-representation (VR):

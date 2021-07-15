@@ -6,8 +6,11 @@ volumes used by Siemens. For more information read `this
 `here
 <https://discovery.ucl.ac.uk/id/eprint/1495621/1/Li%20et%20al%20The%20first%20step%20for%20neuroimaging%20data%20analysis%20-%20DICOM%20to%20NIfTI%20conversion.pdf>`_.
 """
+from typing import Tuple
+
 import numpy as np
 from dicom_parser.header import Header
+from dicom_parser.utils.siemens import messages
 
 
 class Mosaic:
@@ -30,23 +33,91 @@ class Mosaic:
         self.mosaic_array = mosaic_array
         self.header = header
         self.series_header_info = self.header.get("CSASeriesHeaderInfo")
+        self.n_images = self.get_n_images()
+        self.size = int(np.ceil(np.sqrt(self.n_images)))
         self.volume_shape = self.get_volume_shape()
         self.mosaic_dimensions = self.get_mosaic_dimensions()
         self.ascending = "Asc" in self.series_header_info["SliceArray"]
 
-    def get_volume_shape(self) -> tuple:
+    def get_n_images(self) -> int:
+        """
+        Returns the number of images encoded in the mosaic.
+
+        Returns
+        -------
+        int
+            Number of images encoded in mosaic
+        """
+        try:
+            return self.header["NumberOfImagesInMosaic"]
+        except KeyError:
+            raise KeyError(messages.MISSING_NUMBER_OF_IMAGES)
+
+    def get_image_shape(self) -> Tuple[int, int]:
+        """
+        Returns the 2D shape of a single image within the mosaic.
+
+        Returns
+        -------
+        Tuple[int, int]
+            Single image shape
+        """
+        x = self.header.get("Rows")
+        y = self.header.get("Columns")
+        if x is not None and y is not None:
+            return (x // self.size, y // self.size)
+
+    def get_volume_shape(self) -> Tuple[float, float, float]:
         """
         Returns the dimensions of the volume that will be created.
 
         Returns
         -------
-        tuple
-            x_dim, y_dim, z_dim
+        Tuple[float, float, float]
+            Volume shape
         """
-        acquisition_matrix = self.header.get("AcquisitionMatrix")
-        x, y = acquisition_matrix[0], acquisition_matrix[-1]
-        z = self.series_header_info["SliceArray"]["Size"]
-        return x, y, z
+        image_shape = self.get_image_shape()
+        if image_shape is not None:
+            try:
+                z = self.series_header_info["SliceArray"]["Size"]
+            except KeyError:
+                return
+            else:
+                return (*image_shape, z)
+
+    def get_image_position(
+        self, iop: np.ndarray
+    ) -> Tuple[float, float, float]:
+        """
+        Returns a fixed Image Position (Patient) header field value.
+
+        Parameters
+        ----------
+        iop : np.ndarray
+            Image Orientation (Patient) header field value
+
+        References
+        ----------
+        * https://nipy.org/nibabel/dicom/dicom_mosaic.html
+
+        Returns
+        -------
+        Tuple[float, float, float]
+            Image Position (Patient) header field value
+        """
+        try:
+            x = self.header["Rows"]
+            y = self.header["Columns"]
+            raw_ipp = self.header["ImagePositionPatient"]
+            pixel_spacing = self.header["PixelSpacing"]
+        except KeyError:
+            return
+        raw_shape = np.array([x, y])
+
+        slice_shape = raw_shape / self.size
+        translation_fix = (raw_shape - slice_shape) / 2
+        Q = np.fliplr(iop) * pixel_spacing
+        return raw_ipp + np.dot(Q, translation_fix[:, None]).ravel()
 
     def get_mosaic_dimensions(self) -> tuple:
         """
