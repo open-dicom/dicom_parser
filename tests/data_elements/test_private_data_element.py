@@ -26,6 +26,18 @@ class PrivateDataElementTestCase(DataElementTestCase):
         """
         return self.raw_header[key]
 
+    def test_is_public(self):
+        if self.TEST_CLASS is None or self.SAMPLE_KEY == "":
+            self.skipTest(self.SKIP_MESSAGE)
+        element = self.TEST_CLASS(self.raw_element)
+        self.assertFalse(element.is_public)
+
+    def test_is_private(self):
+        if self.TEST_CLASS is None or self.SAMPLE_KEY == "":
+            self.skipTest(self.SKIP_MESSAGE)
+        element = self.TEST_CLASS(self.raw_element)
+        self.assertTrue(element.is_private)
+
 
 class PrivateDataElementTestCase(PrivateDataElementTestCase):
     """

@@ -61,3 +61,15 @@ class DataElementTestCase(TestCase):
             self.skipTest("No sample key provided.")
         element = self.header.get_data_element(self.SAMPLE_KEY)
         self.assertEqual(repr(element), str(element))
+
+    def test_is_public(self):
+        if self.TEST_CLASS is None or self.SAMPLE_KEY == "":
+            self.skipTest(self.SKIP_MESSAGE)
+        element = self.TEST_CLASS(self.raw_element)
+        self.assertTrue(element.is_public)
+
+    def test_is_private(self):
+        if self.TEST_CLASS is None or self.SAMPLE_KEY == "":
+            self.skipTest(self.SKIP_MESSAGE)
+        element = self.TEST_CLASS(self.raw_element)
+        self.assertFalse(element.is_private)
