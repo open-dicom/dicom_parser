@@ -3,8 +3,9 @@ Release Notes
 
 1.2.0
 -----
+  * Chaned license to MIT.
   * Removed NiBabel from requirements.
-  * Made pandas an optional requirement.
+  * Made pandas an optional requirement.  
   * Added new :class:`~dicom_parser.image.Image` attributes and properties:
 
     * :func:`~dicom_parser.image.Image.affine`
