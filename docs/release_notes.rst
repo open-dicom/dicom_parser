@@ -5,7 +5,7 @@ Release Notes
 -----
   * Chaned license to MIT.
   * Removed NiBabel from requirements.
-  * Made pandas an optional requirement.  
+  * Made pandas an optional requirement.
   * Added new :class:`~dicom_parser.image.Image` attributes and properties:
 
     * :func:`~dicom_parser.image.Image.affine`
@@ -16,13 +16,17 @@ Release Notes
     * :func:`~dicom_parser.image.Image.rotation_matrix`
     * :func:`~dicom_parser.image.Image.slice_normal`
     * :func:`~dicom_parser.image.Image.spatial_resolution`
-  
+
   * :func:`~dicom_parser.image.Image.data` now also applies rescaling as (and
     if) defined by the `Rescale Slope`_ and `Rescale Intercept`_ header fields.
     See:
-      
+
     * :func:`~dicom_parser.image.Image.rescale_data`
     * :func:`~dicom_parser.image.Image.fix_data`
+
+  * Fixed private tag exclusion in the :class:`~dicom_parser.header.Header`
+    class' :func:`~dicom_parser.header.Header.to_dict` method (see
+    `#59 <https://github.com/ZviBaratz/dicom_parser/issues/59>`_).
 
 1.1.1
 -----

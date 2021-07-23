@@ -472,7 +472,7 @@ class Header:
             Header information
         """
         return {
-            data_element.keyword: self.get(data_element.keyword, parsed=parsed)
+            data_element.keyword: self.get(data_element.tag, parsed=parsed)
             for data_element in self.data_elements
         }
 
