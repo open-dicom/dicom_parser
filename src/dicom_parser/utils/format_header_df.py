@@ -25,8 +25,8 @@ def format_header_df(df, max_colwidth: int = 28) -> str:
     str
         Formatted dataframe information
     """
-    import pandas as pd
-
+    if df is None:
+        return ""
     formatters = {}
     for column_name in df.columns:
         form = None

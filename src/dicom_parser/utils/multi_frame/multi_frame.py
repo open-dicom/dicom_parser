@@ -1,17 +1,31 @@
 """
 Definition of the :class:`MultiFrame` class.
 """
+from operator import eq
 from typing import List, Tuple
 
 import numpy as np
 from dicom_parser.header import Header
 from dicom_parser.utils.exceptions import DicomParsingError
 from dicom_parser.utils.multi_frame.messages import (
-    AMBIGUOUS_N_FRAMES, INVALID_DIFFUSION_SEQUENCE, MISSING_DERIVED_INDICES,
-    MISSING_DIMENSION_INDEX_POINTERS, MISSING_FRAME_INDEX,
-    MISSING_FUNCTIONAL_GROUPS, MISSING_IOP, MISSING_PIXEL_MEASURES,
-    MISSING_PIXEL_SPACING, MISSING_SLICE_THICKNESS, MISSING_STACK_ID,
-    MULTIPLE_STACK_IDS, SHAPE_MISMATCH)
+    AMBIGUOUS_N_FRAMES,
+    INVALID_DIFFUSION_SEQUENCE,
+    MISSING_DERIVED_INDICES,
+    MISSING_DIMENSION_INDEX_POINTERS,
+    MISSING_FRAME_INDEX,
+    MISSING_FUNCTIONAL_GROUPS,
+    MISSING_IMAGE_POSITION,
+    MISSING_IMAGE_SHAPE,
+    MISSING_IOP,
+    MISSING_PIXEL_MEASURES,
+    MISSING_PIXEL_SPACING,
+    MISSING_PLANE_POSITION,
+    MISSING_SLICE_THICKNESS,
+    MISSING_STACK_ID,
+    MULTIPLE_STACK_IDS,
+    SHAPE_MISMATCH,
+)
+from dicom_parser.utils.multi_frame.utils import none_or_close
 from pydicom.datadict import tag_for_keyword
 from pydicom.tag import BaseTag
 
@@ -39,6 +53,12 @@ class MultiFrame:
     #: information.
     _image_orientation_patient: np.ndarray = None
 
+    #: Keeps a cached copy of the image position header information.
+    _image_position: np.ndarray = None
+
+    #: Keeps a cached copy of the image shape header information.
+    _image_shape: tuple = None
+
     #: Keeps a cached copy of the shared functional groups header information.
     _shared_functional_groups: List[Header] = None
 
@@ -57,8 +77,11 @@ class MultiFrame:
     #: Keeps a cached copy of the voxel sizes.
     _voxel_sizes: Tuple[float, float, float] = None
 
-    #: Keeps a chached copt of the dimension index pointers.
+    #: Keeps a chached copy of the dimension index pointers.
     _dimension_index_pointers: List[BaseTag] = None
+
+    #: Keeps a cached copy of the series signature.
+    _series_signature: dict = None
 
     #: Stack ID tag (in integer representation), used to remove any dimension
     #: indices pointing to it.
@@ -67,6 +90,15 @@ class MultiFrame:
     #: Diffusion B-value tag (in integer representation), used to evaluate the
     #: inclusion of a derived volume.
     DERIVED_VOLUME_TAG: int = tag_for_keyword("DiffusionBValue")
+
+    #: Header keys to be included in the series signature.
+    SERIES_SIGNATURE_KEYS: tuple = (
+        "SeriesInstanceUID",
+        "SeriesNumber",
+        "ImageType",
+        "SequenceName",
+        "EchoNumbers",
+    )
 
     def __init__(self, pixel_array: np.ndarray, header: Header):
         """
@@ -397,6 +429,18 @@ class MultiFrame:
         return shape
 
     def get_image_shape(self) -> tuple:
+        """
+        Returns the calculated shape of the image.
+
+        See Also
+        --------
+        * :func:`image_shape`
+
+        Returns
+        -------
+        tuple
+            Image shape
+        """
         rows = self.header.get("Rows")
         columns = self.header.get("Columns")
         if rows is None or columns is None:
@@ -500,6 +544,103 @@ class MultiFrame:
                 raise DicomParsingError(MISSING_SLICE_THICKNESS)
         sizes = list(pixel_spacing) + [slice_thickness]
         return tuple(map(float, sizes))
+
+    def get_image_position(self) -> np.ndarray:
+        """
+        Returns the image position.
+
+        See Also
+        --------
+        * :func:`image_position`
+
+        Returns
+        -------
+        np.ndarray
+            Image position
+
+        Raises
+        ------
+        DicomParsingError
+            Image position could not be determined
+        """
+        try:
+            shared = self.shared_functional_groups[0]
+            plane_position = shared["PlanePositionSequence"][0]
+        except (KeyError, IndexError):
+            try:
+                frame = self.frame_functional_groups[0]
+                plane_position = frame["PlanePositionSequence"][0]
+            except (KeyError, IndexError):
+                raise DicomParsingError(MISSING_PLANE_POSITION)
+        try:
+            ipp = plane_position["ImagePositionPatient"]
+            return np.array(list(map(float, ipp)))
+        except KeyError:
+            raise DicomParsingError(MISSING_IMAGE_POSITION)
+
+    def get_series_signature(self) -> dict:
+        """
+        Returns the series instance's signature.
+
+        See Also
+        --------
+        * :func:`series_signature`
+
+        Returns
+        -------
+        dict
+            Series signature
+        """
+        signature = {}
+        for key in self.SERIES_SIGNATURE_KEYS:
+            signature[key] = (self.header.get(key), eq)
+        signature["image_shape"] = (self.image_shape, eq)
+        signature["iop"] = (self.image_orientation_patient, none_or_close)
+        signature["vox"] = (self.voxel_sizes, none_or_close)
+        return signature
+
+    def get_scaling_parameters(self) -> np.ndarray:
+        """
+        Returns the scaling parameters (slope and intercept) for the pixel
+        array.
+
+        Returns
+        -------
+        np.ndarray
+            Scaled pixel array
+        """
+        try:
+            frame = self.frame_functional_groups[0]
+            transformation = frame["PixelValueTransformationSequence"]
+            slope = float(transformation[0]["RescaleSlope"])
+            intercept = float(transformation[0]["RescaleIntercept"])
+        except (KeyError, IndexError):
+            slope = self.header.get("RescaleSlope", 1)
+            intercept = self.header.get("RescaleIntercept", 0)
+        return (slope, intercept)
+
+    def get_data(self) -> np.ndarray:
+        """
+        Returns the parsed multi-frame image pixel array.
+
+        Returns
+        -------
+        np.ndarray
+            Pixel array
+
+        Raises
+        ------
+        DicomParsingError
+            Failed to parse multi-frame pixel array
+        """
+        if self.image_shape is None:
+            raise DicomParsingError(MISSING_IMAGE_SHAPE)
+        # Roll frames axis to last.
+        data = self.pixel_array.transpose((1, 2, 0))
+        # Sort frames with first index changing fastest, last slowest.
+        sorted_indices = np.lexsort(self.frame_indices.T)
+        data = data[..., sorted_indices]
+        return data.reshape(self.image_shape, order="F")
 
     @property
     def frame_functional_groups(self) -> int:
@@ -660,3 +801,62 @@ class MultiFrame:
         if self._voxel_sizes is None:
             self._voxel_sizes = self.get_voxel_sizes()
         return self._voxel_sizes
+
+    @property
+    def image_position(self) -> np.ndarray:
+        """
+        Returns the image position.
+
+        See Also
+        --------
+        * :func:`get_image_position`
+
+        Returns
+        -------
+        np.ndarray
+            Image position
+
+        Raises
+        ------
+        DicomParsingError
+            Image position could not be determined
+        """
+        if self._image_position is None:
+            self._image_position = self.get_image_position()
+        return self._image_position
+
+    @property
+    def image_shape(self) -> tuple:
+        """
+        Returns the calculated shape of the image.
+
+        See Also
+        --------
+        * :func:`get_image_shape`
+
+        Returns
+        -------
+        tuple
+            Image shape
+        """
+        if self._image_shape is None:
+            self._image_shape = self.get_image_shape()
+        return self._image_shape
+
+    @property
+    def series_signature(self) -> dict:
+        """
+        Returns the series instance's signature.
+
+        See Also
+        --------
+        * :func:`get_series_signature`
+
+        Returns
+        -------
+        dict
+            Series signature
+        """
+        if self._series_signature is None:
+            self._series_signature = self.get_series_signature()
+        return self._series_signature

@@ -27,6 +27,18 @@ MISSING_STACK_ID: str = (
     "Failed to read stack IDs for a multi-frame encoded image."
 )
 
+#: Message to display if plane position could not be read.
+MISSING_PLANE_POSITION: str = "Plane position header information could not be determined for multi-frame image."
+
+#: Message to display if image position could not be read.
+MISSING_IMAGE_POSITION: str = "Image position header information could not be determined for multi-frame image."
+
+#: Message to display of the image shape could not be determined, causing a
+#: pixel array read failure.
+MISSING_IMAGE_SHAPE: str = (
+    "Missing image shape! Failed to parse multi-frame array pixel array."
+)
+
 #: Message to display if the image orientation (patient) header information
 #: is missing.
 MISSING_IOP: str = "Image Orientation (Patient) header information is missing! Failed to parse multi-frame image data."
@@ -49,7 +61,6 @@ MISSING_SLICE_THICKNESS: str = (
 MULTIPLE_STACK_IDS: str = (
     "Multi-frame parsing for multipls stack IDs is not implemented."
 )
-
 #: Message to display for calculated frame/shape mismatch.
 SHAPE_MISMATCH: str = "Calculated data shape does not match the number of frame!\nNumber of volumes:\t{n_volumes}\nCalculated number of frames:\t{n_calculated}\nNumber of frame according to the header: {n_frames}"
 
