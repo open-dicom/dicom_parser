@@ -7,16 +7,11 @@ import numpy as np
 from dicom_parser.header import Header
 from dicom_parser.utils.exceptions import DicomParsingError
 from dicom_parser.utils.multi_frame.messages import (
-    AMBIGUOUS_N_FRAMES,
-    INVALID_DIFFUSION_SEQUENCE,
-    MISSING_DERIVED_INDICES,
-    MISSING_DIMENSION_INDEX_POINTERS,
-    MISSING_FRAME_INDEX,
-    MISSING_FUNCTIONAL_GROUPS,
-    MISSING_STACK_ID,
-    MULTIPLE_STACK_IDS,
-    SHAPE_MISMATCH,
-)
+    AMBIGUOUS_N_FRAMES, INVALID_DIFFUSION_SEQUENCE, MISSING_DERIVED_INDICES,
+    MISSING_DIMENSION_INDEX_POINTERS, MISSING_FRAME_INDEX,
+    MISSING_FUNCTIONAL_GROUPS, MISSING_IOP, MISSING_PIXEL_MEASURES,
+    MISSING_PIXEL_SPACING, MISSING_SLICE_THICKNESS, MISSING_STACK_ID,
+    MULTIPLE_STACK_IDS, SHAPE_MISMATCH)
 from pydicom.datadict import tag_for_keyword
 from pydicom.tag import BaseTag
 
@@ -40,6 +35,10 @@ class MultiFrame:
     #: information.
     _frame_functional_groups: List[Header] = None
 
+    #: Keeps a cached copy of the calculated image orientation (patient) header
+    #: information.
+    _image_orientation_patient: np.ndarray = None
+
     #: Keeps a cached copy of the shared functional groups header information.
     _shared_functional_groups: List[Header] = None
 
@@ -54,6 +53,9 @@ class MultiFrame:
 
     #: Keeps a cached copy of the frame stack IDs.
     _stack_ids: Tuple[str] = None
+
+    #: Keeps a cached copy of the voxel sizes.
+    _voxel_sizes: Tuple[float, float, float] = None
 
     #: Keeps a chached copt of the dimension index pointers.
     _dimension_index_pointers: List[BaseTag] = None
@@ -407,6 +409,98 @@ class MultiFrame:
         # 4D data.
         return self.calculate_high_dim_shape(rows, columns)
 
+    def get_image_orientation_patient(self) -> np.ndarray:
+        """
+        Returns the image position and orientation.
+
+        References
+        ----------
+        * https://dicom.innolitics.com/ciods/mr-image/image-plane/00200037
+
+        See Also
+        --------
+        * :func:`image_orientation_patient`
+
+        Returns
+        -------
+        np.array
+            Parsed image orientation (patient) attribute information
+        """
+        try:
+            shared = self.shared_functional_groups[0]
+            sequence = shared["PlaneOrientationSequence"][0]
+        except (KeyError, IndexError):
+            try:
+                frame = self.frame_functional_groups[0]
+                sequence = frame["PlaneOrientationSequence"][0]
+            except AttributeError:
+                raise DicomParsingError(MISSING_IOP)
+        try:
+            iop = sequence["ImageOrientationPatient"]
+        except KeyError:
+            return
+        else:
+            iop = np.array(list(map(float, iop)))
+            return np.array(iop).reshape(2, 3).T
+
+    def get_pixel_measures(self) -> Header:
+        """
+        Returns the pixel measures sequence from the first shared functional
+        group.
+
+        Returns
+        -------
+        Header
+            Shared functional group header information
+
+        Raises
+        ------
+        DicomParsingError
+            Pixel measures sequence could not be read
+        """
+        try:
+            shared = self.shared_functional_groups[0]
+            return shared["PixelMeasuresSequence"][0]
+        except (KeyError, IndexError):
+            try:
+                frame = self.frame_functional_groups[0]
+                return frame["PixelMeasuresSequence"][0]
+            except (KeyError, IndexError):
+                raise DicomParsingError(MISSING_PIXEL_MEASURES)
+
+    def get_voxel_sizes(self) -> Tuple[float, float, float]:
+        """
+        Returns the voxel sizes of the image.
+
+        See Also
+        --------
+        * :func:`voxel_sizes`
+
+        Returns
+        -------
+        Tuple[float, float, float]
+            Voxel sizes
+
+        Raises
+        ------
+        DicomParsingError
+            Voxel sizes could not be determines
+        """
+        pixel_measures = self.get_pixel_measures()
+        try:
+            pixel_spacing = pixel_measures["PixelSpacing"]
+        except KeyError:
+            raise DicomParsingError(MISSING_PIXEL_SPACING)
+        try:
+            slice_thickness = pixel_measures["SliceThickness"]
+        except KeyError:
+            try:
+                slice_thickness = self.header["SpacingBetweenSlices"]
+            except KeyError:
+                raise DicomParsingError(MISSING_SLICE_THICKNESS)
+        sizes = list(pixel_spacing) + [slice_thickness]
+        return tuple(map(float, sizes))
+
     @property
     def frame_functional_groups(self) -> int:
         """
@@ -440,7 +534,9 @@ class MultiFrame:
             Shared header information
         """
         if self._shared_functional_groups is None:
-            self._shared_functional_groups = self._shared_functional_groups()
+            self._shared_functional_groups = (
+                self.get_shared_functional_groups()
+            )
         return self._shared_functional_groups
 
     @property
@@ -521,3 +617,46 @@ class MultiFrame:
                 self.get_dimension_index_pointers()
             )
         return self._dimension_index_pointers
+
+    @property
+    def image_orientation_patient(self) -> np.ndarray:
+        """
+        Returns the image position and orientation.
+
+        See Also
+        --------
+        * :func:`get_image_orientation_patient`
+
+        Returns
+        -------
+        np.array
+            Parsed image orientation (patient) attribute information
+        """
+        if self._image_orientation_patient is None:
+            self._image_orientation_patient = (
+                self.get_image_orientation_patient()
+            )
+        return self._image_orientation_patient
+
+    @property
+    def voxel_sizes(self) -> Tuple[float, float, float]:
+        """
+        Returns the voxel sizes of the image.
+
+        See Also
+        --------
+        * :func:`get_voxel_sizes`
+
+        Returns
+        -------
+        Tuple[float, float, float]
+            Voxel sizes
+
+        Raises
+        ------
+        DicomParsingError
+            Voxel sizes could not be determines
+        """
+        if self._voxel_sizes is None:
+            self._voxel_sizes = self.get_voxel_sizes()
+        return self._voxel_sizes

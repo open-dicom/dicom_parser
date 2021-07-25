@@ -27,6 +27,24 @@ MISSING_STACK_ID: str = (
     "Failed to read stack IDs for a multi-frame encoded image."
 )
 
+#: Message to display if the image orientation (patient) header information
+#: is missing.
+MISSING_IOP: str = "Image Orientation (Patient) header information is missing! Failed to parse multi-frame image data."
+
+#: Message to display if the voxel sizes could not be read from the header due
+#: to a missing pixel measures sequence.
+MISSING_PIXEL_MEASURES: str = "Missing pixel measures sequence! Voxel sizes could not be determined for multi-frame image."
+
+#: Message to display if pixel spacing could not be read from pixel measures.
+MISSING_PIXEL_SPACING: str = (
+    "Pixel spacing could not be read from multi-frame image pixel measures!"
+)
+
+#: Message to display if slice thickness could not be read from pixel measures.
+MISSING_SLICE_THICKNESS: str = (
+    "Slice thickness could not be read multi-frame image pixel measures!"
+)
+
 #: NotImplementedError message to display for multi stack multi-frames.
 MULTIPLE_STACK_IDS: str = (
     "Multi-frame parsing for multipls stack IDs is not implemented."
