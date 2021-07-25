@@ -1,7 +1,6 @@
 """
 Definition of the :class:`MultiFrame` class.
 """
-from operator import eq
 from typing import List, Tuple
 
 import numpy as np
@@ -25,7 +24,6 @@ from dicom_parser.utils.multi_frame.messages import (
     MULTIPLE_STACK_IDS,
     SHAPE_MISMATCH,
 )
-from dicom_parser.utils.multi_frame.utils import none_or_close
 from pydicom.datadict import tag_for_keyword
 from pydicom.tag import BaseTag
 
@@ -578,27 +576,6 @@ class MultiFrame:
         except KeyError:
             raise DicomParsingError(MISSING_IMAGE_POSITION)
 
-    def get_series_signature(self) -> dict:
-        """
-        Returns the series instance's signature.
-
-        See Also
-        --------
-        * :func:`series_signature`
-
-        Returns
-        -------
-        dict
-            Series signature
-        """
-        signature = {}
-        for key in self.SERIES_SIGNATURE_KEYS:
-            signature[key] = (self.header.get(key), eq)
-        signature["image_shape"] = (self.image_shape, eq)
-        signature["iop"] = (self.image_orientation_patient, none_or_close)
-        signature["vox"] = (self.voxel_sizes, none_or_close)
-        return signature
-
     def get_scaling_parameters(self) -> np.ndarray:
         """
         Returns the scaling parameters (slope and intercept) for the pixel
@@ -842,21 +819,3 @@ class MultiFrame:
         if self._image_shape is None:
             self._image_shape = self.get_image_shape()
         return self._image_shape
-
-    @property
-    def series_signature(self) -> dict:
-        """
-        Returns the series instance's signature.
-
-        See Also
-        --------
-        * :func:`get_series_signature`
-
-        Returns
-        -------
-        dict
-            Series signature
-        """
-        if self._series_signature is None:
-            self._series_signature = self.get_series_signature()
-        return self._series_signature
