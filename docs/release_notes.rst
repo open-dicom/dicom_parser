@@ -27,6 +27,8 @@ Release Notes
   * Fixed private tag exclusion in the :class:`~dicom_parser.header.Header`
     class' :func:`~dicom_parser.header.Header.to_dict` method (see
     `#59 <https://github.com/ZviBaratz/dicom_parser/issues/59>`_).
+  * Created the :class:`dicom_parser.utils.multi_frame.multi_frame.MultiFrame`
+    class to handle multi-frame images.
 
 1.1.1
 -----
