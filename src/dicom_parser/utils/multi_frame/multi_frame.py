@@ -6,24 +6,7 @@ from typing import List, Tuple
 import numpy as np
 from dicom_parser.header import Header
 from dicom_parser.utils.exceptions import DicomParsingError
-from dicom_parser.utils.multi_frame.messages import (
-    AMBIGUOUS_N_FRAMES,
-    INVALID_DIFFUSION_SEQUENCE,
-    MISSING_DERIVED_INDICES,
-    MISSING_DIMENSION_INDEX_POINTERS,
-    MISSING_FRAME_INDEX,
-    MISSING_FUNCTIONAL_GROUPS,
-    MISSING_IMAGE_POSITION,
-    MISSING_IMAGE_SHAPE,
-    MISSING_IOP,
-    MISSING_PIXEL_MEASURES,
-    MISSING_PIXEL_SPACING,
-    MISSING_PLANE_POSITION,
-    MISSING_SLICE_THICKNESS,
-    MISSING_STACK_ID,
-    MULTIPLE_STACK_IDS,
-    SHAPE_MISMATCH,
-)
+from dicom_parser.utils.multi_frame import messages
 from pydicom.datadict import tag_for_keyword
 from pydicom.tag import BaseTag
 
@@ -125,7 +108,8 @@ class MultiFrame:
         """
         n_stack_ids = len(set(self.stack_ids))
         if n_stack_ids > 1:
-            raise NotImplementedError(MULTIPLE_STACK_IDS)
+            message = messages.MULTIPLE_STACK_IDS
+            raise NotImplementedError(message)
 
     def get_frame_functional_groups(self) -> List[Header]:
         """
@@ -174,7 +158,8 @@ class MultiFrame:
         try:
             return frames[0].get(PHILLIPS_APPENDIX_FLAG, False)
         except IndexError:
-            raise DicomParsingError(MISSING_FUNCTIONAL_GROUPS)
+            message = messages.MISSING_FUNCTIONAL_GROUPS
+            raise DicomParsingError(message)
 
     def check_frame_inclusion(self, frame_info: Header) -> bool:
         """
@@ -194,7 +179,8 @@ class MultiFrame:
         try:
             diffusion_sequence = frame_info["MRDiffusionSequence"][0]
         except (KeyError, IndexError):
-            raise DicomParsingError(INVALID_DIFFUSION_SEQUENCE)
+            message = messages.INVALID_DIFFUSION_SEQUENCE
+            raise DicomParsingError(message)
         else:
             directionality = diffusion_sequence["DiffusionDirectionality"]
             return directionality != "ISOTROPIC"
@@ -238,7 +224,8 @@ class MultiFrame:
             return n_frame_info
         header_n_frames = self.header.get("NumberOfFrames")
         if n_frame_info != header_n_frames:
-            raise DicomParsingError(AMBIGUOUS_N_FRAMES)
+            message = messages.AMBIGUOUS_N_FRAMES
+            raise DicomParsingError(message)
         return header_n_frames
 
     def get_frame_index(self, frame_info: Header) -> Tuple[int, int, int]:
@@ -265,7 +252,8 @@ class MultiFrame:
             frame_content = frame_info["FrameContentSequence"][0]
             return frame_content["DimensionIndexValues"]
         except (IndexError, KeyError):
-            raise DicomParsingError(MISSING_FRAME_INDEX)
+            message = messages.MISSING_FRAME_INDEX
+            raise DicomParsingError(message)
 
     def get_frame_stack_id(self, frame_info: Header) -> str:
         """
@@ -291,7 +279,8 @@ class MultiFrame:
             frame_content = frame_info["FrameContentSequence"][0]
             return frame_content["StackID"]
         except (IndexError, KeyError):
-            raise DicomParsingError(MISSING_STACK_ID)
+            message = messages.MISSING_STACK_ID
+            raise DicomParsingError(message)
 
     def get_dimension_index_pointers(self) -> Tuple[BaseTag]:
         """
@@ -317,7 +306,9 @@ class MultiFrame:
                 for dimension in self.header["DimensionIndexSequence"]
             )
         except (KeyError, TypeError) as e:
-            message = MISSING_DIMENSION_INDEX_POINTERS.format(exception=e)
+            message = messages.MISSING_DIMENSION_INDEX_POINTERS.format(
+                exception=e
+            )
             raise DicomParsingError(message)
 
     def get_frame_indices(self) -> np.ndarray:
@@ -348,7 +339,8 @@ class MultiFrame:
         # Remove dimension indices refering to derived volumes.
         if self.has_derived_appendix:
             if self.DERIVED_VOLUME_TAG not in pointers:
-                raise DicomParsingError(MISSING_DERIVED_INDICES)
+                message = messages.MISSING_DERIVED_INDICES
+                raise DicomParsingError(message)
             index = pointers.index(self.DERIVED_VOLUME_TAG)
             indices = np.delete(indices, index, axis=1)
         return np.array(indices)
@@ -389,7 +381,7 @@ class MultiFrame:
         n_volumes = np.prod(shape[3:])
         n_frames_expected = n_volumes * shape[2]
         if self.n_frames != n_frames_expected:
-            message = SHAPE_MISMATCH.format(
+            message = messages.SHAPE_MISMATCH.format(
                 n_volumes=n_volumes,
                 n_calculated=n_frames_expected,
                 n_frames=self.n_frames,
@@ -476,7 +468,8 @@ class MultiFrame:
                 frame = self.frame_functional_groups[0]
                 sequence = frame["PlaneOrientationSequence"][0]
             except AttributeError:
-                raise DicomParsingError(MISSING_IOP)
+                message = messages.MISSING_IOP
+                raise DicomParsingError(message)
         try:
             iop = sequence["ImageOrientationPatient"]
         except KeyError:
@@ -508,7 +501,8 @@ class MultiFrame:
                 frame = self.frame_functional_groups[0]
                 return frame["PixelMeasuresSequence"][0]
             except (KeyError, IndexError):
-                raise DicomParsingError(MISSING_PIXEL_MEASURES)
+                message = messages.MISSING_PIXEL_MEASURES
+                raise DicomParsingError(message)
 
     def get_voxel_sizes(self) -> Tuple[float, float, float]:
         """
@@ -532,14 +526,16 @@ class MultiFrame:
         try:
             pixel_spacing = pixel_measures["PixelSpacing"]
         except KeyError:
-            raise DicomParsingError(MISSING_PIXEL_SPACING)
+            message = messages.MISSING_PIXEL_SPACING
+            raise DicomParsingError(message)
         try:
             slice_thickness = pixel_measures["SliceThickness"]
         except KeyError:
             try:
                 slice_thickness = self.header["SpacingBetweenSlices"]
             except KeyError:
-                raise DicomParsingError(MISSING_SLICE_THICKNESS)
+                message = messages.MISSING_SLICE_THICKNESS
+                raise DicomParsingError(message)
         sizes = list(pixel_spacing) + [slice_thickness]
         return tuple(map(float, sizes))
 
@@ -569,12 +565,14 @@ class MultiFrame:
                 frame = self.frame_functional_groups[0]
                 plane_position = frame["PlanePositionSequence"][0]
             except (KeyError, IndexError):
-                raise DicomParsingError(MISSING_PLANE_POSITION)
+                message = messages.MISSING_PLANE_POSITION
+                raise DicomParsingError(message)
         try:
             ipp = plane_position["ImagePositionPatient"]
             return np.array(list(map(float, ipp)))
         except KeyError:
-            raise DicomParsingError(MISSING_IMAGE_POSITION)
+            message = messages.MISSING_IMAGE_POSITION
+            raise DicomParsingError(message)
 
     def get_scaling_parameters(self) -> np.ndarray:
         """
@@ -611,7 +609,8 @@ class MultiFrame:
             Failed to parse multi-frame pixel array
         """
         if self.image_shape is None:
-            raise DicomParsingError(MISSING_IMAGE_SHAPE)
+            message = messages.MISSING_IMAGE_SHAPE
+            raise DicomParsingError(message)
         # Roll frames axis to last.
         data = self.pixel_array.transpose((1, 2, 0))
         # Sort frames with first index changing fastest, last slowest.
