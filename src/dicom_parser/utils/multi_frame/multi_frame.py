@@ -7,11 +7,9 @@ import numpy as np
 from dicom_parser.header import Header
 from dicom_parser.utils.exceptions import DicomParsingError
 from dicom_parser.utils.multi_frame import messages
+from dicom_parser.utils.multi_frame.functional_groups import FunctionalGroups
 from pydicom.datadict import tag_for_keyword
 from pydicom.tag import BaseTag
-
-#: Phillips derived data appendix data element tag.
-PHILLIPS_APPENDIX_FLAG: Tuple[float, float] = (0x18, 0x9117)
 
 
 class MultiFrame:
@@ -72,14 +70,11 @@ class MultiFrame:
     #: inclusion of a derived volume.
     DERIVED_VOLUME_TAG: int = tag_for_keyword("DiffusionBValue")
 
-    #: Header keys to be included in the series signature.
-    SERIES_SIGNATURE_KEYS: tuple = (
-        "SeriesInstanceUID",
-        "SeriesNumber",
-        "ImageType",
-        "SequenceName",
-        "EchoNumbers",
-    )
+    #: Key to use for reading the per frame functional groups sequence.
+    PER_FRAME_GROUPS_KEY: str = "PerFrameFunctionalGroupsSequence"
+
+    #: Key to use for reading the shared functional groups sequence.
+    SHARED_GROUPS_KEY: str = "SharedFunctionalGroupsSequence"
 
     def __init__(self, pixel_array: np.ndarray, header: Header):
         """
@@ -94,7 +89,8 @@ class MultiFrame:
         """
         self.pixel_array: np.ndarray = pixel_array
         self.header: Header = header
-        self.has_derived_appendix: bool = self.check_derived_appendix()
+        self.sample_sequence = self.frame_functional_groups[0]
+        self.has_derived_appendix: bool = self.sample_sequence.appendix_flag
         self.validate_single_stack()
 
     def validate_single_stack(self):
@@ -111,9 +107,15 @@ class MultiFrame:
             message = messages.MULTIPLE_STACK_IDS
             raise NotImplementedError(message)
 
-    def get_frame_functional_groups(self) -> List[Header]:
+    def get_functional_groups(self, shared: bool = False) -> List[Header]:
         """
-        Reads per frame functional groups information from the header.
+        Reads functional groups information from the header.
+
+        Parameters
+        ----------
+        shared : bool
+            Whether to read the shared (rather than per frame) sequence,
+            default is False
 
         See Also
         --------
@@ -124,82 +126,23 @@ class MultiFrame:
         List[Header]
             Frame header information
         """
-        frames = self.header.get("PerFrameFunctionalGroupsSequence", [])
-        if self.has_derived_appendix:
-            return self.remove_derived_appendix(frames)
-        return frames
-
-    def get_shared_functional_groups(self) -> List[Header]:
-        """
-        Reads shared functional groups information from the header.
-
-        See Also
-        --------
-        * :func:`shared_functional_groups`
-
-        Returns
-        -------
-        List[Header]
-            Frame header information
-        """
-        return self.header.get("SharedFunctionalGroupsSequence", [])
-
-    def check_derived_appendix(self) -> bool:
-        """
-        Checks whether derived images were appended to the pixel array
-        (Phillips) specific functionality.
-
-        Returns
-        -------
-        bool
-            Image had appended derived images
-        """
-        frames = self.header.get("PerFrameFunctionalGroupsSequence", [])
+        key = self.SHARED_GROUPS_KEY if shared else self.PER_FRAME_GROUPS_KEY
         try:
-            return frames[0].get(PHILLIPS_APPENDIX_FLAG, False)
-        except IndexError:
-            message = messages.MISSING_FUNCTIONAL_GROUPS
+            sequence = self.header[key]
+        except KeyError:
+            sequence_type = "shared" if shared else "per frame"
+            message = messages.MISSING_FUNCTIONAL_GROUPS.format(
+                sequence_type=sequence_type
+            )
             raise DicomParsingError(message)
-
-    def check_frame_inclusion(self, frame_info: Header) -> bool:
-        """
-        Checks whether a frame functional groups header should be included.
-
-        Parameters
-        ----------
-        frame_info : Header
-            Single frame functional groups header
-
-        Returns
-        -------
-        bool
-            Whether this frame should be included in the data (not an
-            appendix), or not
-        """
-        try:
-            diffusion_sequence = frame_info["MRDiffusionSequence"][0]
-        except (KeyError, IndexError):
-            message = messages.INVALID_DIFFUSION_SEQUENCE
-            raise DicomParsingError(message)
-        else:
-            directionality = diffusion_sequence["DiffusionDirectionality"]
-            return directionality != "ISOTROPIC"
-
-    def remove_derived_appendix(self, frames: List[Header]) -> List[Header]:
-        """
-        Removes derived frames that may be appended to the data.
-
-        Parameters
-        ----------
-        frames : List[Header]
-            All encoded frames
-
-        Returns
-        -------
-        List[Header]
-            Frames without derived data
-        """
-        return [frame for frame in frames if self.check_frame_inclusion(frame)]
+        if shared:
+            try:
+                return FunctionalGroups(sequence[0])
+            except IndexError:
+                message = messages.EMPTY_SHARED_FUNCTIONAL_GROUPS
+                raise DicomParsingError(message)
+        groups = [FunctionalGroups(frame_header) for frame_header in sequence]
+        return [group for group in groups if not group.is_appendix]
 
     def get_n_frames(self) -> int:
         """
@@ -228,59 +171,21 @@ class MultiFrame:
             raise DicomParsingError(message)
         return header_n_frames
 
-    def get_frame_index(self, frame_info: Header) -> Tuple[int, int, int]:
+    def remove_derived_appendix(self, frames: List[Header]) -> List[Header]:
         """
-        Reads a single frame's index from its associated functional groups
-        header information.
+        Removes derived frames that may be appended to the data.
 
         Parameters
         ----------
-        frame_info : Header
-            Single frame functional groups header information
+        frames : List[Header]
+            All encoded frames
 
         Returns
         -------
-        Tuple[int, int, int]
-            Frame index
-
-        Raises
-        ------
-        DicomParsingError
-            Missing header information
+        List[Header]
+            Frames without derived data
         """
-        try:
-            frame_content = frame_info["FrameContentSequence"][0]
-            return frame_content["DimensionIndexValues"]
-        except (IndexError, KeyError):
-            message = messages.MISSING_FRAME_INDEX
-            raise DicomParsingError(message)
-
-    def get_frame_stack_id(self, frame_info: Header) -> str:
-        """
-        Reads a single frame's stack ID from its associated functional groups
-        header information.
-
-        Parameters
-        ----------
-        frame_info : Header
-            Single frame functional groups header information
-
-        Returns
-        -------
-        str
-            Stack ID
-
-        Raises
-        ------
-        DicomParsingError
-            Missing header information
-        """
-        try:
-            frame_content = frame_info["FrameContentSequence"][0]
-            return frame_content["StackID"]
-        except (IndexError, KeyError):
-            message = messages.MISSING_STACK_ID
-            raise DicomParsingError(message)
+        return [frame for frame in frames if self.check_frame_inclusion(frame)]
 
     def get_dimension_index_pointers(self) -> Tuple[BaseTag]:
         """
@@ -324,10 +229,7 @@ class MultiFrame:
         np.ndarray
             Frame indices
         """
-        indices = [
-            self.get_frame_index(frame_info)
-            for frame_info in self.frame_functional_groups
-        ]
+        indices = [group.get_index() for group in self.frame_functional_groups]
         pointers = self.dimension_index_pointers
         # Remove dimension indices refering to stack IDs.
         if self.STACK_ID_TAG in pointers:
@@ -355,8 +257,7 @@ class MultiFrame:
             Stack IDs by frame
         """
         return tuple(
-            self.get_frame_stack_id(frame_info)
-            for frame_info in self.frame_functional_groups
+            group.get_stack_id() for group in self.frame_functional_groups
         )
 
     def validate_high_dim_shape(self, shape: tuple) -> None:
@@ -461,32 +362,27 @@ class MultiFrame:
             Parsed image orientation (patient) attribute information
         """
         try:
-            shared = self.shared_functional_groups[0]
-            sequence = shared["PlaneOrientationSequence"][0]
-        except (KeyError, IndexError):
-            try:
-                frame = self.frame_functional_groups[0]
-                sequence = frame["PlaneOrientationSequence"][0]
-            except AttributeError:
-                message = messages.MISSING_IOP
-                raise DicomParsingError(message)
+            plane_orientation = (
+                self.shared_functional_groups.get_plane_orientation()
+            )
+        except DicomParsingError:
+            plane_orientation = self.sample_sequence.get_plane_orientation()
         try:
-            iop = sequence["ImageOrientationPatient"]
+            iop = plane_orientation["ImageOrientationPatient"]
         except KeyError:
-            return
+            raise DicomParsingError(messages.MISSING_PLANE_ORIENTATION)
         else:
             iop = np.array(list(map(float, iop)))
             return np.array(iop).reshape(2, 3).T
 
     def get_pixel_measures(self) -> Header:
         """
-        Returns the pixel measures sequence from the first shared functional
-        group.
+        Returns the pixel measures sequence.
 
         Returns
         -------
         Header
-            Shared functional group header information
+            Pixel measures sequence
 
         Raises
         ------
@@ -494,15 +390,9 @@ class MultiFrame:
             Pixel measures sequence could not be read
         """
         try:
-            shared = self.shared_functional_groups[0]
-            return shared["PixelMeasuresSequence"][0]
-        except (KeyError, IndexError):
-            try:
-                frame = self.frame_functional_groups[0]
-                return frame["PixelMeasuresSequence"][0]
-            except (KeyError, IndexError):
-                message = messages.MISSING_PIXEL_MEASURES
-                raise DicomParsingError(message)
+            return self.shared_functional_groups.get_pixel_measures()
+        except DicomParsingError:
+            return self.sample_sequence.get_pixel_measures()
 
     def get_voxel_sizes(self) -> Tuple[float, float, float]:
         """
@@ -558,38 +448,54 @@ class MultiFrame:
             Image position could not be determined
         """
         try:
-            shared = self.shared_functional_groups[0]
-            plane_position = shared["PlanePositionSequence"][0]
-        except (KeyError, IndexError):
-            try:
-                frame = self.frame_functional_groups[0]
-                plane_position = frame["PlanePositionSequence"][0]
-            except (KeyError, IndexError):
-                message = messages.MISSING_PLANE_POSITION
-                raise DicomParsingError(message)
+            plane_position = self.shared_functional_groups.get_plane_position()
+        except DicomParsingError:
+            plane_position = self.sample_sequence.get_plane_position()
         try:
             ipp = plane_position["ImagePositionPatient"]
-            return np.array(list(map(float, ipp)))
         except KeyError:
-            message = messages.MISSING_IMAGE_POSITION
-            raise DicomParsingError(message)
+            raise DicomParsingError(messages.MISSING_IMAGE_POSITION)
+        else:
+            return np.array(list(map(float, ipp)))
+
+    def get_pixel_value_transformations(self) -> Header:
+        """
+        Returns any pixel value transformations included in the first frame's
+        functional groups sequence, or `None`.
+
+        See Also
+        --------
+        * :func:`get_scaling_parameters`
+
+        Returns
+        -------
+        Header
+            Pixel value transformations
+        """
+        try:
+            return self.sample_sequence.get_pixel_value_transformations()
+        except DicomParsingError:
+            pass
 
     def get_scaling_parameters(self) -> np.ndarray:
         """
         Returns the scaling parameters (slope and intercept) for the pixel
         array.
 
+        See Also
+        --------
+        * :func:`get_pixel_value_transformations`
+
         Returns
         -------
         np.ndarray
             Scaled pixel array
         """
+        transformation = self.get_pixel_value_transformations()
         try:
-            frame = self.frame_functional_groups[0]
-            transformation = frame["PixelValueTransformationSequence"]
             slope = float(transformation[0]["RescaleSlope"])
             intercept = float(transformation[0]["RescaleIntercept"])
-        except (KeyError, IndexError):
+        except (KeyError, IndexError, TypeError):
             slope = self.header.get("RescaleSlope", 1)
             intercept = self.header.get("RescaleIntercept", 0)
         return (slope, intercept)
@@ -633,7 +539,9 @@ class MultiFrame:
             Per frame header information
         """
         if self._frame_functional_groups is None:
-            self._frame_functional_groups = self.get_frame_functional_groups()
+            self._frame_functional_groups = self.get_functional_groups(
+                shared=False
+            )
         return self._frame_functional_groups
 
     @property
@@ -643,7 +551,7 @@ class MultiFrame:
 
         See Also
         --------
-        * :func:`get_shared_functional_groups`
+        * :func:`get_functional_groups`
 
         Returns
         -------
@@ -651,8 +559,8 @@ class MultiFrame:
             Shared header information
         """
         if self._shared_functional_groups is None:
-            self._shared_functional_groups = (
-                self.get_shared_functional_groups()
+            self._shared_functional_groups = self.get_functional_groups(
+                shared=True
             )
         return self._shared_functional_groups
 

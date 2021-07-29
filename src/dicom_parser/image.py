@@ -402,6 +402,21 @@ class Image:
                 return np.zeros((3,))
             return q_vector / b_value
 
+    def check_multi_frame(self) -> bool:
+        """
+        Checks whether this image is a multi-frame image or not.
+
+        See Also
+        --------
+        * :func: `is_multi_frame`
+
+        Returns
+        -------
+        bool
+            Whether this image is a multi-frame image or not
+        """
+        return self.header.get("SOPClassUID") == "1.2.840.10008.5.1.4.1.1.4.1"
+
     @property
     def image_shape(self) -> Tuple[int, int]:
         """
@@ -518,12 +533,16 @@ class Image:
         """
         Checks whether this image is a multi-frame image or not.
 
+        See Also
+        --------
+        * :func: `check_multi_frame`
+
         Returns
         -------
         bool
             Whether this image is a multi-frame image or not
         """
-        return self.header.get("NumberOfFrames", False)
+        return self.check_multi_frame()
 
     @property
     def is_fmri(self) -> bool:
