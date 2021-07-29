@@ -11,8 +11,8 @@ an :class:`~dicom_parser.image.Image` instance.
 
 ---------------------------------------------------------------
 
-Coversion to Python's native types
-----------------------------------
+Conversion to Python's native types
+------------------------------------
 
 `dicom_parser` provides :obj:`dict`-like access to the parsed values of the
 header_\'s data-elements. The raw values as read by pydicom_ remain accessible
@@ -25,8 +25,14 @@ through the :attr:`~dicom_parser.header.Header.raw` attribute.
 Examples
 ........
 
-Decimal String (DS) to :obj:`float` using the :class:`~dicom_parser.header.Header`
-class's :meth:`~dicom_parser.header.Header.get` method:
+In the following example, you can see that using pydicom_'s :attr:`~dicom_parser.header.Header.raw` attribute
+reads header information as a string, while using `dicom_parser`'s :meth:`~dicom_parser.header.Header.get` attribute  
+converts datatype from :obj:`string` to :obj:`float`, which is more convenient for data processing:
+
+Decimal String
+##############
+
+Image Frequency String to *float*:
 
 .. code:: python
 
@@ -41,6 +47,9 @@ class's :meth:`~dicom_parser.header.Header.get` method:
     123.25993
     >>> type(parsed_value)
     float
+
+Age String
+##########
 
 Age String (AS) to *float*:
 
@@ -58,6 +67,9 @@ Age String (AS) to *float*:
     >>> type(parsed_value)
     float
 
+
+Date String
+###########
 
 Date String (DA) to `datetime.date`_ using the :class:`~dicom_parser.header.Header`
 class's indexing operator/subscript notation:
@@ -78,6 +90,10 @@ class's indexing operator/subscript notation:
     >>> type(parsed_value)
     datetime.date
 
+
+Code String
+###########
+
 Code String (CS) to a verbose value or set of values:
 
 .. code:: python
@@ -95,7 +111,18 @@ Code String (CS) to a verbose value or set of values:
     set
 
 
-Et cetera.
+Others
+........
+
+There are many other header parameters that you can read with `dicom_parser`'s :meth:`~dicom_parser.header.Header.get` or :meth:`~dicom_parser.header.Header` attribute, such as 'StudyDate', 'AcquisitionTime', 'PatientSex', 'PatientSize', 'PatientWeight', etc.
+You can simply use the following command to look up all the header parameters.
+
+.. code:: python
+
+    >>> image.header
+
+
+For more information on dicom headers,  please look up the resources page.
 
 .. note::
 
@@ -130,6 +157,10 @@ Another useful class this package offers is the
     >>> series = Series('/some/dicom/series/')
 
 
+Query images’ headers with :meth:`~dicom_parser.series.Series.get`
+...........................................................................
+
+
 The :class:`~dicom_parser.series.Series` instance allows us to easily
 query the underlying images' headers using its
 :meth:`~dicom_parser.series.Series.get` method:
@@ -152,6 +183,9 @@ query the underlying images' headers using its
     >>> series.get('MissingKey', 'default_value')
     'default_value'
 
+Query images’ headers with indexing operator
+.............................................
+
 Similarly to the :class:`~dicom_parser.image.Image` class, we can also use
 the indexing operator:
 
@@ -171,6 +205,9 @@ the indexing operator:
     >>> series['MissingKey']
     KeyError: "The keyword: 'MissingKey' does not exist in the header!"
 
+Query an image instance with index
+....................................
+
 Another useful feature of the indexing operator is for querying an
 :class:`~dicom_parser.image.Image` instance based on its index in the series:
 
@@ -180,6 +217,10 @@ Another useful feature of the indexing operator is for querying an
     dicom_parser.image.Image
     >>> series[6].header['InstanceNumber]
     7   # InstanceNumber is 1-indexed
+
+
+The data property
+..............................
 
 The `data` property returns a stacked volume of the images' data:
 
