@@ -12,6 +12,7 @@ Welcome to dicom_parser's documentation!
    vendors
    modules/reference
    release_notes
+   resources
 
 
 Indices and tables
