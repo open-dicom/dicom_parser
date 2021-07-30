@@ -3,7 +3,7 @@ Release Notes
 
 1.2.0
 -----
-  * Chaned license to MIT.
+  * Changed license to MIT.
   * Removed NiBabel from requirements.
   * Made pandas an optional requirement.
   * Added new :class:`~dicom_parser.image.Image` attributes and properties:
@@ -27,6 +27,8 @@ Release Notes
   * Fixed private tag exclusion in the :class:`~dicom_parser.header.Header`
     class' :func:`~dicom_parser.header.Header.to_dict` method (see
     `#59 <https://github.com/ZviBaratz/dicom_parser/issues/59>`_).
+  * Created the :class:`dicom_parser.utils.multi_frame.multi_frame.MultiFrame`
+    class to handle multi-frame images.
 
 1.1.1
 -----

@@ -17,6 +17,7 @@ Subpackages
    :maxdepth: 1
 
    dicom_parser.utils.code_strings
+   dicom_parser.utils.multi_frame
    dicom_parser.utils.sequence_detector
    dicom_parser.utils.siemens
 

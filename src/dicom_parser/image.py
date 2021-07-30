@@ -13,6 +13,7 @@ from pydicom.dataset import FileDataset
 from dicom_parser import messages
 from dicom_parser.header import Header
 from dicom_parser.utils.exceptions import PrecisionError
+from dicom_parser.utils.multi_frame import MultiFrame
 from dicom_parser.utils.read_file import read_file
 from dicom_parser.utils.siemens.mosaic import Mosaic
 from dicom_parser.utils.siemens.private_tags import (
@@ -27,7 +28,11 @@ class Image:
     unified access to it's header information and data.
     """
 
+    #: Keeps a cached reference to an initialized Mosaic instance.
     _mosaic: Mosaic = None
+
+    #: Keeps a cached reference to an initialized MultiFrame instance.
+    _multi_frame: MultiFrame = None
 
     def __init__(self, raw: Union[FileDataset, str, Path]):
         """
@@ -87,8 +92,11 @@ class Image:
         np.array
             Fixed pixel array
         """
-        slope = self.header.get("RescaleSlope", 1)
-        intercept = self.header.get("RescaleIntercept", 0)
+        if self.is_multi_frame:
+            slope, intercept = self.multi_frame.get_scaling_parameters()
+        else:
+            slope = self.header.get("RescaleSlope", 1)
+            intercept = self.header.get("RescaleIntercept", 0)
         return data * slope + intercept
 
     def fix_data(self) -> np.ndarray:
@@ -99,6 +107,7 @@ class Image:
         --------
         * :func:`rescale_data`
         * :class:`~dicom_parser.utils.siemens.mosaic.Mosaic`
+        * :class:`~dicom_parser.utils.multi_frame.multi_frame.MultiFrame`
 
         Returns
         -------
@@ -108,6 +117,8 @@ class Image:
         data = self._data
         if self.is_mosaic:
             data = self.mosaic.fold()
+        if self.is_multi_frame:
+            data = self.multi_frame.get_data()
         return self.rescale_data(data)
 
     def get_default_relative_path(self) -> Path:
@@ -391,6 +402,21 @@ class Image:
                 return np.zeros((3,))
             return q_vector / b_value
 
+    def check_multi_frame(self) -> bool:
+        """
+        Checks whether this image is a multi-frame image or not.
+
+        See Also
+        --------
+        * :func: `is_multi_frame`
+
+        Returns
+        -------
+        bool
+            Whether this image is a multi-frame image or not
+        """
+        return self.header.get("SOPClassUID") == "1.2.840.10008.5.1.4.1.1.4.1"
+
     @property
     def image_shape(self) -> Tuple[int, int]:
         """
@@ -501,6 +527,22 @@ class Image:
             Whether the image is a mosaic encoded volume
         """
         return "MOSAIC" in self.header.get("ImageType")
+
+    @property
+    def is_multi_frame(self) -> bool:
+        """
+        Checks whether this image is a multi-frame image or not.
+
+        See Also
+        --------
+        * :func: `check_multi_frame`
+
+        Returns
+        -------
+        bool
+            Whether this image is a multi-frame image or not
+        """
+        return self.check_multi_frame()
 
     @property
     def is_fmri(self) -> bool:
@@ -660,6 +702,28 @@ class Image:
 
     @property
     def mosaic(self) -> Mosaic:
+        """
+        Returns mosaic information.
+
+        Returns
+        -------
+        Mosaic
+            Mosaic encoded image information
+        """
         if self.is_mosaic and self._mosaic is None:
             self._mosaic = Mosaic(self._data, self.header)
         return self._mosaic
+
+    @property
+    def multi_frame(self) -> MultiFrame:
+        """
+        Returns multi-frame encoded data.
+
+        Returns
+        -------
+        MultiFrame
+            Multi-frame encoded image information
+        """
+        if self.is_multi_frame and self._multi_frame is None:
+            self._multi_frame = MultiFrame(self._data, self.header)
+        return self._multi_frame

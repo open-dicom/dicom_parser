@@ -64,10 +64,12 @@ class SequenceOfItems(DataElement):
         """
         import pandas as pd
 
-        df = pd.concat(
-            [subheader.to_dataframe() for subheader in self.value],
-            keys=range(len(self.value)),
-            names=("Index", "Tag"),
-        )
-        df.name = f"{self.tag}\t{self.keyword}"
-        return df
+        subheaders = [subheader.to_dataframe() for subheader in self.value]
+        if subheaders:
+            df = pd.concat(
+                subheaders,
+                keys=range(len(self.value)),
+                names=("Index", "Tag"),
+            )
+            df.name = f"{self.tag}\t{self.keyword}"
+            return df

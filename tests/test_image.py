@@ -5,10 +5,13 @@ import numpy as np
 import pydicom
 from dicom_parser.header import Header
 from dicom_parser.image import Image
+from dicom_parser.utils.multi_frame.multi_frame import MultiFrame
+from dicom_parser.utils.siemens.mosaic import Mosaic
 
 from tests.fixtures import (
     TEST_IMAGE_PATH,
     TEST_IMAGE_RELATIVE_PATH,
+    TEST_MULTIFRAME,
     TEST_RSFMRI_IMAGE_PATH,
     TEST_SIEMENS_DWI_PATH,
 )
@@ -20,6 +23,7 @@ class ImageTestCase(TestCase):
         cls.image = Image(TEST_IMAGE_PATH)
         cls.rsfmri_image = Image(TEST_RSFMRI_IMAGE_PATH)
         cls.siemens_dwi = Image(TEST_SIEMENS_DWI_PATH)
+        cls.multi_frame = Image(TEST_MULTIFRAME)
 
     def test_initialization_with_string_path(self):
         image = Image(TEST_IMAGE_PATH)
@@ -89,6 +93,13 @@ class ImageTestCase(TestCase):
         self.assertFalse(not_mosaic_image.is_mosaic)
         mosaic_image = Image(TEST_RSFMRI_IMAGE_PATH)
         self.assertTrue(mosaic_image.is_mosaic)
+
+    def test_mosaic_property_with_mosaic(self):
+        self.assertIsInstance(self.rsfmri_image.mosaic, Mosaic)
+
+    def test_mosaic_property_with_non_mosaic(self):
+        self.assertIsNone(self.image.mosaic)
+        self.assertIsNone(self.multi_frame.mosaic)
 
     def test_siemens_mosaic_returns_as_volume(self):
         n_dimensions = self.rsfmri_image.data.ndim
@@ -227,3 +238,11 @@ class ImageTestCase(TestCase):
     def test_b_vector_with_missing(self):
         value = self.image.b_vector
         self.assertIsNone(value)
+
+    def test_multiframe_property_with_multi_frame(self):
+        self.assertIsInstance(self.multi_frame.multi_frame, MultiFrame)
+
+    def test_multiframe_property_with_non_multi_frame(self):
+        self.assertIsNone(self.image.multi_frame)
+        self.assertIsNone(self.rsfmri_image.multi_frame)
+        self.assertIsNone(self.siemens_dwi.multi_frame)
