@@ -17,5 +17,16 @@ Example
     >>> fmri_series.data.shape
     (96, 96, 64, 200)
 
+The associated :class:`~dicom_parser.utils.siemens.mosaic.Mosaic` instance and
+underlying attributes are avialble through the
+:attr:`~dicom_parser.image.Image.mosaic` property.
+
+.. code-block:: python
+
+    >>> type(image.mosaic)
+    dicom_parser.utils.siemens.mosaic.Mosaic
+    >>> image.mosaic.volume_shape
+    (96, 96, 64)
+
 .. _encoded as mosaics:
    https://nipy.org/nibabel/dicom/dicom_mosaic.html

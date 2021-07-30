@@ -715,14 +715,14 @@ class Image:
         return self._mosaic
 
     @property
-    def multi_frame(self) -> Mosaic:
+    def multi_frame(self) -> MultiFrame:
         """
-        Returns mosaic information.
+        Returns multi-frame encoded data.
 
         Returns
         -------
-        Mosaic
-            Mosaic encoded image information
+        MultiFrame
+            Multi-frame encoded image information
         """
         if self.is_multi_frame and self._multi_frame is None:
             self._multi_frame = MultiFrame(self._data, self.header)

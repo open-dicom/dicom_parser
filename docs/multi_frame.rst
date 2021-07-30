@@ -22,7 +22,7 @@ instance and underlying attributes are available through the
 
     >>> type(image.multi_frame)
     dicom_parser.utils.multi_frame.multi_frame.MultiFrame
-    >>> i.multi_frame.image_orientation_patient
+    >>> image.multi_frame.image_orientation_patient
     array([[ 1.,  0.],
            [ 0.,  0.],
            [ 0., -1.]])
