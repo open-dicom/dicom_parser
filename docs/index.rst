@@ -9,9 +9,11 @@ Welcome to dicom_parser's documentation!
    :caption: Contents:
 
    quickstart
+   value_representation
    vendors
    modules/reference
    release_notes
+   resources
 
 
 Indices and tables
