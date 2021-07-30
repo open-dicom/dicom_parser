@@ -1,6 +1,9 @@
 Quickstart
 ==========
 
+The :class:`~dicom_parser.image.Image` Class
+--------------------------------------------
+
 The most basic usage case is reading a single DICOM image (*.dcm* file) as
 an :class:`~dicom_parser.image.Image` instance.
 
@@ -9,120 +12,24 @@ an :class:`~dicom_parser.image.Image` instance.
     >>> from dicom_parser import Image
     >>> image = Image('/path/to/dicom/file.dcm')
 
----------------------------------------------------------------
 
-Conversion to Python's native types
-------------------------------------
-
-`dicom_parser` provides :obj:`dict`-like access to the parsed values of the
-header_\'s data-elements. The raw values as read by pydicom_ remain accessible
-through the :attr:`~dicom_parser.header.Header.raw` attribute.
-
-.. _header:
-  https://dcm4che.atlassian.net/wiki/spaces/d2/pages/1835038/A+Very+Basic+DICOM+Introduction
-.. _pydicom: https://pydicom.github.io/
-
-Examples
-........
-
-In the following example, you can see that using pydicom_'s :attr:`~dicom_parser.header.Header.raw` attribute
-reads header information as a string, while using `dicom_parser`'s :meth:`~dicom_parser.header.Header.get` attribute  
-converts datatype from :obj:`string` to :obj:`float`, which is more convenient for data processing:
-
-Decimal String
-##############
-
-Image Frequency String to *float*:
-
-.. code:: python
-
-    >>> raw_value = image.header.raw['ImagingFrequency'].value
-    >>> raw_value
-    "123.25993"
-    >>> type(raw_value)
-    str
-
-    >>> parsed_value = image.header.get('ImagingFrequency')
-    >>> parsed_value
-    123.25993
-    >>> type(parsed_value)
-    float
-
-Age String
-##########
-
-Age String (AS) to *float*:
-
-.. code:: python
-
-    >>> raw_value = image.header.raw['PatientAge'].value
-    >>> raw_value
-    "027Y"
-    >>> type(raw_value)
-    str
-
-    >>> parsed_value = image.header.get('PatientAge')
-    >>> parsed_value
-    27.0
-    >>> type(parsed_value)
-    float
-
-
-Date String
-###########
-
-Date String (DA) to `datetime.date`_ using the :class:`~dicom_parser.header.Header`
-class's indexing operator/subscript notation:
-
-.. _datetime.date: https://docs.python.org/3/library/datetime.html#available-types
-
-.. code:: python
-
-    >>> raw_value = image.header.raw['PatientBirthDate'].value
-    >>> raw_value
-    "19901214"
-    >>> type(raw_value)
-    str
-
-    >>> parsed_value = image.header['PatientBirthDate']
-    >>> parsed_value
-    datetime.date(1990, 12, 14)
-    >>> type(parsed_value)
-    datetime.date
-
-
-Code String
-###########
-
-Code String (CS) to a verbose value or set of values:
-
-.. code:: python
-
-    >>> raw_value = image.header.raw['SequenceVariant'].value
-    >>> raw_value
-    ['SP', 'OSP']
-    >>> type(raw_value)
-    pydicom.multival.MultiValue
-
-    >>> parsed_value = image.header['SequenceVariant']
-    >>> parsed_value
-    {'Oversampling Phase', 'Spoiled'}
-    >>> type(parsed_value)
-    set
-
-
-Others
-........
-
-There are many other header parameters that you can read with `dicom_parser`'s :meth:`~dicom_parser.header.Header.get` or :meth:`~dicom_parser.header.Header` attribute, such as 'StudyDate', 'AcquisitionTime', 'PatientSex', 'PatientSize', 'PatientWeight', etc.
-You can simply use the following command to look up all the header parameters.
+Images have a :attr:`~dicom_parser.image.Image.header` attribute, which stores
+the parsed :class:`~dicom_parser.header.Header` instance.
 
 .. code:: python
 
     >>> image.header
+                 Keyword                      VR                VM  Value
+    Tag
+    (0008, 0005)  SpecificCharacterSet         Code String       1   ISO_IR 100
+    (0008, 0008)  ImageType                    Code String       5   ('ORIGINAL', 'PRIMARY', ...
+    (0008, 0012)  InstanceCreationDate         Date              1   2018-05-01
+    ...
 
-
-For more information on dicom headers,  please look up the resources page.
+`dicom_parser` provides :obj:`dict`-like access to the parsed values of the
+header_\'s data-elements. The raw values as read by pydicom_ remain accessible
+through the :attr:`~dicom_parser.header.Header.raw` attribute. For a full
+comparison of the expected return types, see :ref:`value-representation`.
 
 .. note::
 
@@ -143,13 +50,12 @@ For more information on dicom headers,  please look up the resources page.
         >>> image.header['MissingKey']
         KeyError: "The keyword: 'MissingKey' does not exist in the header!"
 
----------------------------------------------------------------
-
-Read DICOM series directory as a :class:`~dicom_parser.series.Series`
----------------------------------------------------------------------
+The :class:`~dicom_parser.series.Series` Class
+----------------------------------------------
 
 Another useful class this package offers is the
-:class:`~dicom_parser.series.Series` class:
+:class:`~dicom_parser.series.Series` class, which enables reading an entire
+series' directory.
 
 .. code:: python
 
@@ -157,12 +63,10 @@ Another useful class this package offers is the
     >>> series = Series('/some/dicom/series/')
 
 
-Query images’ headers with :meth:`~dicom_parser.series.Series.get`
-...........................................................................
+Header Information
+..................
 
-
-The :class:`~dicom_parser.series.Series` instance allows us to easily
-query the underlying images' headers using its
+We can easily query the underlying images' headers using the
 :meth:`~dicom_parser.series.Series.get` method:
 
 .. code:: python
@@ -183,9 +87,6 @@ query the underlying images' headers using its
     >>> series.get('MissingKey', 'default_value')
     'default_value'
 
-Query images’ headers with indexing operator
-.............................................
-
 Similarly to the :class:`~dicom_parser.image.Image` class, we can also use
 the indexing operator:
 
@@ -205,8 +106,8 @@ the indexing operator:
     >>> series['MissingKey']
     KeyError: "The keyword: 'MissingKey' does not exist in the header!"
 
-Query an image instance with index
-....................................
+Image Instances
+###############
 
 Another useful feature of the indexing operator is for querying an
 :class:`~dicom_parser.image.Image` instance based on its index in the series:
@@ -219,10 +120,10 @@ Another useful feature of the indexing operator is for querying an
     7   # InstanceNumber is 1-indexed
 
 
-The data property
-..............................
+Pixel Arrays
+............
 
-The `data` property returns a stacked volume of the images' data:
+The `data` property returns a stacked volume of the images' pixel arrays:
 
 .. code:: python
 
@@ -231,17 +132,7 @@ The `data` property returns a stacked volume of the images' data:
     >>> series.data.shape
     (224, 224, 208)
 
-
-
-Siemens 4D data
-...............
-
-Reading Siemens 4D data
-`encoded as mosaics <https://nipy.org/nibabel/dicom/dicom_mosaic.html>`_
-is also supported:
-
-.. code:: python
-
-    >>> fmri_series = Series('/path/to/dicom/fmri/')
-    >>> fmri_series.data.shape
-    (96, 96, 64, 200)
+.. _header:
+   https://dcm4che.atlassian.net/wiki/spaces/d2/pages/1835038/A+Very+Basic+DICOM+Introduction
+.. _pydicom:
+   https://pydicom.github.io/
