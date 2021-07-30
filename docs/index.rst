@@ -10,6 +10,7 @@ Welcome to dicom_parser's documentation!
 
    quickstart
    value_representation
+   multi_frame
    vendors
    modules/reference
    release_notes
