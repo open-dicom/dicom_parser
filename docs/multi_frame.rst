@@ -9,9 +9,9 @@ parsed automatically:
 .. code-block:: python
 
     >>> image = Image("/path/to/multi-frame/")
-    >>> i.raw.pixel_array.shape
+    >>> image.raw.pixel_array.shape
     (112, 512, 512)
-    >>> i.data.shape
+    >>> image.data.shape
     (512, 512, 56, 2)
 
 The associated :class:`~dicom_parser.utils.multi_frame.multi_frame.MultiFrame`
