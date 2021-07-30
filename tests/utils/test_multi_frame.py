@@ -4,7 +4,6 @@ class.
 
 TODO
 ----
-* Test properties return cached values.
 * Find multi-stack multi-frame image to test NotImplementedError or implement
   parsing.
 * Find Phillips image with a derived appendix to test exclusion in frames info.
@@ -230,3 +229,39 @@ class MultiFrameTestCase(TestCase):
         header["PlanePositionSequence"][0].raw[
             "ImagePositionPatient"
         ] = original_value
+
+    def test_property_caching(self):
+        self.assertIs(
+            self.multi_frame.frame_functional_groups,
+            self.multi_frame._frame_functional_groups,
+        )
+        self.assertIs(
+            self.multi_frame.shared_functional_groups,
+            self.multi_frame._shared_functional_groups,
+        )
+        self.assertIs(
+            self.multi_frame.frame_indices, self.multi_frame._frame_indices
+        )
+        self.assertIs(self.multi_frame.stack_ids, self.multi_frame._stack_ids)
+        self.assertIs(self.multi_frame.stack_ids, self.multi_frame._stack_ids)
+        self.assertIs(
+            self.multi_frame.image_orientation_patient,
+            self.multi_frame._image_orientation_patient,
+        )
+        self.assertIs(
+            self.multi_frame.image_position, self.multi_frame._image_position
+        )
+        self.assertIs(
+            self.multi_frame.image_shape, self.multi_frame._image_shape
+        )
+        self.assertIs(self.multi_frame.n_frames, self.multi_frame._n_frames)
+        self.assertIs(
+            self.multi_frame.frame_indices, self.multi_frame._frame_indices
+        )
+        self.assertIs(
+            self.multi_frame.voxel_sizes, self.multi_frame._voxel_sizes
+        )
+        self.assertIs(
+            self.multi_frame.dimension_index_pointers,
+            self.multi_frame._dimension_index_pointers,
+        )

@@ -41,9 +41,6 @@ class MultiFrame:
     #: Keeps a cached copy of the shared functional groups header information.
     _shared_functional_groups: List[Header] = None
 
-    #: Keeps a cached copy of the calculated image shape.
-    _shape: tuple = None
-
     #: Keeps a cached copy of the number of frames.
     _n_frames: tuple = None
 
@@ -58,9 +55,6 @@ class MultiFrame:
 
     #: Keeps a chached copy of the dimension index pointers.
     _dimension_index_pointers: List[BaseTag] = None
-
-    #: Keeps a cached copy of the series signature.
-    _series_signature: dict = None
 
     #: Stack ID tag (in integer representation), used to remove any dimension
     #: indices pointing to it.
