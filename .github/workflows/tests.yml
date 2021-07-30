@@ -45,9 +45,3 @@ jobs:
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         fail_ci_if_error: true
-    - name: Codacy Coverage Reporter
-      uses: codacy/codacy-coverage-reporter-action@1.0.0
-      if: "contains(env.USING_COVERAGE, matrix.python-version)"
-      with:
-        project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
-        coverage-reports: coverage.xml
