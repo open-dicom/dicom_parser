@@ -14,9 +14,8 @@ from dicom_parser.messages import INVALID_ELEMENT_IDENTIFIER
 from dicom_parser.utils import read_file, requires_pandas
 from dicom_parser.utils.format_header_df import format_header_df
 from dicom_parser.utils.private_tags import PRIVATE_TAGS
-from dicom_parser.utils.sequence_detector.sequence_detector import (
-    SequenceDetector,
-)
+from dicom_parser.utils.sequence_detector.sequence_detector import \
+    SequenceDetector
 from dicom_parser.utils.value_representation import ValueRepresentation
 from dicom_parser.utils.vr_to_data_element import get_data_element_class
 
@@ -424,9 +423,18 @@ class Header:
         tag_or_keyword : tuple or str, or list
             Tag or keyword representing the requested data element, or a list
             of such
+        default : Any, optional
+            Default value to be returned if the key doesn't exist, default is
+            None
         parsed : bool, optional
             Whether to return a parsed or raw value (the default is True,
             which will return the parsed value)
+        missing_ok : bool, optional
+            Whether to treat missing key as None (otherwise, raises an
+            exception), default is True
+        as_json : bool, optional
+            Whether to return a JSON encoded string of the value, default is
+            False
 
         Returns
         -------
