@@ -166,7 +166,7 @@ class Series:
     ) -> Any:
         """
         Returns header information from the
-        :class:`~dicom_parser.image.Image` that compose this series.
+        :class:`~dicom_parser.image.Image` instances that compose this series.
         If one distinct value is returned from all the images' headers,
         returns that value. Otherwise, returns a list of the values
         (ordered the same as the `images` attribute, by instance number).
@@ -176,6 +176,15 @@ class Series:
         tag_or_keyword : tuple or str, or list
             Tag or keyword representing the requested data element, or a list
             of such
+        default : Any, optional
+            Default value to be returned if the key doesn't exist, default is
+            None
+        parsed : bool, optional
+            Whether to return a parsed or raw value (the default is True,
+            which will return the parsed value)
+        missing_ok : bool, optional
+            Whether to treat missing key as None (otherwise, raises an
+            exception), default is True
 
         Returns
         -------
