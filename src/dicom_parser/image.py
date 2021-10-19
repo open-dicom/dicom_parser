@@ -36,7 +36,7 @@ class Image:
 
     def __init__(self, raw: Union[FileDataset, str, Path]):
         """
-        The Image class should be initialized with either a string or a
+        The Image class should be initialized with either a string or a`
         :class:`~pathlib.Path` instance representing the path of a .dcm file.
         Another option is to initialize it with a :class:`~pydicom.FileDataset`
         instance, however, in that case make sure that the `stop_before_pixels`
@@ -217,6 +217,7 @@ class Image:
             return np.cross(iop[:, 1], iop[:, 0])
         # TODO: Implement Siemens fix for slice normal?
         # https://github.com/nipy/nibabel/blob/62aea04248e70d7c4529954ca41685d7f75a0b1e/nibabel/nicom/dicomwrappers.py#L710
+        # https://github.com/open-dicom/dicom_parser/issues#issuecomment-894822482
 
     def get_rotation_matrix(self) -> np.array:
         """
