@@ -5,5 +5,7 @@ WRONG_DEFINITION_TYPE = "Sequence definition must be a dict, a list, or a tuple,
 INVALID_MODALITY = (
     "The {modality} modality has not been implemented or doesn't exist!"
 )
-
+INVALID_OPERATOR_OR_LOOKUP = (
+    "There is no `{operator}` implementation available yet!"
+)
 # flake8: noqa: E501

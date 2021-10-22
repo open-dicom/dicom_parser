@@ -4,8 +4,11 @@ Definition of the :class:`SequenceDetector` class.
 from dicom_parser.utils.sequence_detector.messages import (
     INVALID_MODALITY,
     WRONG_DEFINITION_TYPE,
+    INVALID_OPERATOR_OR_LOOKUP,
 )
 from dicom_parser.utils.sequence_detector.data_types import DATA_TYPES
+from dicom_parser.utils.sequence_detector.lookups import LOOKUPS
+from dicom_parser.utils.sequence_detector.operators import OPERATORS
 from typing import Tuple
 
 
@@ -15,7 +18,7 @@ class DatatypeDetector:
     """
 
     REQUIRED_RULE_KEYS: Tuple[str] = "key", "value"
-    DEFAULT_OPERATOR: str = "and"
+    DEFAULT_OPERATOR: str = "all"
     DEFAULT_LOOKUP: str = "exact"
 
     def __init__(self, data_types: dict = None):
@@ -77,9 +80,31 @@ class DatatypeDetector:
             for key in self.REQUIRED_RULE_KEYS:
                 if key not in rule.keys():
                     raise ValueError(f"Missing key {key} in definition rule.")
-            lookup = rule.get("lookup", self.DEFAULT_LOOKUP)
-            operator = rule.get("operator", self.DEFAULT_OPERATOR)
-            evaluation = values.get(key)
+            lookup_key = rule.get("lookup", self.DEFAULT_LOOKUP)
+            lookup_function = LOOKUPS.get(lookup_key)
+            if not lookup_function:
+                raise NotImplementedError(
+                    INVALID_OPERATOR_OR_LOOKUP.format(operator=lookup_key)
+                )
+            operator_key = rule.get("operator", self.DEFAULT_OPERATOR)
+            operator_function = OPERATORS.get(operator_key)
+            if not operator_function:
+                raise NotImplementedError(
+                    INVALID_OPERATOR_OR_LOOKUP.format(operator=operator_key)
+                )
+            rules_evaluations.append(
+                operator_function(
+                    lookup_function(values.get(rule["key"]), val)
+                    for val in rule["value"]
+                )
+            )
+        definition_operator = definition.get("operator", self.DEFAULT_OPERATOR)
+        definition_operator_function = OPERATORS.get(definition_operator)
+        if not operator_function:
+            raise NotImplementedError(
+                INVALID_OPERATOR_OR_LOOKUP.format(operator=definition_operator)
+            )
+        return definition_operator_function(rules_evaluations)
 
     def get_known_modality_sequences(self, modality: str) -> dict:
         """
