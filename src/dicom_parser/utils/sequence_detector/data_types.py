@@ -12,7 +12,7 @@ MR_DATA_TYPES = {
                 "key": "SeriesDescription",
                 "value": {"t1w", "t2w", "flair", "mprage", "spgr"},
                 "lookup": "icontains",
-                "operator": "or",
+                "operator": "any",
             }
         ],
     },
@@ -22,7 +22,7 @@ MR_DATA_TYPES = {
                 "key": "SeriesDescription",
                 "value": {"fmri"},
                 "lookup": "icontains",
-                "operator": "or",
+                "operator": "any",
             }
         ],
     },
@@ -32,16 +32,16 @@ MR_DATA_TYPES = {
                 "key": "SeriesDescription",
                 "value": {"dmri"},
                 "lookup": "icontains",
-                "operator": "or",
+                "operator": "any",
             },
             {
                 "key": "ImageType",
                 "value": {"DIFFUSION"},
                 "lookup": "in",
-                "operator": "or",
+                "operator": "any",
             },
         ],
-        "operator": "and",
+        "operator": "all",
     },
     "fmap": {
         "rules": [
@@ -49,16 +49,16 @@ MR_DATA_TYPES = {
                 "key": "SeriesDescription",
                 "value": {"dmri", "fieldmap", "spinecho"},
                 "lookup": "icontains",
-                "operator": "or",
+                "operator": "any",
             },
             {
                 "key": "ImageType",
                 "value": {"DIFFUSION"},
                 "lookup": "not in",
-                "operator": "or",
+                "operator": "any",
             },
         ],
-        "operator": "and",
+        "operator": "all",
     },
 }
 
