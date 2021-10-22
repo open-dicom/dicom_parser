@@ -3,7 +3,7 @@ Available lookups for various detectors.
 """
 from typing import Iterable, Any
 
-
+#: Definitions of lookups used to evaluate detectors' rules
 def icontains(value: str, rule: str) -> bool:
     """
     Case insensitive implementation of str-in-str lookup.
@@ -62,5 +62,5 @@ def not_in(value: Iterable, rule: Any) -> bool:
     return rule not in value
 
 
-#: Lookups used in to evaluate detectors' rules
+#: Lookups used to evaluate detectors' rules
 LOOKUPS = {"icontains": icontains, "in": is_in, "not in": not_in}
