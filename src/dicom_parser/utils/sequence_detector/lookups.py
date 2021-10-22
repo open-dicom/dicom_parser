@@ -13,6 +13,11 @@ def icontains(value: str, rule: str) -> bool:
         String to look within.
     rule : str
         String to look for.
+
+    Returns
+    -------
+    bool
+        Whether **rule** exists in **value**
     """
     if not (isinstance(value, str) and isinstance(rule, str)):
         raise TypeError(
@@ -27,17 +32,35 @@ def is_in(value: Iterable, rule: Any) -> bool:
     Parameters
     ----------
     value : Iterable
-        An iterable of some
+        An iterable of any kind
     rule : Any
-        [description]
+        An object to look for in **value**
 
     Returns
     -------
     bool
-        [description]
+        Whether **rule** exists in **value**
     """
     return rule in value
 
 
+def not_in(value: Iterable, rule: Any) -> bool:
+    """
+    Checks whether *rule* doesn't exist within *value*.
+    Parameters
+    ----------
+    value : Iterable
+        An iterable of any kind
+    rule : Any
+        An object to look for in **value**
+
+    Returns
+    -------
+    bool
+        Whether **rule** doesn't exist in **value**
+    """
+    return rule not in value
+
+
 #: Lookups used in to evaluate detectors' rules
-LOOKUPS = {"icontains": icontains}
+LOOKUPS = {"icontains": icontains, "in": is_in, "not in": not_in}
