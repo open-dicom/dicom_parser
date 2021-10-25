@@ -19,6 +19,10 @@ def icontains(value: str, rule: str) -> bool:
     bool
         Whether **rule** exists in **value**
     """
+    # I guess this needs fixing. Did this because values get here in the form of tuple, which raises an error even if the tuple contains a single string.
+    if len(value) == 1:
+        value = list(value)[0]
+
     if not (isinstance(value, str) and isinstance(rule, str)):
         raise TypeError(
             f"Unable to apply icontains lookup for value-rule pairings of types {type(value)}-{type(rule)} respectively."

@@ -14,8 +14,12 @@ from dicom_parser.messages import INVALID_ELEMENT_IDENTIFIER
 from dicom_parser.utils import read_file, requires_pandas
 from dicom_parser.utils.format_header_df import format_header_df
 from dicom_parser.utils.private_tags import PRIVATE_TAGS
-from dicom_parser.utils.sequence_detector.sequence_detector import \
-    SequenceDetector
+from dicom_parser.utils.sequence_detector.sequence_detector import (
+    SequenceDetector,
+)
+from dicom_parser.utils.sequence_detector.datatype_detector import (
+    DatatypeDetector,
+)
 from dicom_parser.utils.value_representation import ValueRepresentation
 from dicom_parser.utils.vr_to_data_element import get_data_element_class
 
@@ -36,7 +40,12 @@ class Header:
     #: Header fields to pass to
     #: :class:`~dicom_parser.utils.sequence_detector.sequence_detector.SequenceDetector`.
     sequence_identifiers = {
-        "Magnetic Resonance": ["ScanningSequence", "SequenceVariant"]
+        "Magnetic Resonance": [
+            "ScanningSequence",
+            "SequenceVariant",
+            "SeriesDescription",
+            "ImageType",
+        ]
     }
 
     #: Column names to use when converting to dataframe.
