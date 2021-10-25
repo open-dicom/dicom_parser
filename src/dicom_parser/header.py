@@ -17,9 +17,6 @@ from dicom_parser.utils.private_tags import PRIVATE_TAGS
 from dicom_parser.utils.sequence_detector.sequence_detector import (
     SequenceDetector,
 )
-from dicom_parser.utils.sequence_detector.datatype_detector import (
-    DatatypeDetector,
-)
 from dicom_parser.utils.value_representation import ValueRepresentation
 from dicom_parser.utils.vr_to_data_element import get_data_element_class
 

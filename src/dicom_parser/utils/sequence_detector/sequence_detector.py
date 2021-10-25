@@ -44,6 +44,7 @@ class SequenceDetector:
             raise NotImplementedError(
                 INVALID_OPERATOR_OR_LOOKUP.format(operator=lookup_key)
             )
+        return lookup_function
 
     def retreive_operator(self, rule: dict) -> Callable:
         operator_key = rule.get("operator", self.DEFAULT_OPERATOR)
@@ -52,6 +53,7 @@ class SequenceDetector:
             raise NotImplementedError(
                 INVALID_OPERATOR_OR_LOOKUP.format(operator=operator_key)
             )
+        return operator_function
 
     def evaluate_rule(self, rule: dict, header_fields: dict) -> bool:
         """
