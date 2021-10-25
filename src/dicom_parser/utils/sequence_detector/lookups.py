@@ -2,6 +2,8 @@
 Available lookups for various detectors.
 """
 from typing import Iterable, Any
+from dicom_parser.utils.sequence_detector.messages import ICONTAINS_TYPE_ERROR
+
 
 #: Definitions of lookups used to evaluate detectors' rules
 def icontains(value: str, rule: str) -> bool:
@@ -19,14 +21,17 @@ def icontains(value: str, rule: str) -> bool:
     bool
         Whether **rule** exists in **value**
     """
-    # I guess this needs fixing. Did this because values get here in the form of tuple, which raises an error even if the tuple contains a single string.
+    # I guess this needs fixing. Did this because values get here in the form
+    # of tuple, which raises an error even if the tuple contains a single
+    # string.
     if len(value) == 1:
         value = list(value)[0]
 
     if not (isinstance(value, str) and isinstance(rule, str)):
-        raise TypeError(
-            f"Unable to apply icontains lookup for value-rule pairings of types {type(value)}-{type(rule)} respectively."
+        message = ICONTAINS_TYPE_ERROR.format(
+            rule_type=type(rule), value_type=type(value)
         )
+        raise TypeError(message)
     return rule.lower() in value.lower()
 
 

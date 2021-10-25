@@ -12,6 +12,7 @@ class SequenceDetector:
     """
     Default sequence detector implementation.
     """
+
     def __init__(self, sequences: dict = None):
         """
         Initializes a new instance of this class.
