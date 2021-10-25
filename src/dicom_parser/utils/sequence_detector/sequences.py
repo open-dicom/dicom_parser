@@ -6,62 +6,99 @@ header.
 #: Sequences used in Magnetic Resonance (MR) imaging and their associated
 #: definitions.
 MR_SEQUENCES = {
-    "Localizer": {
-        "ScanningSequence": {"Gradient Recalled"},
-        "SequenceVariant": {"Spoiled", "Oversampling Phase"},
+    "mprage": {
+        "rules": [
+            {
+                "key": "ScanningSequence",
+                "value": ["Gradient Recalled", "Inversion Recovery"],
+                "lookup": "in",
+                "operator": "and",
+            },
+            {
+                "key": "SequenceVariant",
+                "value": ["Segmented k-Space", "Spoiled", "MAG Prepared"],
+                "lookup": "in",
+                "operator": "and",
+            },
+            {
+                "key": "ScanOptions",
+                "value": ["IR", "WE"],
+                "lookup": "in",
+                "operator": "and",
+            },
+        ]
     },
-    "MPRAGE": {
-        "ScanningSequence": {"Gradient Recalled", "Inversion Recovery"},
-        "SequenceVariant": {"Segmented k-Space", "Spoiled", "MAG Prepared"},
+    "t2w": {
+        "rules": [
+            {
+                "key": "ScanningSequence",
+                "value": "Spin Echo",
+                "lookup": "exact",
+                "operator": None,
+            },
+            {
+                "key": "SequenceVariant",
+                "value": ("Segmented k-Space", "Spoiled"),
+                "lookup": "exact",
+                "operator": None,
+            },
+        ]
     },
-    "SPGR": {
-        "ScanningSequence": {"Gradient Recalled"},
-        "SequenceVariant": {"Segmented k-Space", "Spoiled", "Steady State"},
+    "flair": {
+        "rules": [
+            {
+                "key": "ScanningSequence",
+                "value": ("Spin Echo", "Inversion Recovery"),
+                "lookup": "exact",
+                "operator": None,
+            },
+            {
+                "key": "SequenceVariant",
+                "value": ["Segmented k-Space", "Spoiled", "MAG Prepared"],
+                "lookup": "in",
+                "operator": "and",
+            },
+        ]
     },
-    "FSPGR": {
-        "ScanningSequence": {"Gradient Recalled"},
-        "SequenceVariant": {"Segmented k-Space", "Steady State"},
-    },
-    "FLAIR": {
-        "ScanningSequence": {"Spin Echo", "Inversion Recovery"},
-        "SequenceVariant": {"Segmented k-Space", "Spoiled", "MAG Prepared"},
-    },
-    "DTI": (
-        {
-            "ScanningSequence": {"Echo Planar", "Spin Echo"},
-            "SequenceVariant": {"None"},
-        },
-        {
-            "ScanningSequence": {"Echo Planar", "Research Mode"},
-            "SequenceVariant": {"None"},
-        },
-    ),
-    "fMRI": (
-        {
-            "ScanningSequence": {"Echo Planar"},
-            "SequenceVariant": {"Segmented k-Space", "Steady State"},
-        },
-        {
-            "ScanningSequence": {"Echo Planar", "Gradient Recalled"},
-            "SequenceVariant": {"Steady State"},
-        },
-    ),
-    "IR-EPI": {
-        "ScanningSequence": {"Echo Planar", "Inversion Recovery"},
-        "SequenceVariant": {
-            "Segmented k-Space",
-            "Spoiled",
-            "MAG Prepared",
-            "Oversampling Phase",
-        },
-    },
-    "ep2d": {
-        "ScanningSequence": {"Echo Planar"},
-        "SequenceVariant": {"Segmented k-Space", "Spoiled"},
-    },
-    "FSE": {
-        "ScanningSequence": {"Spin Echo"},
-        "SequenceVariant": {"Segmented k-Space"},
+    "bold": {
+        "rules": [
+            [
+                {
+                    "key": "ScanningSequence",
+                    "value": ["Echo Planar", None],
+                    "lookup": "in",
+                    "operator": "or",
+                },
+                {
+                    "key": "SequenceVariant",
+                    "value": (
+                        "Segmented k-Space",
+                        "Steady State",
+                        "Oversampling Phase",
+                    ),
+                    "lookup": "in",
+                    "operator": "and",
+                },
+            ],
+            [
+                {
+                    "key": "ScanningSequence",
+                    "value": ["Echo Planar", None],
+                    "lookup": "in",
+                    "operator": "or",
+                },
+                {
+                    "key": "SequenceVariant",
+                    "value": (
+                        "Segmented k-Space",
+                        "Steady State",
+                        "Oversampling Phase",
+                    ),
+                    "lookup": "in",
+                    "operator": "and",
+                },
+            ],
+        ]
     },
 }
 

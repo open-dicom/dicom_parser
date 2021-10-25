@@ -1,5 +1,5 @@
 """
-Definition of the :class:`SequenceDetector` class.
+Definition of the :class:`DatatypeDetector` class.
 """
 from dicom_parser.utils.sequence_detector.messages import (
     INVALID_MODALITY,
