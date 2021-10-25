@@ -29,7 +29,7 @@ MR_SEQUENCES = {
         "rules": [
             {
                 "key": "ScanningSequence",
-                "value": {"Spin Echo"},
+                "value": "Spin Echo",
                 "lookup": "exact",
             },
             {
@@ -57,7 +57,7 @@ MR_SEQUENCES = {
         "rules": [
             {
                 "key": "ScanningSequence",
-                "value": {"Echo Planar"},
+                "value": "Echo Planar",
                 "lookup": "exact",
             },
             {
@@ -71,7 +71,7 @@ MR_SEQUENCES = {
         "rules": [
             {
                 "key": "ScanningSequence",
-                "value": {"Echo Planar"},
+                "value": "Echo Planar",
                 "lookup": "exact",
             },
             {
@@ -90,7 +90,7 @@ MR_SEQUENCES = {
         "rules": [
             {
                 "key": "ScanningSequence",
-                "value": {"Echo Planar"},
+                "value": "Echo Planar",
                 "lookup": "exact",
             },
             {
@@ -114,7 +114,7 @@ MR_SEQUENCES = {
         "rules": [
             {
                 "key": "ScanningSequence",
-                "value": {"Echo Planar"},
+                "value": "Echo Planar",
                 "lookup": "exact",
             },
             {
@@ -132,7 +132,7 @@ MR_SEQUENCES = {
             },
             {
                 "key": "ScanOptions",
-                "value": {"PFP"},
+                "value": "PFP",
                 "lookup": "exact",
             },
         ],
@@ -141,7 +141,7 @@ MR_SEQUENCES = {
         "rules": [
             {
                 "key": "ScanningSequence",
-                "value": {"Echo Planar"},
+                "value": "Echo Planar",
                 "lookup": "exact",
             },
             {
@@ -151,7 +151,7 @@ MR_SEQUENCES = {
             },
             {
                 "key": "ScanOptions",
-                "value": {"PFP"},
+                "value": "PFP",
                 "lookup": "exact",
             },
         ],
