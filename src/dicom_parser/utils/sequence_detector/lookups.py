@@ -19,7 +19,7 @@ def icontains(value: str, rule: str) -> bool:
     Returns
     -------
     bool
-        Whether **rule** exists in **value**
+        Whether *rule* exists in *value*
     """
     # I guess this needs fixing. Did this because values get here in the form
     # of tuple, which raises an error even if the tuple contains a single
@@ -43,14 +43,14 @@ def is_in(value: Iterable, rule: Any) -> bool:
     value : Iterable
         An iterable of any kind
     rule : Any
-        An object to look for in **value**
+        An object to look for in *value*
 
     Returns
     -------
     bool
-        Whether **rule** exists in **value**
+        Whether *rule* exists in *value*
     """
-    return rule in value
+    return rule in value if value else False
 
 
 def not_in(value: Iterable, rule: Any) -> bool:
@@ -61,15 +61,40 @@ def not_in(value: Iterable, rule: Any) -> bool:
     value : Iterable
         An iterable of any kind
     rule : Any
-        An object to look for in **value**
+        An object to look for in *value*
 
     Returns
     -------
     bool
-        Whether **rule** doesn't exist in **value**
+        Whether *rule* doesn't exist in *value*
     """
-    return rule not in value
+
+    return rule not in value if value else False
+
+
+def exact(value: Any, rule: Any) -> bool:
+    """
+    Checks whether *rule* is identical to *value*.
+    Parameters
+    ----------
+    value : Any
+        Any kind of object
+    rule : Any
+        Any kind of object
+
+    Returns
+    -------
+    bool
+        Whether *rule* is identical to *value*
+    """
+    print(rule, value)
+    return rule == value
 
 
 #: Lookups used to evaluate detectors' rules
-LOOKUPS = {"icontains": icontains, "in": is_in, "not in": not_in}
+LOOKUPS = {
+    "icontains": icontains,
+    "in": is_in,
+    "not in": not_in,
+    "exact": exact,
+}

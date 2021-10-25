@@ -9,6 +9,7 @@ from dicom_parser.utils.sequence_detector.messages import (
 from dicom_parser.utils.sequence_detector.data_types import DATA_TYPES
 from dicom_parser.utils.sequence_detector.lookups import LOOKUPS
 from dicom_parser.utils.sequence_detector.operators import OPERATORS
+from dicom_parser.utils.sequence_detector.sequences import SEQUENCES
 from typing import Tuple
 
 
@@ -21,7 +22,7 @@ class DatatypeDetector:
     DEFAULT_OPERATOR: str = "all"
     DEFAULT_LOOKUP: str = "exact"
 
-    def __init__(self, data_types: dict = None):
+    def __init__(self, sequences: dict = None):
         """
         Initializes a new instance of this class.
 
@@ -30,7 +31,7 @@ class DatatypeDetector:
         sequences : dict, optional
             Dictionary of known data types by modality, by default None
         """
-        self.data_types = data_types or DATA_TYPES
+        self.sequences = sequences or SEQUENCES
 
     def check_definition(self, definition, values: dict) -> bool:
         """
@@ -86,18 +87,20 @@ class DatatypeDetector:
                 raise NotImplementedError(
                     INVALID_OPERATOR_OR_LOOKUP.format(operator=lookup_key)
                 )
+
             operator_key = rule.get("operator", self.DEFAULT_OPERATOR)
             operator_function = OPERATORS.get(operator_key)
             if not operator_function:
                 raise NotImplementedError(
                     INVALID_OPERATOR_OR_LOOKUP.format(operator=operator_key)
                 )
+
             rules_evaluations.append(
                 operator_function(
-                    lookup_function(values.get(rule["key"]), val)
-                    for val in rule["value"]
+                    lookup_function(values.get(rule["key"]), rule.get("value"))
                 )
             )
+        print(rules_evaluations)
         definition_operator = definition.get("operator", self.DEFAULT_OPERATOR)
         definition_operator_function = OPERATORS.get(definition_operator)
         if not operator_function:
@@ -123,10 +126,10 @@ class DatatypeDetector:
         Raises
         ------
         NotImplementedError
-            The `data_types` dictionary does not include the provided modality
+            The `sequences` dictionary does not include the provided modality
         """
         try:
-            return self.data_types[modality]
+            return self.sequences[modality]
         except KeyError:
             message = INVALID_MODALITY.format(modality=modality)
             raise NotImplementedError(message)
@@ -148,8 +151,8 @@ class DatatypeDetector:
         str
             The detected sequence name or None.
         """
-        known_data_types = self.get_known_modality_sequences(modality)
-        for label, definition in known_data_types.items():
+        known_sequences = self.get_known_modality_sequences(modality)
+        for label, definition in known_sequences.items():
             match = self.check_definition(definition, values)
             if match:
                 break

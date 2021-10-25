@@ -45,6 +45,7 @@ class Header:
             "SequenceVariant",
             "SeriesDescription",
             "ImageType",
+            "ScanOptions",
         ]
     }
 
