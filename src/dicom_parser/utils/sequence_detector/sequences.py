@@ -25,6 +25,29 @@ MR_SEQUENCES = {
             },
         ]
     },
+    "ir_epi": {
+        "rules": [
+            {
+                "key": "ScanningSequence",
+                "value": ("Echo Planar", "Inversion Recovery"),
+                "lookup": "exact",
+            },
+            {
+                "key": "SequenceVariant",
+                "value": [
+                    "Segmented k-Space",
+                    "Spoiled",
+                    "MAG Prepared",
+                ],
+                "lookup": "in",
+            },
+            {
+                "key": "ScanOptions",
+                "value": ["IR", "FS"],
+                "lookup": "in",
+            },
+        ]
+    },
     "t2w": {
         "rules": [
             {
@@ -73,6 +96,11 @@ MR_SEQUENCES = {
                 "key": "ScanningSequence",
                 "value": "Echo Planar",
                 "lookup": "exact",
+            },
+            {
+                "key": "SequenceVariant",
+                "value": ["Steady State"],
+                "lookup": "in",
             },
             {
                 "key": "ImageType",
