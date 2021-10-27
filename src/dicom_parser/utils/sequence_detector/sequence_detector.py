@@ -1,15 +1,16 @@
 """
 Definition of the :class:`SequenceDetector` class.
 """
+from typing import Callable, Tuple
+
+from dicom_parser.utils.sequence_detector.lookups import LOOKUPS
 from dicom_parser.utils.sequence_detector.messages import (
     INVALID_MODALITY,
-    WRONG_DEFINITION_TYPE,
     INVALID_OPERATOR_OR_LOOKUP,
+    WRONG_DEFINITION_TYPE,
 )
-from dicom_parser.utils.sequence_detector.lookups import LOOKUPS
 from dicom_parser.utils.sequence_detector.operators import OPERATORS
 from dicom_parser.utils.sequence_detector.sequences import SEQUENCES
-from typing import Tuple, Callable
 
 
 class SequenceDetector:
@@ -33,11 +34,42 @@ class SequenceDetector:
         self.sequences = sequences or SEQUENCES
 
     def validate_rule_keys(self, rule: dict) -> None:
+        """
+        Checks whether the given rule contains all required keys.
+
+        Parameters
+        ----------
+        rule : dict
+            Sequence detection rule
+
+        Raises
+        ------
+        ValueError
+            Missing mandatory rule key
+        """
         for key in self.REQUIRED_RULE_KEYS:
             if key not in rule.keys():
                 raise ValueError(f"Missing key {key} in definition rule.")
 
     def retreive_lookup(self, rule: dict) -> Callable:
+        """
+        Returns the appropriate lookup function for the given rule.
+
+        Parameters
+        ----------
+        rule : dict
+            Sequence detection rule
+
+        Returns
+        -------
+        Callable
+            Lookup function
+
+        Raises
+        ------
+        NotImplementedError
+            No lookup function found
+        """
         lookup_key = rule.get("lookup", self.DEFAULT_LOOKUP)
         lookup_function = LOOKUPS.get(lookup_key)
         if not lookup_function:
@@ -47,6 +79,24 @@ class SequenceDetector:
         return lookup_function
 
     def retreive_operator(self, rule: dict) -> Callable:
+        """
+        Returns the appropriate operator function for the given rule.
+
+        Parameters
+        ----------
+        rule : dict
+            Sequence detection rule
+
+        Returns
+        -------
+        Callable
+            Operator function
+
+        Raises
+        ------
+        NotImplementedError
+            No operator function found
+        """
         operator_key = rule.get("operator", self.DEFAULT_OPERATOR)
         operator_function = OPERATORS.get(operator_key)
         if not operator_function:
