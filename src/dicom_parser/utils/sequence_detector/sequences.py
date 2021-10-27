@@ -184,6 +184,25 @@ MR_SEQUENCES = {
             },
         ],
     },
+    "localizer": {
+        "rules": [
+            {
+                "key": "ScanningSequence",
+                "value": "Gradient Recalled",
+                "lookup": "exact",
+            },
+            {
+                "key": "SequenceVariant",
+                "value": ("Spoiled", "Oversampling Phase"),
+                "lookup": "exact",
+            },
+            {
+                "key": "ImageType",
+                "value": ("ORIGINAL", "PRIMARY", "M", "NORM", "DIS2D"),
+                "lookup": "exact",
+            },
+        ],
+    },
 }
 
 

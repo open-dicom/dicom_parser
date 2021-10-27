@@ -8,6 +8,7 @@ from dicom_parser.utils.sequence_detector.messages import (
 )
 from dicom_parser.utils.sequence_detector.bids_fields import BIDS_FIELDS
 from typing import Tuple, Callable
+import warnings
 
 
 class BIDSDetector:
@@ -64,14 +65,14 @@ class BIDSDetector:
             Dictionaty with sequence-specific BIDS fields and values
         """
         if not sequence_bids_fields:
-            raise NotImplementedError(
-                INVALID_SEQUENCE.format(sequence=sequence)
-            )
+            warnings.warn(INVALID_SEQUENCE.format(sequence=sequence))
+            return False
         for required_key in self.REQUIRED_BIDS_NAMING_KEYS:
             if not required_key in sequence_bids_fields:
                 raise ValueError(
                     INVALID_SEQUENCE_KEYS.format(required_key=required_key)
                 )
+        return True
 
     def build_seqeunce_specific_values(
         self, sequence: str, sequence_bids_fields: dict, header: dict
@@ -90,7 +91,8 @@ class BIDSDetector:
         dict
             Dictionaty with instance-specific BIDS fields and values
         """
-        self.validate_sequence_fields(sequence, sequence_bids_fields)
+        if not self.validate_sequence_fields(sequence, sequence_bids_fields):
+            return None
         result = {}
         for key, value in sequence_bids_fields.items():
             result[key] = (
