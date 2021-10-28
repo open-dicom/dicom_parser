@@ -1,21 +1,40 @@
 """
-Definition of the :class:`SequenceDetector` class.
+Definition of the :class:`BidsDetector` class.
 """
+import warnings
+from typing import Callable, Dict, List, Tuple
+
+from dicom_parser.utils.sequence_detector.bids_fields import BIDS_FIELDS
 from dicom_parser.utils.sequence_detector.messages import (
     INVALID_MODALITY,
     INVALID_SEQUENCE,
     INVALID_SEQUENCE_KEYS,
 )
-from dicom_parser.utils.sequence_detector.bids_fields import BIDS_FIELDS
-from typing import Tuple, Callable
-import warnings
 
 
-class BIDSDetector:
+class BidsDetector:
     """
     Default data types detector implementation.
     """
 
+    BIDS_FILE_NAME_TEMPLATE: Dict[str, List[str]] = {
+        "anat": ["acq", "ce", "rec", "run", "part"],
+        "func": [
+            "task",
+            "acq",
+            "ce",
+            "rec",
+            "dir",
+            "run",
+            "echo",
+            "part",
+        ],
+        "dwi": ["acq", "dir", "run", "part"],
+        "sbref": ["acq", "dir", "run", "part"],
+    }
+    BIDS_PATH_TEMPLATE: str = (
+        "{subject}/{session}/{data_type}/{subject}_{session}_{labels}"
+    )
     REQUIRED_BIDS_NAMING_KEYS: Tuple[str] = "data_type", "suffix"
 
     def __init__(self, bids_fields: dict = None):
@@ -29,7 +48,7 @@ class BIDSDetector:
         """
         self.bids_fields = bids_fields or BIDS_FIELDS
 
-    def get_known_modality_bids_fields(self, modality: str) -> dict:
+    def get_modality_fields(self, modality: str) -> dict:
         """
         Returns a dictionary of imaging bids fields definitions.
 
@@ -54,36 +73,36 @@ class BIDSDetector:
             message = INVALID_MODALITY.format(modality=modality)
             raise NotImplementedError(message)
 
-    def validate_sequence_fields(
-        self, sequence: str, sequence_bids_fields: dict
-    ) -> None:
+    def validate_fields(self, sequence: str, fields: dict) -> None:
         """
         Validates the sequence-specific BIDS fields definition
         Parameters
         ----------
-        sequence_bids_fields : dict
+        fields : dict
             Dictionaty with sequence-specific BIDS fields and values
         """
-        if not sequence_bids_fields:
+        if not fields:
             warnings.warn(INVALID_SEQUENCE.format(sequence=sequence))
             return False
         for required_key in self.REQUIRED_BIDS_NAMING_KEYS:
-            if not required_key in sequence_bids_fields:
+            if required_key not in fields:
                 raise ValueError(
                     INVALID_SEQUENCE_KEYS.format(required_key=required_key)
                 )
         return True
 
-    def build_seqeunce_specific_values(
-        self, sequence: str, sequence_bids_fields: dict, header: dict
+    def get_field_values(
+        self, sequence: str, fields: dict, header: dict
     ) -> dict:
         """
-        Fills instance-specific values as required for an appropriate BIDS naming
+        Fills instance-specific values as required for an appropriate BIDS
+        naming.
+
         Parameters
         ----------
         sequence : str
             Sequence-identifier
-        sequence_bids_fields : dict
+        fields : dict
             Dictionaty with sequence-specific BIDS fields and values
 
         Returns
@@ -91,19 +110,19 @@ class BIDSDetector:
         dict
             Dictionaty with instance-specific BIDS fields and values
         """
-        if not self.validate_sequence_fields(sequence, sequence_bids_fields):
+        if not self.validate_fields(sequence, fields):
             return None
         result = {}
-        for key, value in sequence_bids_fields.items():
+        for key, value in fields.items():
             result[key] = (
-                value if not isinstance(value, Callable) else value(header)
+                value(header) if isinstance(value, Callable) else value
             )
         return result
 
     def detect(self, modality: str, sequence: str, header: dict) -> dict:
         """
-        Tries to detect the appropriate bids fields' values according to the modality and
-        provided sequence information.
+        Tries to detect the appropriate bids fields' values according to the
+        modality and provided sequence information.
 
         Parameters
         ----------
@@ -111,14 +130,46 @@ class BIDSDetector:
             The imaging modality as described in the DICOM header
         sequence : str
             BIDS-identifying sequence
+        header : dict
+            DICOM header information
 
         Returns
         -------
         str
-            The detected BIDS-appropriate fields and values or None.
+            The detected BIDS-appropriate fields and values or None
         """
-        known_bids_fields = self.get_known_modality_bids_fields(modality)
-        sequence_bids_fields = known_bids_fields.get(sequence)
-        return self.build_seqeunce_specific_values(
-            sequence, sequence_bids_fields, header
+        modality_fields = self.get_modality_fields(modality)
+        fields = modality_fields.get(sequence)
+        return self.get_field_values(sequence, fields, header)
+
+    def build_anonymized_parts(
+        self, modality: str, sequence: str, header: dict
+    ) -> Tuple[str, str]:
+        field_values = self.detect(modality, sequence, header)
+        data_type = field_values.pop("data_type")
+        suffix = field_values.pop("suffix")
+        try:
+            parts = self.BIDS_FILE_NAME_TEMPLATE[data_type]
+        except KeyError:
+            raise NotImplementedError(
+                f"{data_type} not registered for BIDS detector."
+            )
+        labels = (
+            f"{part}-{field_values.get(part)}"
+            for part in parts
+            if field_values.get(part)
+        )
+        return data_type, "_".join(labels) + f"_{suffix}"
+
+    def build_path(self, modality: str, sequence: str, header: dict) -> str:
+        data_type, labels = self.build_anonymized_parts(
+            modality, sequence, header
+        )
+        subject = f"sub-{header.get('PatientID')}"
+        session = f"ses-{header.get('StudyTime').strftime('%Y%M%d%H%m')}"
+        return self.BIDS_PATH_TEMPLATE.format(
+            subject=subject,
+            session=session,
+            data_type=data_type,
+            labels=labels,
         )

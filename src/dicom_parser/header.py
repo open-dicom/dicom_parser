@@ -14,6 +14,7 @@ from dicom_parser.messages import INVALID_ELEMENT_IDENTIFIER
 from dicom_parser.utils import read_file, requires_pandas
 from dicom_parser.utils.format_header_df import format_header_df
 from dicom_parser.utils.private_tags import PRIVATE_TAGS
+from dicom_parser.utils.sequence_detector.bids_detector import BidsDetector
 from dicom_parser.utils.sequence_detector.sequence_detector import (
     SequenceDetector,
 )
@@ -68,6 +69,7 @@ class Header:
         self,
         raw: Union[FileDataset, str, Path],
         sequence_detector=SequenceDetector,
+        bids_detector=BidsDetector,
     ):
         """
         Header is meant to be initialized with a pydicom FileDataset
@@ -82,6 +84,7 @@ class Header:
             A utility class to automatically detect sequences
         """
         self.sequence_detector = sequence_detector()
+        self.bids_detector = bids_detector()
         self.raw = read_file(raw, read_data=False)
         self.manufacturer = self.get("Manufacturer")
         self.detected_sequence = self.detect_sequence()
@@ -175,6 +178,23 @@ class Header:
         try:
             return self.sequence_detector.detect(
                 modality, sequence_identifying_values
+            )
+        except NotImplementedError:
+            pass
+
+    def build_bids_path(self) -> str:
+        """
+        Returns the derived BIDS path for this series.
+
+        Returns
+        -------
+        str
+            Imaging sequence name
+        """
+        modality = self.get("Modality")
+        try:
+            return self.bids_detector.build_path(
+                modality, self.detected_sequence, self.as_dict
             )
         except NotImplementedError:
             pass

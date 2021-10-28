@@ -20,7 +20,7 @@ MR_SEQUENCES = {
             },
             {
                 "key": "ScanOptions",
-                "value": ["IR", "WE"],
+                "value": ["IR"],
                 "lookup": "in",
             },
         ]
@@ -123,8 +123,12 @@ MR_SEQUENCES = {
             },
             {
                 "key": "SequenceVariant",
-                "value": ("Segmented k-Space", "Oversampling Phase"),
+                "value": [
+                    ("Segmented k-Space", "Oversampling Phase"),
+                    "Segmented k-Space",
+                ],
                 "lookup": "exact",
+                "operator": "any",
             },
             {
                 "key": "ImageType",
@@ -147,21 +151,34 @@ MR_SEQUENCES = {
             },
             {
                 "key": "ImageType",
-                "value": (
-                    "ORIGINAL",
-                    "PRIMARY",
-                    "DIFFUSION",
-                    "NONE",
-                    "MB",
-                    "ND",
-                    "MOSAIC",
-                ),
+                "value": [
+                    (
+                        "ORIGINAL",
+                        "PRIMARY",
+                        "DIFFUSION",
+                        "NONE",
+                        "MB",
+                        "ND",
+                        "MOSAIC",
+                    ),
+                    (
+                        "ORIGINAL",
+                        "PRIMARY",
+                        "DIFFUSION",
+                        "NONE",
+                        "ND",
+                        "NORM",
+                        "MOSAIC",
+                    ),
+                ],
                 "lookup": "exact",
+                "operator": "any",
             },
             {
                 "key": "ScanOptions",
-                "value": "PFP",
+                "value": ["PFP", ("PFP", "FS")],
                 "lookup": "exact",
+                "operator": "any",
             },
         ],
     },
