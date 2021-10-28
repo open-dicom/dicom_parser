@@ -35,7 +35,7 @@ class BidsDetector:
     BIDS_PATH_TEMPLATE: str = (
         "{subject}/{session}/{data_type}/{subject}_{session}_{labels}"
     )
-    REQUIRED_BIDS_NAMING_KEYS: Tuple[str] = "data_type", "suffix"
+    REQUIRED_BIDS_NAMING_KEYS: Tuple[str] = ("data_type", "suffix")
 
     def __init__(self, bids_fields: dict = None):
         """

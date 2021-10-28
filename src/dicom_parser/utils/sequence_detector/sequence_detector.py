@@ -18,7 +18,7 @@ class SequenceDetector:
     Default data types detector implementation.
     """
 
-    REQUIRED_RULE_KEYS: Tuple[str] = "key", "value"
+    REQUIRED_RULE_KEYS: Tuple[str] = ("key", "value")
     DEFAULT_OPERATOR: str = "all"
     DEFAULT_LOOKUP: str = "exact"
 
