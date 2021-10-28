@@ -119,7 +119,7 @@ class HeaderTestCase(TestCase):
         self.assertIsInstance(self.header.sequence_detector, SequenceDetector)
 
     def test_init_detected_sequence(self):
-        self.assertEqual(self.header.detected_sequence, "Localizer")
+        self.assertEqual(self.header.detected_sequence, "localizer")
 
     def test_get_raw_element(self):
         keys = list(self.TAGS.keys()) + list(self.KEYWORDS.keys())
@@ -243,7 +243,7 @@ class HeaderTestCase(TestCase):
 
     def test_detect_sequence(self):
         result = self.header.detect_sequence()
-        expected = "Localizer"
+        expected = "localizer"
         self.assertEqual(result, expected)
 
     def test_detect_sequence_with_unknown_modality_returns_none(self):

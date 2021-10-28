@@ -576,7 +576,7 @@ class Image:
         bool
             Whether this image represents fMRI data
         """
-        return self.header.detected_sequence == "fMRI"
+        return self.header.detected_sequence == "bold"
 
     @property
     def data(self) -> np.ndarray:

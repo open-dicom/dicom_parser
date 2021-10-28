@@ -21,17 +21,12 @@ class SequenceDetectorCase(TestCase):
 
     def test_detecting_mr_localizer(self):
         value = self.mr_localizer_image.header.detected_sequence
-        expected = "Localizer"
-        self.assertEqual(value, expected)
-
-    def test_detecting_mr_ep2d(self):
-        value = self.mr_ep2d_image.header.detected_sequence
-        expected = "ep2d"
+        expected = "localizer"
         self.assertEqual(value, expected)
 
     def test_detecting_mr_fmri(self):
         value = self.mr_fmri_image.header.detected_sequence
-        expected = "fMRI"
+        expected = "bold"
         self.assertEqual(value, expected)
 
     def test_detecting_with_unknown_modality_raises_not_implemented_error(
