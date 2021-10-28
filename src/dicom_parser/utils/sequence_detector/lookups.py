@@ -1,10 +1,9 @@
 """
 Available lookups for various detectors.
 """
-from typing import Iterable, Any
+from typing import Any, Iterable
 
 
-#: Definitions of lookups used to evaluate detectors' rules
 def icontains(header_value: str, rule_value: str) -> bool:
     """
     Case insensitive implementation of str-in-str lookup.

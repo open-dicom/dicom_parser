@@ -1,10 +1,16 @@
+"""
+Helper functions for querying specific header fields in order to scaffold
+BIDS-compatible paths.
+"""
+#: Characters that should not be used in BIDS elements.
 INVALID_CHARACTERS = "!@#$%^&*()_-+="
-#: Helper functions for querying specific fields of BIDS specifications
 
 
 def find_mprage_acq(header: dict) -> str:
     """
-    Finds correct value for the "acq" field of BIDS specification for MPRAGE sequences
+    Finds correct value for the "acq" field of BIDS specification for MPRAGE
+    sequences.
+
     Parameters
     ----------
     header : dict
@@ -21,7 +27,9 @@ def find_mprage_acq(header: dict) -> str:
 
 def find_irepi_acq(header: dict) -> str:
     """
-    Finds correct value for the "acq" field of BIDS specification for IR-EPI sequences
+    Finds correct value for the "acq" field of BIDS specification for IR-EPI
+    sequences.
+
     Parameters
     ----------
     header : dict
@@ -38,7 +46,8 @@ def find_irepi_acq(header: dict) -> str:
 
 def strip_element(element: str) -> str:
     """
-    strips element from BIDS-invalid characters
+    strips element from BIDS-invalid characters.
+
     Parameters
     ----------
     element : str
@@ -56,7 +65,9 @@ def strip_element(element: str) -> str:
 
 def find_task_name(header: dict) -> str:
     """
-    Finds correct value for the "task" field of BIDS specification for fMRI sequences
+    Finds correct value for the "task" field of BIDS specification for fMRI
+    sequences.
+
     Parameters
     ----------
     header : dict
@@ -79,7 +90,9 @@ def find_task_name(header: dict) -> str:
 
 def find_phase_encoding(header: dict) -> str:
     """
-    Finds correct value for the "dir" field of BIDS specification for EPI sequences
+    Finds correct value for the "dir" field of BIDS specification for EPI
+    sequences.
+
     Parameters
     ----------
     header : dict

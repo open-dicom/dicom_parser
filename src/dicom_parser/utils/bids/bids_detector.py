@@ -4,7 +4,7 @@ Definition of the :class:`BidsDetector` class.
 import warnings
 from typing import Callable, Dict, List, Tuple
 
-from dicom_parser.utils.sequence_detector.bids_fields import BIDS_FIELDS
+from dicom_parser.utils.bids.sequence_to_bids import SEQUENCE_TO_BIDS
 from dicom_parser.utils.sequence_detector.messages import (
     INVALID_MODALITY,
     INVALID_SEQUENCE,
@@ -47,7 +47,7 @@ class BidsDetector:
         bids_fields : dict, optional
             Dictionary of known bids fields by modality, by default None
         """
-        self.bids_fields = bids_fields or BIDS_FIELDS
+        self.bids_fields = bids_fields or SEQUENCE_TO_BIDS
 
     def get_modality_fields(self, modality: str) -> dict:
         """

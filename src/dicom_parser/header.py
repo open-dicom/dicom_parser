@@ -12,9 +12,9 @@ from pydicom.dataset import FileDataset
 from dicom_parser.data_element import DataElement
 from dicom_parser.messages import INVALID_ELEMENT_IDENTIFIER
 from dicom_parser.utils import read_file, requires_pandas
+from dicom_parser.utils.bids.bids_detector import BidsDetector
 from dicom_parser.utils.format_header_df import format_header_df
 from dicom_parser.utils.private_tags import PRIVATE_TAGS
-from dicom_parser.utils.sequence_detector.bids_detector import BidsDetector
 from dicom_parser.utils.sequence_detector.sequence_detector import (
     SequenceDetector,
 )

@@ -7,10 +7,11 @@ from dicom_parser.utils.sequence_detector.lookups import LOOKUPS
 from dicom_parser.utils.sequence_detector.messages import (
     INVALID_MODALITY,
     INVALID_OPERATOR_OR_LOOKUP,
+    MISSING_RULE_KEY,
     WRONG_DEFINITION_TYPE,
 )
 from dicom_parser.utils.sequence_detector.operators import OPERATORS
-from dicom_parser.utils.sequence_detector.sequences import SEQUENCES
+from dicom_parser.utils.sequence_detector.sequences import SEQUENCE_RULES
 
 
 class SequenceDetector:
@@ -18,20 +19,25 @@ class SequenceDetector:
     Default data types detector implementation.
     """
 
-    REQUIRED_RULE_KEYS: Tuple[str] = ("key", "value")
-    DEFAULT_OPERATOR: str = "all"
-    DEFAULT_LOOKUP: str = "exact"
+    LOOKUP_KEY: str = "lookup"
+    OPERATOR_KEY: str = "operator"
+    RULES_KEY: str = "rules"
 
-    def __init__(self, sequences: dict = None):
+    DEFAULT_LOOKUP: str = "exact"
+    DEFAULT_OPERATOR: str = "all"
+
+    REQUIRED_RULE_KEYS: Tuple[str] = ("key", "value")
+
+    def __init__(self, rules: dict = None):
         """
         Initializes a new instance of this class.
 
         Parameters
         ----------
-        sequences : dict, optional
+        rules : dict, optional
             Dictionary of known data types by modality, by default None
         """
-        self.sequences = sequences or SEQUENCES
+        self.rules = rules or SEQUENCE_RULES
 
     def validate_rule_keys(self, rule: dict) -> None:
         """
@@ -49,7 +55,8 @@ class SequenceDetector:
         """
         for key in self.REQUIRED_RULE_KEYS:
             if key not in rule.keys():
-                raise ValueError(f"Missing key {key} in definition rule.")
+                message = MISSING_RULE_KEY.format(key=key)
+                raise ValueError(message)
 
     def retreive_lookup(self, rule: dict) -> Callable:
         """
@@ -70,7 +77,7 @@ class SequenceDetector:
         NotImplementedError
             No lookup function found
         """
-        lookup_key = rule.get("lookup", self.DEFAULT_LOOKUP)
+        lookup_key = rule.get(self.LOOKUP_KEY, self.DEFAULT_LOOKUP)
         lookup_function = LOOKUPS.get(lookup_key)
         if not lookup_function:
             raise NotImplementedError(
@@ -97,7 +104,7 @@ class SequenceDetector:
         NotImplementedError
             No operator function found
         """
-        operator_key = rule.get("operator", self.DEFAULT_OPERATOR)
+        operator_key = rule.get(self.OPERATOR_KEY, self.DEFAULT_OPERATOR)
         operator_function = OPERATORS.get(operator_key)
         if not operator_function:
             raise NotImplementedError(
@@ -160,11 +167,12 @@ class SequenceDetector:
         # All definitions are dictionary of rules and operators.
         # Raise error otherwise.
         if not isinstance(definition, (dict, list)):
-            raise TypeError(
-                WRONG_DEFINITION_TYPE.format(definition_type=type(definition))
+            message = WRONG_DEFINITION_TYPE.format(
+                definition_type=type(definition)
             )
+            raise TypeError(message)
         rules = (
-            definition.get("rules", [])
+            definition.get(self.RULES_KEY, [])
             if isinstance(definition, dict)
             else definition
         )
@@ -172,18 +180,17 @@ class SequenceDetector:
             self.evaluate_rule(rule, header_fields) for rule in rules
         )
         operator = (
-            definition.get("operator", self.DEFAULT_OPERATOR)
+            definition.get(self.OPERATOR_KEY, self.DEFAULT_OPERATOR)
             if isinstance(definition, dict)
             else self.DEFAULT_OPERATOR
         )
         operator = OPERATORS.get(operator)
         if not operator:
-            raise NotImplementedError(
-                INVALID_OPERATOR_OR_LOOKUP.format(operator=operator)
-            )
+            message = INVALID_OPERATOR_OR_LOOKUP.format(operator=operator)
+            raise NotImplementedError(message)
         return operator(rules_evaluations)
 
-    def get_known_modality_sequences(self, modality: str) -> dict:
+    def get_modality_rules(self, modality: str) -> dict:
         """
         Returns a dictionary of imaging sequence definitions.
 
@@ -203,7 +210,7 @@ class SequenceDetector:
             The `sequences` dictionary does not include the provided modality
         """
         try:
-            return self.sequences[modality]
+            return self.rules[modality]
         except KeyError:
             message = INVALID_MODALITY.format(modality=modality)
             raise NotImplementedError(message)
@@ -225,11 +232,8 @@ class SequenceDetector:
         str
             The detected sequence name or None.
         """
-        known_sequences = self.get_known_modality_sequences(modality)
-        for label, definition in known_sequences.items():
+        rules = self.get_modality_rules(modality)
+        for label, definition in rules.items():
             match = self.check_definition(definition, values)
             if match:
-                break
-        else:
-            return None
-        return label
+                return label
