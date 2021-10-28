@@ -214,6 +214,27 @@ class Series:
         """
         return self.images[0].spatial_resolution
 
+    def get_bids_path(self) -> str:
+        """
+        Build BIDS-appropriate path for the series.
+        Returns
+        -------
+        str
+            BIDS-appropriate path
+        """
+        return self.images[0].get_bids_path()
+
+    @property
+    def bids_path(self) -> str:
+        """
+        Builds BIDS-appropriate path according to DICOM's header
+        Returns
+        -------
+        str
+            BIDS-appropriate path
+        """
+        return self.get_bids_path()
+
     @property
     def data(self) -> np.ndarray:
         """

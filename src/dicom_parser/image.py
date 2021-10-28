@@ -418,6 +418,27 @@ class Image:
         """
         return self.header.get("SOPClassUID") == "1.2.840.10008.5.1.4.1.1.4.1"
 
+    def get_bids_path(self) -> str:
+        """
+        Build BIDS-appropriate path for the series.
+        Returns
+        -------
+        str
+            BIDS-appropriate path
+        """
+        return self.header.build_bids_path()
+
+    @property
+    def bids_path(self) -> str:
+        """
+        Builds BIDS-appropriate path according to DICOM's header
+        Returns
+        -------
+        str
+            BIDS-appropriate path
+        """
+        return self.get_bids_path()
+
     @property
     def image_shape(self) -> Tuple[int, int]:
         """
