@@ -90,9 +90,6 @@ def find_phase_encoding(header: dict) -> str:
     str
         Phase encoding direction (AP/PA)
     """
-    description = header.get("SeriesDescription").lower()
-    if "_ap" in description:
-        pe = "AP"
-    elif "_pa":
-        pe = "PA"
+    description = header.get("ProtocolName").lower()
+    pe = description.split("_")[-1]
     return pe

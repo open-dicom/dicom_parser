@@ -8,9 +8,9 @@ from dicom_parser.utils.sequence_detector.field_query import (
 #: BIDS fields used in Magnetic Resonance (MR) imaging and their associated
 #: definitions.
 MR_BIDS_FIELDS = {
-    "mprage": {"data_type": "anat", "acq": find_mprage_acq, "suffix": "T1w"},
-    "ir_epi": {"data_type": "anat", "acq": find_irepi_acq, "suffix": "IRT1"},
-    "t2w": {"data_type": "anat", "acq": find_mprage_acq, "suffix": "T2w"},
+    "mprage": {"data_type": "anat", "ce": find_mprage_acq, "suffix": "T1w"},
+    "ir_epi": {"data_type": "anat", "inv": find_irepi_acq, "suffix": "IRT1"},
+    "t2w": {"data_type": "anat", "ce": find_mprage_acq, "suffix": "T2w"},
     "flair": {"data_type": "anat", "suffix": "FLAIR"},
     "bold": {
         "data_type": "func",

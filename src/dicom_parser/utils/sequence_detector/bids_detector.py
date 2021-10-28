@@ -18,7 +18,7 @@ class BidsDetector:
     """
 
     BIDS_FILE_NAME_TEMPLATE: Dict[str, List[str]] = {
-        "anat": ["acq", "ce", "rec", "run", "part"],
+        "anat": ["acq", "ce", "rec", "inv", "run", "part"],
         "func": [
             "task",
             "acq",
@@ -31,9 +31,10 @@ class BidsDetector:
         ],
         "dwi": ["acq", "dir", "run", "part"],
         "sbref": ["acq", "dir", "run", "part"],
+        "fmap": ["acq", "ce", "dir", "run"],
     }
     BIDS_PATH_TEMPLATE: str = (
-        "{subject}/{session}/{data_type}/{subject}_{session}_{labels}"
+        "{subject}/{session}/{data_type}/{subject}_{session}{labels}"
     )
     REQUIRED_BIDS_NAMING_KEYS: Tuple[str] = ("data_type", "suffix")
 
@@ -146,6 +147,8 @@ class BidsDetector:
         self, modality: str, sequence: str, header: dict
     ) -> Tuple[str, str]:
         field_values = self.detect(modality, sequence, header)
+        if field_values is None:
+            return None, None
         data_type = field_values.pop("data_type")
         suffix = field_values.pop("suffix")
         try:
@@ -159,14 +162,22 @@ class BidsDetector:
             for part in parts
             if field_values.get(part)
         )
-        return data_type, "_".join(labels) + f"_{suffix}"
+        labels = "_".join(labels)
+        if labels != "":
+            return data_type, "_" + labels + "_" + suffix
+        else:
+            return data_type, "_" + suffix
 
     def build_path(self, modality: str, sequence: str, header: dict) -> str:
         data_type, labels = self.build_anonymized_parts(
             modality, sequence, header
         )
+        if (data_type is None) and (labels is None):
+            return None
         subject = f"sub-{header.get('PatientID')}"
-        session = f"ses-{header.get('StudyTime').strftime('%Y%M%d%H%m')}"
+        session_date = header.get("StudyDate").strftime("%Y%m%d")
+        session_time = header.get("StudyTime").strftime("%H%M")
+        session = f"ses-{session_date}{session_time}"
         return self.BIDS_PATH_TEMPLATE.format(
             subject=subject,
             session=session,
