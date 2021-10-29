@@ -29,7 +29,11 @@ class BidsDetector:
     #: Required BIDS key/value pairs for each defined rule.
     REQUIRED_KEYS: Tuple[str] = ("data_type", "suffix")
 
-    #: Session identifier configuration.
+    # Subject identifier configuration.
+    SUBJECT_ID_FIELD: str = "PatientID"
+    SUBJECT_IDENTIFIER_TEMPLATE: str = "sub-{subject_id}"
+
+    # Session identifier configuration.
     SESSION_DATE_FIELD: str = "StudyDate"
     SESSION_DATE_FORMAT: str = "%Y%m%d"
     SESSION_TIME_FIELD: str = "StudyTime"
@@ -170,11 +174,13 @@ class BidsDetector:
 
     def get_subject_identifier(self, header_info: dict) -> str:
         try:
-            patient_id = header_info["PatientID"]
+            subject_id = header_info[self.SUBJECT_ID_FIELD]
         except KeyError:
             raise KeyError(MISSING_PATIENT_ID)
         else:
-            return f"sub-{patient_id}"
+            return self.SUBJECT_IDENTIFIER_TEMPLATE.format(
+                subject_id=subject_id
+            )
 
     def get_session_identifier(self, header_info: dict) -> str:
         try:
