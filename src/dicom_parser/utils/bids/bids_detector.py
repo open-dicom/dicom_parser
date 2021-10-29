@@ -26,7 +26,15 @@ class BidsDetector:
     Default data types detector implementation.
     """
 
+    #: Required BIDS key/value pairs for each defined rule.
     REQUIRED_KEYS: Tuple[str] = ("data_type", "suffix")
+
+    #: Session identifier configuration.
+    SESSION_DATE_FIELD: str = "StudyDate"
+    SESSION_DATE_FORMAT: str = "%Y%m%d"
+    SESSION_TIME_FIELD: str = "StudyTime"
+    SESSION_TIME_FORMAT: str = "%H%M"
+    SESSION_IDENTIFIER_TEMPLATE: str = "ses-{session_date}{session_time}"
 
     def __init__(self, sequence_to_bids: dict = None):
         """
@@ -170,15 +178,16 @@ class BidsDetector:
 
     def get_session_identifier(self, header_info: dict) -> str:
         try:
-            study_date = header_info["StudyDate"]
-            study_time = header_info["StudyTime"]
+            date = header_info[self.SESSION_DATE_FIELD]
+            time = header_info[self.SESSION_TIME_FIELD]
         except KeyError:
             raise KeyError(MISSING_SESSION_TIME)
         else:
-            date_string = study_date.strftime("%Y%m%d")
-            time_string = study_time.strftime("%H%M")
-            session_id = date_string + time_string
-            return f"ses-{session_id}"
+            session_date = date.strftime(self.SESSION_DATE_FORMAT)
+            session_time = time.strftime(self.SESSION_TIME_FORMAT)
+            return self.SESSION_IDENTIFIER_TEMPLATE.format(
+                session_date=session_date, session_time=session_time
+            )
 
     def build_path(
         self, modality: str, sequence: str, header_info: dict
