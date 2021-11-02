@@ -41,7 +41,7 @@ IREPI_RULES = [
         "lookup": "in",
     },
 ]
-T2W_RULES = [
+T2W_RULES_1 = [
     {
         "key": "ScanningSequence",
         "value": "Spin Echo",
@@ -53,7 +53,37 @@ T2W_RULES = [
         "lookup": "exact",
     },
 ]
-FLAIR_RULES = [
+T2W_RULES_2 = [
+    {
+        "key": "ScanningSequence",
+        "value": "Research Mode",
+        "lookup": "exact",
+    },
+    {
+        "key": "SequenceVariant",
+        "value": "None",
+        "lookup": "exact",
+    },
+    {
+        "key": "ImageType",
+        "value": ("ORIGINAL", "PRIMARY", "OTHER"),
+        "lookup": "exact",
+    },
+    {
+        "key": "ScanOptions",
+        "value": ["FC", "VB_GEMS", "TRF_GEMS"],
+        "lookup": "in",
+        "operator": "all",
+    },
+    {
+        "key": "ScanOptions",
+        "value": ["FC_FREQ_AX_GEMS", "FC_SLICE_AX_GEMS", "SP", "FS"],
+        "lookup": "in",
+        "operator": "any",
+    },
+]
+T2W_RULES = (T2W_RULES_1, T2W_RULES_2)
+FLAIR_RULES_1 = [
     {
         "key": "ScanningSequence",
         "value": ("Spin Echo", "Inversion Recovery"),
@@ -65,7 +95,30 @@ FLAIR_RULES = [
         "lookup": "exact",
     },
 ]
-BOLD_RULES = [
+FLAIR_RULES_2 = [
+    {
+        "key": "ScanningSequence",
+        "value": ("Spin Echo", "Inversion Recovery"),
+        "lookup": "exact",
+    },
+    {
+        "key": "SequenceVariant",
+        "value": "Segmented k-Space",
+        "lookup": "exact",
+    },
+    {
+        "key": "ImageType",
+        "value": ("ORIGINAL", "PRIMARY", "OTHER"),
+        "lookup": "exact",
+    },
+    {
+        "key": "ScanOptions",
+        "value": ("FAST_GEMS", "TRF_GEMS", "FILTERED_GEMS"),
+        "lookup": "exact",
+    },
+]
+FLAIR_RULES = (FLAIR_RULES_1, FLAIR_RULES_2)
+BOLD_RULES_1 = [
     {
         "key": "ScanningSequence",
         "value": "Echo Planar",
@@ -73,10 +126,37 @@ BOLD_RULES = [
     },
     {
         "key": "ImageType",
-        "value": ("ORIGINAL", "PRIMARY", "M", "MB", "ND", "MOSAIC"),
+        "value": [
+            ("ORIGINAL", "PRIMARY", "M", "MB", "ND", "MOSAIC"),
+            ("ORIGINAL", "PRIMARY", "M", "MB", "ND", "NORM", "MOSAIC"),
+        ],
+        "lookup": "exact",
+        "oprator": "any",
+    },
+]
+BOLD_RULES_2 = [
+    {
+        "key": "ScanningSequence",
+        "value": ("Echo Planar", "Gradient Recalled"),
+        "lookup": "exact",
+    },
+    {
+        "key": "SequenceVariant",
+        "value": "Steady State",
+        "lookup": "exact",
+    },
+    {
+        "key": "ImageType",
+        "value": ("ORIGINAL", "PRIMARY", "EPI", "NONE"),
+        "lookup": "exact",
+    },
+    {
+        "key": "ScanOptions",
+        "value": ("EPI_GEMS", "ACC_GEMS"),
         "lookup": "exact",
     },
 ]
+BOLD_RULES = (BOLD_RULES_1, BOLD_RULES_2)
 FUNCTIONAL_SBREF_RULES = [
     {
         "key": "ScanningSequence",
@@ -125,7 +205,7 @@ FUNCTIONAL_FIELDMAP_RULES = [
         "lookup": "exact",
     },
 ]
-DWI_RULES = [
+DWI_RULES_1 = [
     {
         "key": "ScanningSequence",
         "value": "Echo Planar",
@@ -152,17 +232,37 @@ DWI_RULES = [
                 "NORM",
                 "MOSAIC",
             ),
+            ("ORIGINAL", "PRIMARY", "DIFFUSION", "NONE", "DIS2D", "MOSAIC"),
+            ("ORIGINAL", "PRIMARY", "DIFFUSION", "NONE", "DIS2D"),
+            ("ORIGINAL", "PRIMARY", "DIFFUSION", "NONE", "ND", "NORM"),
         ],
         "lookup": "exact",
         "operator": "any",
     },
     {
         "key": "ScanOptions",
-        "value": ["PFP", ("PFP", "FS")],
-        "lookup": "exact",
-        "operator": "any",
+        "value": ["PFP"],
+        "lookup": "in",
     },
 ]
+DWI_RULES_2 = [
+    {
+        "key": "ScanningSequence",
+        "value": ("Echo Planar", "Research Mode"),
+        "lookup": "exact",
+    },
+    {
+        "key": "ImageType",
+        "value": ("ORIGINAL", "PRIMARY", "OTHER"),
+        "lookup": "exact",
+    },
+    {
+        "key": "ScanOptions",
+        "value": ("EPI_GEMS", "PFF"),
+        "lookup": "exact",
+    },
+]
+DWI_RULES = (DWI_RULES_1, DWI_RULES_2)
 DWI_FIELDMAP_RULES = [
     {
         "key": "ScanningSequence",
@@ -171,16 +271,24 @@ DWI_FIELDMAP_RULES = [
     },
     {
         "key": "ImageType",
-        "value": ("ORIGINAL", "PRIMARY", "M", "ND", "MOSAIC"),
+        "value": [
+            ("ORIGINAL", "PRIMARY", "M", "ND", "MOSAIC"),
+            ("ORIGINAL", "PRIMARY", "PHASE MAP", "ND"),
+            ("DERIVED", "PRIMARY", "DIFFUSION", "ADC", "ND", "NORM"),
+            ("DERIVED", "PRIMARY", "DIFFUSION", "FA", "ND", "NORM"),
+            ("DERIVED", "PRIMARY", "DIFFUSION", "TRACEW", "ND", "NORM"),
+        ],
         "lookup": "exact",
+        "operator": "any",
     },
     {
         "key": "ScanOptions",
-        "value": "PFP",
-        "lookup": "exact",
+        "value": ["PFP", ""],
+        "lookup": "in",
+        "operator": "any",
     },
 ]
-LOCALIZER_RULES = [
+LOCALIZER_RULES_1 = [
     {
         "key": "ScanningSequence",
         "value": "Gradient Recalled",
@@ -188,12 +296,83 @@ LOCALIZER_RULES = [
     },
     {
         "key": "SequenceVariant",
-        "value": ("Spoiled", "Oversampling Phase"),
+        "value": [("Spoiled", "Oversampling Phase"), "Spoiled"],
         "lookup": "exact",
+        "operator": "any",
     },
     {
         "key": "ImageType",
         "value": ("ORIGINAL", "PRIMARY", "M", "NORM", "DIS2D"),
+        "lookup": "exact",
+    },
+]
+LOCALIZER_RULES_2 = [
+    {
+        "key": "ScanningSequence",
+        "value": ["Research Mode", "Gradient Recalled"],
+        "lookup": "exact",
+        "operator": "any",
+    },
+    {
+        "key": "SequenceVariant",
+        "value": ["None", ("Steady State", "Segmented k-Space")],
+        "lookup": "exact",
+        "operator": "any",
+    },
+    {
+        "key": "ImageType",
+        "value": ("ORIGINAL", "PRIMARY", "OTHER"),
+        "lookup": "exact",
+    },
+    {
+        "key": "ScanOptions",
+        "value": ["PFF", ("FAST_GEMS", "SEQ_GEMS", "PFF")],
+        "lookup": "exact",
+        "operator": "any",
+    },
+]
+LOCALIZER_RULES = (LOCALIZER_RULES_1, LOCALIZER_RULES_2)
+SPGR_RULES = [
+    {
+        "key": "ScanningSequence",
+        "value": "Gradient Recalled",
+        "lookup": "exact",
+    },
+    {
+        "key": "SequenceVariant",
+        "value": ("Steady State", "Spoiled"),
+        "lookup": "exact",
+    },
+    {
+        "key": "ImageType",
+        "value": ("ORIGINAL", "PRIMARY", "OTHER"),
+        "lookup": "exact",
+    },
+    {
+        "key": "ScanOptions",
+        "value": ("FAST_GEMS", "FILTERED_GEMS", "ACC_GEMS"),
+        "lookup": "exact",
+    },
+]
+FSPGR_RULES = [
+    {
+        "key": "ScanningSequence",
+        "value": "Gradient Recalled",
+        "lookup": "exact",
+    },
+    {
+        "key": "SequenceVariant",
+        "value": ("Steady State", "Spoiled", "Segmented k-Space"),
+        "lookup": "exact",
+    },
+    {
+        "key": "ImageType",
+        "value": ("ORIGINAL", "PRIMARY", "OTHER"),
+        "lookup": "exact",
+    },
+    {
+        "key": "ScanOptions",
+        "value": ("FAST_GEMS", "FILTERED_GEMS", "ACC_GEMS"),
         "lookup": "exact",
     },
 ]
@@ -210,6 +389,8 @@ MR_SEQUENCE_RULES = {
     "ir_epi": IREPI_RULES,
     "localizer": LOCALIZER_RULES,
     "mprage": MPRAGE_RULES,
+    "spgr": SPGR_RULES,
+    "fspgr": FSPGR_RULES,
     "t2w": T2W_RULES,
 }
 

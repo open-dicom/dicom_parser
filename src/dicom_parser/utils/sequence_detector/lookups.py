@@ -7,6 +7,7 @@ from typing import Any, Iterable
 def icontains(header_value: str, rule_value: str) -> bool:
     """
     Case insensitive implementation of str-in-str lookup.
+
     Parameters
     ----------
     header_value : str
@@ -25,6 +26,7 @@ def icontains(header_value: str, rule_value: str) -> bool:
 def is_in(header_value: Iterable, rule_value: Any) -> bool:
     """
     Checks whether *rule* exists within *value*.
+
     Parameters
     ----------
     value : Iterable
@@ -43,6 +45,7 @@ def is_in(header_value: Iterable, rule_value: Any) -> bool:
 def not_in(header_value: Iterable, rule_value: Any) -> bool:
     """
     Checks whether *rule* doesn't exist within *value*.
+
     Parameters
     ----------
     value : Iterable
@@ -61,6 +64,7 @@ def not_in(header_value: Iterable, rule_value: Any) -> bool:
 def exact(header_value: Any, rule_value: Any) -> bool:
     """
     Checks whether *rule* is identical to *value*.
+
     Parameters
     ----------
     value : Any

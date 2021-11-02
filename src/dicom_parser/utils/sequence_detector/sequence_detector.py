@@ -112,7 +112,9 @@ class SequenceDetector:
             )
         return operator_function
 
-    def evaluate_rule(self, rule: dict, header_fields: dict) -> bool:
+    def evaluate_rule(
+        self, rule: dict, header_fields: dict, verbose: bool = False
+    ) -> bool:
         """
         Evaluates a single sequence categorization rule.
 
@@ -122,6 +124,8 @@ class SequenceDetector:
             Sequence categorization rule
         header_fields : dict
             Header information
+        verbose : bool
+            Whether to show evaluation logs
 
         Returns
         -------
@@ -133,12 +137,25 @@ class SequenceDetector:
         lookup = self.retreive_lookup(rule)
         operator = self.retreive_operator(rule)
         header_value = header_fields.get(key)
+        if verbose:
+            print(f"Evaluating rule:\n{rule}")
+            print(f"Queried header value: {header_value}")
         if isinstance(value, list):
-            return operator(lookup(header_value, v) for v in value)
+            if verbose:
+                print(f"Matching each of {value} against the queried value...")
+            result = operator(lookup(header_value, v) for v in value)
         else:
-            return lookup(header_fields.get(key), value)
+            if verbose:
+                print(f"Matching {value} against the header metadata...")
+            result = lookup(header_value, value)
+        if verbose:
+            result_text = "MATCH" if result else "NO MATCH"
+            print(result_text)
+        return result
 
-    def check_definition(self, definition, header_fields: dict) -> bool:
+    def check_definition(
+        self, definition, header_fields: dict, verbose: bool = False
+    ) -> bool:
         """
         Checks whether the specified header information values satisfy the
         provided definition.
@@ -150,6 +167,8 @@ class SequenceDetector:
             instances
         header_fields : dict
             Header information provided for the comparison
+        verbose : bool
+            Whether to show evaluation logs
 
         Returns
         -------
@@ -166,18 +185,24 @@ class SequenceDetector:
 
         # All definitions are dictionary of rules and operators.
         # Raise error otherwise.
-        if not isinstance(definition, (dict, list)):
+        if not isinstance(definition, (dict, list, tuple)):
             message = WRONG_DEFINITION_TYPE.format(
                 definition_type=type(definition)
             )
             raise TypeError(message)
+        if isinstance(definition, tuple):
+            return any(
+                self.check_definition(d, header_fields, verbose=verbose)
+                for d in definition
+            )
         rules = (
             definition.get(self.RULES_KEY, [])
             if isinstance(definition, dict)
             else definition
         )
         rules_evaluations = (
-            self.evaluate_rule(rule, header_fields) for rule in rules
+            self.evaluate_rule(rule, header_fields, verbose=verbose)
+            for rule in rules
         )
         operator = (
             definition.get(self.OPERATOR_KEY, self.DEFAULT_OPERATOR)
@@ -215,7 +240,9 @@ class SequenceDetector:
             message = INVALID_MODALITY.format(modality=modality)
             raise NotImplementedError(message)
 
-    def detect(self, modality: str, values: dict) -> str:
+    def detect(
+        self, modality: str, values: dict, verbose: bool = False
+    ) -> str:
         """
         Tries to detect the imaging sequence according to the modality and
         provided header information.
@@ -226,6 +253,8 @@ class SequenceDetector:
             The imaging modality as described in the DICOM header
         values : dict
             Sequence identifying header elements
+        verbose : bool
+            Whether to show evaluation logs
 
         Returns
         -------
@@ -234,6 +263,8 @@ class SequenceDetector:
         """
         rules = self.get_modality_rules(modality)
         for label, definition in rules.items():
-            match = self.check_definition(definition, values)
+            if verbose:
+                print(f"Evaluating {label} rules:")
+            match = self.check_definition(definition, values, verbose=verbose)
             if match:
                 return label

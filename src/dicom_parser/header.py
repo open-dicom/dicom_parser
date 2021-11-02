@@ -36,7 +36,7 @@ class Header:
     """
 
     #: Header fields to pass to
-    #: :class:`~dicom_parser.utils.sequence_detector.sequence_detector.SequenceDetector`.
+    #: :class:`~dicom_parser.utils.sequence_detector.sequence_detector.SequenceDetector`. # noqa: E501
     sequence_identifiers = {
         "Magnetic Resonance": [
             "ScanningSequence",
@@ -162,10 +162,15 @@ class Header:
         """
         return self.__str__()
 
-    def detect_sequence(self) -> str:
+    def detect_sequence(self, verbose: bool = False) -> str:
         """
         Returns the detected imaging sequence using the modality's sequence
         identifying header information.
+
+        Parameters
+        ----------
+        verbose : bool
+            Whether to show evaluation logs
 
         Returns
         -------
@@ -177,7 +182,7 @@ class Header:
         sequence_identifying_values = self.get(sequence_identifiers)
         try:
             return self.sequence_detector.detect(
-                modality, sequence_identifying_values
+                modality, sequence_identifying_values, verbose=verbose
             )
         except NotImplementedError:
             pass

@@ -42,12 +42,16 @@ FUNCTIONAL_SBREF = {
 }
 IREPI = ({"data_type": "anat", "inv": find_irepi_acq, "suffix": "IRT1"},)
 MPRAGE = {"data_type": "anat", "ce": find_mprage_acq, "suffix": "T1w"}
+SPGR = {"data_type": "anat", "acq": "spgr", "suffix": "T1w"}
+FSPGR = {"data_type": "anat", "acq": "fspgr", "suffix": "T1w"}
 T2W = {"data_type": "anat", "ce": find_mprage_acq, "suffix": "T2w"}
 
 #: BIDS fields used in Magnetic Resonance (MR) imaging and their associated
 #: definitions.
 MR_SEQUENCE_TO_BIDS = {
     "mprage": MPRAGE,
+    "spgr": SPGR,
+    "fspgr": FSPGR,
     "ir_epi": IREPI,
     "t2w": T2W,
     "flair": FLAIR,
