@@ -310,21 +310,6 @@ class Image:
         """
         return self.header.get("B_matrix")
 
-    def get_b_value(self) -> float:
-        """
-        Returns the B value of Siemens DWI scans.
-
-        See Also
-        --------
-        :func:`b_value`
-
-        Returns
-        -------
-        float
-            B value
-        """
-        return self.header.get("B_value")
-
     def get_q_vector(self) -> np.ndarray:
         """
         Calculates Siemens DWI q-vector in voxel space.
@@ -624,22 +609,6 @@ class Image:
             B matrix
         """
         return self.get_b_matrix()
-
-    @property
-    def b_value(self) -> float:
-        """
-        Returns the B matrix of Siemens scans.
-
-        See Also
-        --------
-        :func:`get_b_value`
-
-        Returns
-        -------
-        float
-            B value
-        """
-        return self.get_b_value()
 
     @property
     def q_vector(self) -> np.ndarray:

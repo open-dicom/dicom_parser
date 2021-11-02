@@ -599,6 +599,78 @@ class Header:
                 matches.append(data_element)
         return matches
 
+    def get_b_value(self) -> float:
+        """
+        Returns the B value of Siemens DWI scans.
+
+        See Also
+        --------
+        :func:`b_value`
+
+        Returns
+        -------
+        float
+            B value
+        """
+        csa = self.get(("0029", "1020"))
+        if csa is not None:
+            try:
+                return csa["Diffusion"]["BValue"]
+            except KeyError:
+                pass
+        return self.get("B_value")
+
+    def get_n_diffusion_directions(self) -> int:
+        """
+        Returns the number of diffusion directions for DWI scans.
+
+        See Also
+        --------
+        :func:`n_diffusion_directions`
+
+        Returns
+        -------
+        int
+            Number of diffusion directions
+        """
+        csa = self.get(("0029", "1020"), {})
+        try:
+            return csa["Diffusion"]["DiffDirections"]
+        except KeyError:
+            pass
+
+    @property
+    def b_value(self) -> float:
+        """
+        Returns the B value of Siemens scans.
+
+        See Also
+        --------
+        :func:`get_b_value`
+
+        Returns
+        -------
+        float
+            B value
+        """
+        return self.get_b_value()
+
+    @property
+    def n_diffusion_directions(self) -> float:
+        """
+        Returns the number of diffusion directions for DWI scans.
+
+        See Also
+        --------
+        :func:`get_n_diffusion_directions`
+
+        Returns
+        -------
+        int
+            Number of diffusion directions
+        """
+        return self.get_n_diffusion_directions()
+
     @property
     def data_elements(self) -> GeneratorType:
         """

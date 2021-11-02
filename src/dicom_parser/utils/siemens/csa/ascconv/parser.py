@@ -7,7 +7,7 @@ may aggregate the results.
 from dicom_parser.utils.siemens.csa.data_element import CsaDataElement
 
 
-class CsaParser:
+class AscconvParser:
     """
     Parses CSA header data elements given as
     :class:`~dicom_parser.utils.siemens.data_element.CsaDataElement`

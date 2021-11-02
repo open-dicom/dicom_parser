@@ -80,10 +80,20 @@ def exact(header_value: Any, rule_value: Any) -> bool:
     return header_value == rule_value
 
 
+def greater_than(header_value: int, rule_value: int) -> bool:
+    return header_value > rule_value
+
+
+def less_than(header_value: int, rule_value: int) -> bool:
+    return header_value < rule_value
+
+
 #: Lookups used to evaluate detectors' rules
 LOOKUPS = {
     "icontains": icontains,
     "in": is_in,
     "not in": not_in,
     "exact": exact,
+    "gt": greater_than,
+    "lt": less_than,
 }
