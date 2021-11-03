@@ -1,3 +1,7 @@
+"""
+Utilities for the :mod:`dicom_parser.utils.siemens.csa` module.
+"""
+
 # DICOM VR code to Python type
 VR_TO_TYPE = {
     "FL": float,  # float
