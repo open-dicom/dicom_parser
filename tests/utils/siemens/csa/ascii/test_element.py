@@ -1,30 +1,34 @@
 from unittest import TestCase
 
 import pydicom
-from dicom_parser.utils.siemens.csa.ascconv.element import AscconvElement
-from dicom_parser.utils.siemens.csa.header import AscconvHeader
+from dicom_parser.utils.siemens.csa.ascii.element import CsaAsciiElement
+from dicom_parser.utils.siemens.csa.ascii.header import CsaAsciiHeader
 from dicom_parser.utils.siemens.private_tags import SIEMENS_PRIVATE_TAGS
 from tests.fixtures import TEST_RSFMRI_IMAGE_PATH
-from tests.utils.siemens.csa.fixtures import (ARRAY_PATTERNS, LISTED_KEYS,
-                                              NON_ARRAY_PATTERNS, RAW_ELEMENTS,
-                                              VALUES)
+from tests.utils.siemens.csa.ascii.fixtures import (
+    ARRAY_PATTERNS,
+    LISTED_KEYS,
+    NON_ARRAY_PATTERNS,
+    RAW_ELEMENTS,
+    VALUES,
+)
 
 
-class AscconvDataElementTestCase(TestCase):
+class CsaAsciiDataElementTestCase(TestCase):
     @classmethod
     def setUpClass(cls):
         dcm = pydicom.dcmread(TEST_RSFMRI_IMAGE_PATH)
         tag = SIEMENS_PRIVATE_TAGS["CSASeriesHeaderInfo"]
         cls.series_header_info = dcm.get(tag).value
-        cls.csa_header = AscconvHeader(cls.series_header_info)
-        cls.csa_data_element = AscconvElement(cls.csa_header.raw_elements[0])
+        cls.csa_header = CsaAsciiHeader(cls.series_header_info)
+        cls.csa_data_element = CsaAsciiElement(cls.csa_header.raw_elements[0])
 
     def test_init_splits_to_key_and_value(self):
         first_key = ["Version"]
         first_value = "51130001"
         self.assertListEqual(self.csa_data_element.key, first_key)
         self.assertEqual(self.csa_data_element.value, first_value)
-        element_100 = AscconvElement(self.csa_header.raw_elements[100])
+        element_100 = CsaAsciiElement(self.csa_header.raw_elements[100])
         key_100 = [
             "GRADSPEC",
             "GPAData[0]",
@@ -56,7 +60,7 @@ class AscconvDataElementTestCase(TestCase):
 
     def test_split(self):
         for i, raw_element in enumerate(RAW_ELEMENTS):
-            data_element = AscconvElement(raw_element)
+            data_element = CsaAsciiElement(raw_element)
             key, value = data_element.split()
             self.assertListEqual(key, LISTED_KEYS[i])
             self.assertEqual(value, VALUES[i])

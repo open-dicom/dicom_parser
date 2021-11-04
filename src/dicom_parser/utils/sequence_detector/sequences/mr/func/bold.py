@@ -11,7 +11,7 @@ BOLD_RULES_1 = [
             ("ORIGINAL", "PRIMARY", "M", "MB", "ND", "NORM", "MOSAIC"),
         ],
         "lookup": "exact",
-        "oprator": "any",
+        "operator": "any",
     },
 ]
 BOLD_RULES_2 = [

@@ -35,9 +35,13 @@ class Mosaic:
         self.series_header_info = self.header.get("CSASeriesHeaderInfo")
         self.n_images = self.get_n_images()
         self.size = int(np.ceil(np.sqrt(self.n_images)))
+        self.ascii_header = self.series_header_info.get(
+            "MrPhoenixProtocol", {}
+        )
+        self.slice_array = self.ascii_header.get("SliceArray", {})
+        self.ascending = "Asc" in self.slice_array
         self.volume_shape = self.get_volume_shape()
         self.mosaic_dimensions = self.get_mosaic_dimensions()
-        self.ascending = "Asc" in self.series_header_info["SliceArray"]
 
     def get_n_images(self) -> int:
         """
@@ -78,12 +82,8 @@ class Mosaic:
         """
         image_shape = self.get_image_shape()
         if image_shape is not None:
-            try:
-                z = self.series_header_info["SliceArray"]["Size"]
-            except KeyError:
-                return
-            else:
-                return (*image_shape, z)
+            z = self.slice_array.get("Size", 0)
+            return (*image_shape, z)
 
     def get_image_position(
         self, iop: np.ndarray

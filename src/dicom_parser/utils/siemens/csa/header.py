@@ -3,10 +3,12 @@ Definition of the :class:`CsaHeader` class.
 """
 from typing import Any, Iterable
 
-from dicom_parser.utils.siemens.csa.ascconv import AscconvHeader
+from dicom_parser.utils.siemens.csa.ascii import CsaAsciiHeader
 from dicom_parser.utils.siemens.csa.exceptions import CsaReadError
-from dicom_parser.utils.siemens.csa.messages import (INVALID_CHECK_BIT,
-                                                     READ_OVERREACH)
+from dicom_parser.utils.siemens.csa.messages import (
+    INVALID_CHECK_BIT,
+    READ_OVERREACH,
+)
 from dicom_parser.utils.siemens.csa.unpacker import Unpacker
 from dicom_parser.utils.siemens.csa.utils import VR_TO_TYPE, strip_to_null
 
@@ -202,7 +204,7 @@ class CsaHeader:
             self._first_tag_n_items = n_items
         tag["value"] = self.parse_items(unpacker, n_items, vr, vm)
         if name in self.ASCII_HEADER_TAGS:
-            tag["value"] = AscconvHeader(tag["value"]).parse()
+            tag["value"] = CsaAsciiHeader(tag["value"]).parse()
         return tag
 
     def read(self) -> dict:
@@ -239,7 +241,7 @@ class CsaHeader:
 
         See Also
         --------
-        * :func:`csa_type`
+        * :func:`check_csa_type`
 
         Returns
         -------
@@ -250,4 +252,12 @@ class CsaHeader:
 
     @property
     def is_type_2(self) -> bool:
+        """
+        Returns whether this header if CSA type 2 or not (1).
+
+        Returns
+        -------
+        bool
+            CSA type 2 or not
+        """
         return self.csa_type == self.CSA_TYPE_2

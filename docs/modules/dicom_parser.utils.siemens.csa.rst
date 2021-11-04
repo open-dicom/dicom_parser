@@ -13,26 +13,26 @@ Module contents
 Submodules
 ----------
 
-dicom\_parser.utils.siemens.csa.ascconv.element module
+dicom\_parser.utils.siemens.csa.ascii.element module
 ----------------------------------------------------
 
-.. automodule:: dicom_parser.utils.siemens.csa.ascconv.element
+.. automodule:: dicom_parser.utils.siemens.csa.ascii.element
    :members:
    :undoc-members:
    :show-inheritance:
 
-dicom\_parser.utils.siemens.csa.ascconv.header module
+dicom\_parser.utils.siemens.csa.ascii.header module
 -----------------------------------------------------
 
-.. automodule:: dicom_parser.utils.siemens.csa.ascconv.header
+.. automodule:: dicom_parser.utils.siemens.csa.ascii.header
    :members:
    :undoc-members:
    :show-inheritance:
 
-dicom\_parser.utils.siemens.csa.ascconv.parser module
+dicom\_parser.utils.siemens.csa.ascii.parser module
 -----------------------------------------------------
 
-.. automodule:: dicom_parser.utils.siemens.csa.ascconv.parser
+.. automodule:: dicom_parser.utils.siemens.csa.ascii.parser
    :members:
    :undoc-members:
    :show-inheritance:

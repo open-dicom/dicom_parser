@@ -264,7 +264,7 @@ class SequenceDetector:
         rules = self.get_modality_rules(modality)
         for label, definition in rules.items():
             if verbose:
-                print(f"Evaluating {label} rules:")
+                print(f"\nEvaluating {label} rules:")
             match = self.check_definition(definition, values, verbose=verbose)
             if match:
                 return label
