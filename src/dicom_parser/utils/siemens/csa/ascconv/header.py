@@ -1,15 +1,12 @@
 """
-Definition of the :class:`~dicom_parser.utils.siemens.csa.header.CsaHeader`
-class which handles the parsing of
+Definition of the :class:`AscconvHeader` class which handles the parsing of
 `CSA header <https://nipy.org/nibabel/dicom/siemens_csa.html>`_ values
 returned by `pydicom <https://github.com/pydicom/pydicom>`_ as bytes.
 """
 import re
 
-from dicom_parser.utils.siemens.csa.ascconv.ascconv_element import (
-    AscconvElement,
-)
-from dicom_parser.utils.siemens.csa.ascconv.ascconv_parser import AscconvParser
+from dicom_parser.utils.siemens.csa.ascconv.element import AscconvElement
+from dicom_parser.utils.siemens.csa.ascconv.parser import AscconvParser
 
 
 class AscconvHeader:
@@ -20,9 +17,6 @@ class AscconvHeader:
     #: A pattern used to slice the entire header into single raw (string)
     #: values.
     ASCCONV_ELEMENT_PATTERN = r"([A-Z][^\n]*)"
-
-    #: The header's ASCII-based character encoding.
-    ENCODING = "ISO-8859-1"
 
     def __init__(self, header: str):
         """
@@ -35,27 +29,12 @@ class AscconvHeader:
             Raw ASCCONV header information
         """
         self.raw = header
-        self.decoded = self.decode()
-        if self.csa_type == 2:
-            # Omit CSA header 2 prefix ('SV10')
-            self.unpacker.pointer = 4
         self.decoded_ascconv = self.get_ascconv_header()
 
         # Property cache
         self._raw_ascconv_elements = []
         self._parsed = {}
         self._ascconv_elements = []
-
-    def decode(self) -> str:
-        """
-        Decodes the raw (ASCII) information to string.
-
-        Returns
-        -------
-        str
-            Decoded information
-        """
-        return self.raw.decode(self.ENCODING)
 
     def get_ascconv_header(self) -> str:
         """
@@ -68,7 +47,7 @@ class AscconvHeader:
             Decoded clean header information
         """
         matches = re.findall(
-            self.ASCCONV_HEADER_PATTERN, self.decoded_ascconv, flags=re.DOTALL
+            self.ASCCONV_HEADER_PATTERN, self.raw, flags=re.DOTALL
         )
         return matches[0] if matches else ""
 
@@ -91,7 +70,7 @@ class AscconvHeader:
     def create_ascconv_elements(self, raw_elements: list = None) -> list:
         """
         Creates
-        :class:`~dicom_parser.utils.siemens.csa.ascconv_element.AscconvElement`
+        :class:`~dicom_parser.utils.siemens.csa.ascconv.element.AscconvElement`
         instances that parse the key and the value.
 
         Parameters
@@ -102,7 +81,7 @@ class AscconvHeader:
         Returns
         -------
         list
-            :class:`~dicom_parser.utils.siemens.csa.ascconv_element.AscconvElement`
+            :class:`~dicom_parser.utils.siemens.csa.ascconv.element.AscconvElement`
             instances.
         """
         raw_elements = raw_elements or self.raw_ascconv_elements
@@ -111,13 +90,13 @@ class AscconvHeader:
     def parse(self, ascconv_elements: list = None) -> dict:
         """
         Parses a list of
-        :class:`~dicom_parser.utils.siemens.csa.ascconv_element.AscconvElement`
+        :class:`~dicom_parser.utils.siemens.csa.ascconv.element.AscconvElement`
         instances (or all if left None) as a dictionary.
 
         Parameters
         ----------
         ascconv_elements : list, optional
-            :class:`~dicom_parser.utils.siemens.csa.ascconv_element.AscconvElement`
+            :class:`~dicom_parser.utils.siemens.csa.ascconv.element.AscconvElement`
             instances, by default None
 
         Returns
@@ -149,13 +128,13 @@ class AscconvHeader:
     def ascconv_elements(self) -> list:
         """
         Caches the
-        :class:`~dicom_parser.utils.siemens.csa.ascconv_element.AscconvElement`
+        :class:`~dicom_parser.utils.siemens.csa.ascconv.element.AscconvElement`
         instances representing the entire header information.
 
         Returns
         -------
         list
-            :class:`~dicom_parser.utils.siemens.csa.ascconv_element.AscconvElement`
+            :class:`~dicom_parser.utils.siemens.csa.ascconv.element.AscconvElement`
             instances
         """
         if not self._ascconv_elements:

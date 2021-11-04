@@ -3,11 +3,10 @@ Definition of the :class:`CsaHeader` class.
 """
 from typing import Any, Iterable
 
+from dicom_parser.utils.siemens.csa.ascconv import AscconvHeader
 from dicom_parser.utils.siemens.csa.exceptions import CsaReadError
-from dicom_parser.utils.siemens.csa.messages import (
-    INVALID_CHECK_BIT,
-    READ_OVERREACH,
-)
+from dicom_parser.utils.siemens.csa.messages import (INVALID_CHECK_BIT,
+                                                     READ_OVERREACH)
 from dicom_parser.utils.siemens.csa.unpacker import Unpacker
 from dicom_parser.utils.siemens.csa.utils import VR_TO_TYPE, strip_to_null
 
@@ -46,6 +45,9 @@ class CsaHeader:
 
     #: Valid values for the CSA element's check bit.
     VALID_CHECK_BIT_VALUES: Iterable[int] = {77, 205}
+
+    #: ASCII header tag names.
+    ASCII_HEADER_TAGS: Iterable[str] = {"MrPhoenixProtocol"}
 
     #: CSA type 1 length fix.
     _first_tag_n_items: int = None
@@ -199,6 +201,8 @@ class CsaHeader:
         if i_tag == 1:
             self._first_tag_n_items = n_items
         tag["value"] = self.parse_items(unpacker, n_items, vr, vm)
+        if name in self.ASCII_HEADER_TAGS:
+            tag["value"] = AscconvHeader(tag["value"]).parse()
         return tag
 
     def read(self) -> dict:
