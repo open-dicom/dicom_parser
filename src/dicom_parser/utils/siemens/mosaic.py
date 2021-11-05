@@ -18,6 +18,10 @@ class Mosaic:
     A Siemens mosaic of 2D images representing a single volume.
     """
 
+    CSA_ASCII_HEADER_KEY: str = "MrPhoenixProtocol"
+    CSA_ASCII_SLICE_ARRAY_KEY: str = "SliceArray"
+    CSA_SERIES_INFO_KEY: str = "CSASeriesHeaderInfo"
+
     def __init__(self, mosaic_array: np.ndarray, header: Header):
         """
         Reads required attributes from the header and parses out the
@@ -32,13 +36,25 @@ class Mosaic:
         """
         self.mosaic_array = mosaic_array
         self.header = header
-        self.series_header_info = self.header.get("CSASeriesHeaderInfo")
+
+        # Read series CSA header (contains information about the mosaic
+        # dimensions).
+        self.series_header_info = self.header.get(self.CSA_SERIES_INFO_KEY)
+
+        # Number of images encoded in the mosaic.
         self.n_images = self.get_n_images()
+
+        # Number of rows and columns that make up the mosaic.
         self.size = int(np.ceil(np.sqrt(self.n_images)))
+
+        # Read the ASCII (ASCCONV) header encoded withing the series CSA
+        # header.
         self.ascii_header = self.series_header_info.get(
-            "MrPhoenixProtocol", {}
+            self.CSA_ASCII_HEADER_KEY, {}
+        ).get("value", {})
+        self.slice_array = self.ascii_header.get(
+            self.CSA_ASCII_SLICE_ARRAY_KEY, {}
         )
-        self.slice_array = self.ascii_header.get("SliceArray", {})
         self.ascending = "Asc" in self.slice_array
         self.volume_shape = self.get_volume_shape()
         self.mosaic_dimensions = self.get_mosaic_dimensions()
