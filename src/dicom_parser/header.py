@@ -4,7 +4,7 @@ Definition of the :class:`Header` class.
 import json
 from pathlib import Path
 from types import GeneratorType
-from typing import Any, Iterable, List, Union
+from typing import Any, Dict, Iterable, List, Tuple, Union
 
 from pydicom.dataelem import DataElement as PydicomDataElement
 from pydicom.dataset import FileDataset
@@ -14,6 +14,7 @@ from dicom_parser.messages import INVALID_ELEMENT_IDENTIFIER
 from dicom_parser.utils import read_file, requires_pandas
 from dicom_parser.utils.bids.bids_detector import BidsDetector
 from dicom_parser.utils.format_header_df import format_header_df
+from dicom_parser.utils.plane import Plane
 from dicom_parser.utils.private_tags import PRIVATE_TAGS
 from dicom_parser.utils.sequence_detector.sequence_detector import (
     SequenceDetector,
@@ -52,6 +53,23 @@ class Header:
 
     #: Name of column to be used as an index when converting to dataframe.
     DATAFRAME_INDEX: str = "Tag"
+
+    #: Dictionary used to convert in-plane phase encoding direction to the
+    #: NIfTI appropriate equivalent.
+    PHASE_ENCODING_DIRECTION: Dict[str, str] = {"COL": "i", "ROW": "j"}
+    PHASE_ENCODING_SIGN: Dict[int, str] = {0: "-", 1: ""}
+    PHASE_ENCODING: Dict[Plane, Dict[str, str]] = {
+        Plane.AXIAL: {"i": "LR", "i-": "RL", "j": "PA", "j-": "AP"},
+        # Plane.SAGITTAL: {"i": "PA", "i-": "AP", "j": ""}
+    }
+
+    #: Infer image plane from the rounded ImageOrientationPatient value.
+    #: Based on https://stackoverflow.com/a/56670334/4416932
+    IOP_TO_PLANE: Dict[Tuple[int], Plane] = {
+        (1, 0, 0, 0, 1, 0): Plane.AXIAL,
+        (1, 0, 0, 0, 0, -1): Plane.CORONAL,
+        (0, 1, 0, 0, 0, -1): Plane.SAGITTAL,
+    }
 
     #: Will be prepended to the sequences section when printing the header.
     _SEQUENCES_SECTION_TITLE: str = "\n\nSequences\n=========\n"
@@ -635,9 +653,59 @@ class Header:
         """
         csa = self.get(("0029", "1020"), {})
         try:
-            return csa["Diffusion"]["DiffDirections"]
+            ascii_header = csa["MrPhoenixProtocol"]
+            return ascii_header["Diffusion"]["DiffDirections"]
         except KeyError:
             pass
+
+    def get_phase_encoding_direction(self) -> str:
+        """
+        Returns NIfTI-style phase encoding direction information (i/j[-]).
+
+        Returns
+        -------
+        str
+            Phase encoding direction
+        """
+        inplane_pe = self.get("InPlanePhaseEncodingDirection")
+        inplane_pe = self.PHASE_ENCODING_DIRECTION.get(inplane_pe)
+        image_csa = self.get(("0029", "1010"), {})
+        sign = image_csa.get("PhaseEncodingDirectionPositive", {})
+        sign = self.PHASE_ENCODING_SIGN.get(sign.get("value"))
+        if inplane_pe is not None and sign is not None:
+            return f"{inplane_pe}{sign}"
+
+    def infer_phase_encoding(self) -> str:
+        """
+        Returns the applied phase encoding as defined in the AP/PA or LR/RL
+        format, based on the acquisition plane and phase encoding direction.
+
+        Returns
+        -------
+        str
+            Phase encoding as AP/PA/LR/RL
+        """
+        plane = self.get_plane()
+        direction = self.get_phase_encoding_direction()
+        try:
+            return self.PHASE_ENCODING[plane][direction]
+        except KeyError:
+            pass
+
+    def get_plane(self) -> Plane:
+        """
+        Returns the image plane (see :class:`dicom_parser.utils.plane.Plane`)
+        based on the header's 'ImageOrientationPatient' (0x20, 0x37) tag.
+
+        Returns
+        -------
+        Plane
+            Acquisition plane
+        """
+        iop = self.get(("0020", "0037"))
+        if iop is not None:
+            iop = tuple(round(i) for i in iop)
+            return self.IOP_TO_PLANE.get(iop)
 
     @property
     def b_value(self) -> float:

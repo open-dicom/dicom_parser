@@ -339,3 +339,13 @@ class HeaderTestCase(TestCase):
     def test_unknown_value_representation(self):
         with self.assertRaises(ValueRepresentationError):
             get_data_element_class("invalid")
+
+    def test_get_phase_encoding_direction(self):
+        value = self.dwi_header.get_phase_encoding_direction()
+        expected = "j"
+        self.assertEqual(value, expected)
+
+    def test_get_phase_encoding_direction_with_none(self):
+        ge_loc = Header(TEST_GE_LOCALIZER_PATH)
+        value = ge_loc.get_phase_encoding_direction()
+        self.assertIsNone(value)

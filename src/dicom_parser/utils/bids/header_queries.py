@@ -3,7 +3,7 @@ Helper functions for querying specific header fields in order to scaffold
 BIDS-compatible paths.
 """
 #: Characters that should not be used in BIDS elements.
-INVALID_CHARACTERS = "!@#$%^&*()_-+="
+INVALID_CHARACTERS: str = "!@#$%^&*()_-+="
 
 
 def find_mprage_acq(header: dict) -> str:
@@ -21,7 +21,7 @@ def find_mprage_acq(header: dict) -> str:
     str
         Either "corrected" or "uncorrected" in terms of bias field correction.
     """
-    image_type = header.get("ImageType")
+    image_type = header.get("ImageType", "")
     return "corrected" if "NORM" in image_type else "uncorrected"
 
 
@@ -58,8 +58,8 @@ def strip_element(element: str) -> str:
     str
         The element stripped from invalid characters
     """
-    for invalid_characted in INVALID_CHARACTERS:
-        element = element.replace(invalid_characted, "")
+    for character in INVALID_CHARACTERS:
+        element = element.replace(character, "")
     return element
 
 
@@ -78,7 +78,7 @@ def find_task_name(header: dict) -> str:
     str
         The task's name.
     """
-    description = header.get("SeriesDescription").lower()
+    description = header.get("SeriesDescription", "").lower()
     if "rsf" in description:
         task = "rest"
     else:
