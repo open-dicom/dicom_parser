@@ -310,21 +310,6 @@ class Image:
         """
         return self.header.get("B_matrix")
 
-    def get_b_value(self) -> float:
-        """
-        Returns the B value of Siemens DWI scans.
-
-        See Also
-        --------
-        :func:`b_value`
-
-        Returns
-        -------
-        float
-            B value
-        """
-        return self.header.get("B_value")
-
     def get_q_vector(self) -> np.ndarray:
         """
         Calculates Siemens DWI q-vector in voxel space.
@@ -417,6 +402,27 @@ class Image:
             Whether this image is a multi-frame image or not
         """
         return self.header.get("SOPClassUID") == "1.2.840.10008.5.1.4.1.1.4.1"
+
+    def get_bids_path(self) -> str:
+        """
+        Build BIDS-appropriate path for the series.
+        Returns
+        -------
+        str
+            BIDS-appropriate path
+        """
+        return self.header.build_bids_path()
+
+    @property
+    def bids_path(self) -> str:
+        """
+        Builds BIDS-appropriate path according to DICOM's header
+        Returns
+        -------
+        str
+            BIDS-appropriate path
+        """
+        return self.get_bids_path()
 
     @property
     def image_shape(self) -> Tuple[int, int]:
@@ -555,7 +561,7 @@ class Image:
         bool
             Whether this image represents fMRI data
         """
-        return self.header.detected_sequence == "fMRI"
+        return self.header.detected_sequence == "bold"
 
     @property
     def data(self) -> np.ndarray:
@@ -603,22 +609,6 @@ class Image:
             B matrix
         """
         return self.get_b_matrix()
-
-    @property
-    def b_value(self) -> float:
-        """
-        Returns the B matrix of Siemens scans.
-
-        See Also
-        --------
-        :func:`get_b_value`
-
-        Returns
-        -------
-        float
-            B value
-        """
-        return self.get_b_value()
 
     @property
     def q_vector(self) -> np.ndarray:

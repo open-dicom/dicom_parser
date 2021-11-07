@@ -42,3 +42,6 @@ docs/_templates/
 
 # tox directory
 .tox
+
+# notebooks
+*.ipynb

@@ -119,7 +119,7 @@ class HeaderTestCase(TestCase):
         self.assertIsInstance(self.header.sequence_detector, SequenceDetector)
 
     def test_init_detected_sequence(self):
-        self.assertEqual(self.header.detected_sequence, "Localizer")
+        self.assertEqual(self.header.detected_sequence, "localizer")
 
     def test_get_raw_element(self):
         keys = list(self.TAGS.keys()) + list(self.KEYWORDS.keys())
@@ -243,7 +243,7 @@ class HeaderTestCase(TestCase):
 
     def test_detect_sequence(self):
         result = self.header.detect_sequence()
-        expected = "Localizer"
+        expected = "localizer"
         self.assertEqual(result, expected)
 
     def test_detect_sequence_with_unknown_modality_returns_none(self):
@@ -339,3 +339,13 @@ class HeaderTestCase(TestCase):
     def test_unknown_value_representation(self):
         with self.assertRaises(ValueRepresentationError):
             get_data_element_class("invalid")
+
+    def test_get_phase_encoding_direction(self):
+        value = self.dwi_header.get_phase_encoding_direction()
+        expected = "j"
+        self.assertEqual(value, expected)
+
+    def test_get_phase_encoding_direction_with_none(self):
+        ge_loc = Header(TEST_GE_LOCALIZER_PATH)
+        value = ge_loc.get_phase_encoding_direction()
+        self.assertIsNone(value)

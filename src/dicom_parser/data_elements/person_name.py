@@ -40,4 +40,4 @@ class PersonName(DataElement):
                 component: getattr(value, component)
                 for component in self.COMPONENTS
             }
-        return value
+        return value if value else {}

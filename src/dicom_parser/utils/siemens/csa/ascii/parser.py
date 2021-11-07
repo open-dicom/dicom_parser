@@ -1,16 +1,16 @@
 """
 Definition of parser that accepts
-:class:`~dicom_parser.utils.siemens.data_element.CsaDataElement`
+:class:`~dicom_parser.utils.siemens.data_element.CsaAsciiElement`
 instances to be parsed and keeps a pointer to a dictionary that
 may aggregate the results.
 """
-from dicom_parser.utils.siemens.csa.data_element import CsaDataElement
+from dicom_parser.utils.siemens.csa.ascii.element import CsaAsciiElement
 
 
-class CsaParser:
+class CsaAsciiParser:
     """
     Parses CSA header data elements given as
-    :class:`~dicom_parser.utils.siemens.data_element.CsaDataElement`
+    :class:`~dicom_parser.utils.siemens.csa.ascii.CsaAsciiElement`
     instances into a public dictionary.
     """
 
@@ -95,7 +95,7 @@ class CsaParser:
             Last part's name
         value : Any
             The
-            :class:`~dicom_parser.utils.siemens.csa.data_element.CsaDataElement`'s
+            :class:`~dicom_parser.utils.siemens.csa.ascii.element.CsaAsciiElement`'s
             value
         destination : dict
             A pointer to the appropriate destination with the parsed dictionary
@@ -195,7 +195,7 @@ class CsaParser:
             return self.create_new_element_list(part_name, destination)
 
     def scaffold_part(
-        self, csa_data_element: CsaDataElement, part: str, destination: dict
+        self, csa_data_element: CsaAsciiElement, part: str, destination: dict
     ) -> dict:
         """
         Returns the destination of a given key's part within the parsed
@@ -203,7 +203,7 @@ class CsaParser:
 
         Parameters
         ----------
-        csa_data_element : CsaDataElement
+        csa_data_element : CsaAsciiElement
             The source instance
         part : str
             List part's name
@@ -223,7 +223,7 @@ class CsaParser:
             return self.scaffold_dict_part(part, destination)
 
     def scaffold_listed_key(
-        self, csa_data_element: CsaDataElement, destination: dict = None
+        self, csa_data_element: CsaAsciiElement, destination: dict = None
     ) -> dict:
         """
         Creates a scaffolding within the parsed values dictionary. This means
@@ -234,7 +234,7 @@ class CsaParser:
 
         Parameters
         ----------
-        csa_data_element : CsaDataElement
+        csa_data_element : CsaAsciiElement
             Instance to scaffold a destination for
         destination : dict, optional
             An existing destination dictionary, by default None
@@ -243,7 +243,7 @@ class CsaParser:
         -------
         dict
             A pointer to the appropriate destination for the
-            :class:`~dicom_parser.utils.siemens.csa.data_element.CsaDataElement`'s
+            :class:`~dicom_parser.utils.siemens.csa.ascii.element.CsaAsciiElement`'s
             value
         """
         destination = destination if isinstance(destination, dict) else {}
@@ -254,17 +254,17 @@ class CsaParser:
         return destination
 
     def assign_listed_element(
-        self, csa_data_element: CsaDataElement, destination: dict
+        self, csa_data_element: CsaAsciiElement, destination: dict
     ):
         """
         Once the destination for the
-        :class:`~dicom_parser.utils.siemens.csa.data_element.CsaDataElement`'s
+        :class:`~dicom_parser.utils.siemens.csa.ascii.element.CsaAsciiElement`'s
         value has been retrieved or created, this method assigns the value at
         that destination.
 
         Parameters
         ----------
-        csa_data_element : CsaDataElement
+        csa_data_element : CsaAsciiElement
             The instance from which to assign the value
         destination : dict
             The appropriate destination within the parsed values dictionary
@@ -277,14 +277,14 @@ class CsaParser:
         else:
             destination[last_part] = value
 
-    def parse(self, csa_data_element: CsaDataElement):
+    def parse(self, csa_data_element: CsaAsciiElement):
         """
         Parses a raw CSA header element into the provided dictionary or creates
         a new one.
 
         Parameters
         ----------
-        csa_data_element : CsaDataElement
+        csa_data_element : CsaAsciiElement
             CSA header element to be parsed
         """
         destination = self.scaffold_listed_key(csa_data_element, self.parsed)

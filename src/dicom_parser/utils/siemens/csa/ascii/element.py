@@ -5,7 +5,7 @@ the full string header using new line characters.
 import re
 
 
-class CsaDataElement:
+class CsaAsciiElement:
     """
     Represents a single CSA header data element as extracted from the raw
     header information.

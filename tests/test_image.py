@@ -80,7 +80,7 @@ class ImageTestCase(TestCase):
         self.assertIsNone(value)
         self.image.header.raw["ImageOrientationPatient"].value = original_value
 
-    def test_is_rsfmri_property(self):
+    def test_is_fmri_property(self):
         self.assertFalse(self.image.is_fmri)
         self.assertTrue(self.rsfmri_image.is_fmri)
 

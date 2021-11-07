@@ -91,4 +91,4 @@ class CodeString(DataElement):
         enum = self.TAG_TO_ENUM.get(self.tag)
         if enum:
             return self.parse_with_enum(value, enum)
-        return value
+        return value.strip()

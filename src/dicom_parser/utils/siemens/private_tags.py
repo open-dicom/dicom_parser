@@ -190,7 +190,7 @@ def parse_siemens_bandwith_per_pixel_phase_encode(value: bytes):
 
 
 def parse_siemens_csa_header(value: bytes) -> dict:
-    return CsaHeader(value).parsed
+    return CsaHeader(value).read()
 
 
 SIEMENS_PRIVATE_TAGS = {

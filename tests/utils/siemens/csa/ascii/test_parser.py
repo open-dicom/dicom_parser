@@ -1,27 +1,27 @@
 from unittest import TestCase
 
 from dicom_parser.header import Header
-from dicom_parser.utils.siemens.csa.header import CsaHeader
-from dicom_parser.utils.siemens.csa.parser import CsaParser
+from dicom_parser.utils.siemens.csa.ascii.header import CsaAsciiHeader
+from dicom_parser.utils.siemens.csa.ascii.parser import CsaAsciiParser
 from dicom_parser.utils.siemens.private_tags import SIEMENS_PRIVATE_TAGS
 from tests.fixtures import TEST_EP2D_IMAGE_PATH
-from tests.utils.siemens.csa.fixtures import ELEMENT_LIST
+from tests.utils.siemens.csa.ascii.fixtures import ELEMENT_LIST
 
 
-class CsaParserTestCase(TestCase):
+class CsaAsciiParserTestCase(TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.csa_parser = CsaParser()
+        cls.csa_parser = CsaAsciiParser()
 
         # Read a sample header
         cls.header = Header(TEST_EP2D_IMAGE_PATH)
         csa_series_info_tag = SIEMENS_PRIVATE_TAGS["CSASeriesHeaderInfo"]
         raw_csa_header = cls.header.get(csa_series_info_tag, parsed=False)
-        csa_header = CsaHeader(raw_csa_header)
+        csa_header = CsaAsciiHeader(raw_csa_header)
         cls.parsed = csa_header.parse()
 
     def test_parsed_attribute_set_to_dict_on_init(self):
-        fresh_parser = CsaParser()
+        fresh_parser = CsaAsciiParser()
         self.assertDictEqual(fresh_parser.parsed, {})
 
     def test_update_existing_element_list_with_existing_index(self):
