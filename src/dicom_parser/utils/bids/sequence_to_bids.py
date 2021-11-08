@@ -40,7 +40,7 @@ FUNCTIONAL_SBREF = {
     "dir": find_phase_encoding,
     "suffix": "sbref",
 }
-IREPI = ({"data_type": "anat", "inv": find_irepi_acq, "suffix": "IRT1"},)
+IREPI = {"data_type": "anat", "inv": find_irepi_acq, "suffix": "IRT1"}
 MPRAGE = {"data_type": "anat", "ce": find_mprage_acq, "suffix": "T1w"}
 SPGR = {"data_type": "anat", "acq": "spgr", "suffix": "T1w"}
 FSPGR = {"data_type": "anat", "acq": "fspgr", "suffix": "T1w"}

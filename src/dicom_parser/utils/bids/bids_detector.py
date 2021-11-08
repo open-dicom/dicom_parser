@@ -92,7 +92,7 @@ class BidsDetector:
         for required_key in self.REQUIRED_KEYS:
             if required_key not in fields:
                 message = INVALID_SEQUENCE_KEYS.format(
-                    required_key=required_key
+                    required_key=required_key, fields=fields
                 )
                 raise ValueError(message)
         return True

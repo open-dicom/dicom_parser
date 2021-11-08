@@ -60,10 +60,19 @@ class Header:
     #: NIfTI appropriate equivalent.
     PHASE_ENCODING_DIRECTION: Dict[str, str] = {"COL": "i", "ROW": "j"}
     PHASE_ENCODING_SIGN: Dict[int, str] = {0: "-", 1: ""}
+
     PHASE_ENCODING: Dict[Plane, Dict[str, str]] = {
-        Plane.AXIAL: {"i": "LR", "i-": "RL", "j": "PA", "j-": "AP"},
-        # Plane.SAGITTAL: {"i": "PA", "i-": "AP", "j": ""}
+        Plane.AXIAL: {"i": "PA", "i-": "AP", "j": "LR", "j-": "RL"},
+        Plane.SAGITTAL: {"i": "SI", "i-": "IS", "j": "PA", "j-": "AP"},
+        Plane.CORONAL: {"i": "SI", "i-": "IS", "j": "LR", "j-": "RL"},
     }
+    """
+    Experimental phase encoding direction label dictionary.
+    Due to the requirements of my personal dataset I am testing a dictionary
+    which assumes PIR encoding from the top left corner. There should be some
+    header information that can be used to infer the encoding scheme and make
+    this method more robust.
+    """
 
     #: Infer image plane from the rounded ImageOrientationPatient value.
     #: Based on https://stackoverflow.com/a/56670334/4416932
@@ -198,19 +207,22 @@ class Header:
             Imaging sequence name
         """
         modality = self.get("Modality")
-        SEQUENCE_IDENTIFIERS = self.SEQUENCE_IDENTIFIERS.get(modality)
-        sequence_identifying_values = self.get(SEQUENCE_IDENTIFIERS)
-        for key, value in sequence_identifying_values.items():
+        keys = self.SEQUENCE_IDENTIFIERS.get(modality)
+        if keys is None:
+            print(f"No sequence identifiers registered for {modality}!")
+            return
+        values = self.get(keys)
+        for key, value in values.items():
             if value is None:
                 method = getattr(self, key, None)
                 if method is not None:
                     try:
-                        sequence_identifying_values[key] = method()
+                        values[key] = method()
                     except TypeError:
                         pass
         try:
             return self.sequence_detector.detect(
-                modality, sequence_identifying_values, verbose=verbose
+                modality, values, verbose=verbose
             )
         except NotImplementedError:
             pass
