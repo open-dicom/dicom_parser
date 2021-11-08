@@ -207,6 +207,8 @@ class Header:
             Imaging sequence name
         """
         modality = self.get("Modality")
+        if modality is None:
+            return
         keys = self.SEQUENCE_IDENTIFIERS.get(modality)
         if keys is None:
             print(f"No sequence identifiers registered for {modality}!")
