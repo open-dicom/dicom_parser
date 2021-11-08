@@ -5,6 +5,11 @@ DWI_RULES_1 = [
         "lookup": "exact",
     },
     {
+        "key": "SequenceVariant",
+        "value": ("Segmented k-Space", "Steady State"),
+        "lookup": "exact",
+    },
+    {
         "key": "ImageType",
         "value": [
             (

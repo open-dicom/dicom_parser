@@ -38,7 +38,7 @@ class Header:
 
     #: Header fields to pass to
     #: :class:`~dicom_parser.utils.sequence_detector.sequence_detector.SequenceDetector`. # noqa: E501
-    sequence_identifiers = {
+    SEQUENCE_IDENTIFIERS = {
         "Magnetic Resonance": [
             "ScanningSequence",
             "SequenceVariant",
@@ -47,6 +47,8 @@ class Header:
             "ScanOptions",
         ]
     }
+
+    DICTIONARY_APPENDICES = {"Magnetic Resonance": ["infer_phase_encoding"]}
 
     #: Column names to use when converting to dataframe.
     DATAFRAME_COLUMNS: Iterable[str] = ("Tag", "Keyword", "VR", "VM", "Value")
@@ -196,8 +198,16 @@ class Header:
             Imaging sequence name
         """
         modality = self.get("Modality")
-        sequence_identifiers = self.sequence_identifiers.get(modality)
-        sequence_identifying_values = self.get(sequence_identifiers)
+        SEQUENCE_IDENTIFIERS = self.SEQUENCE_IDENTIFIERS.get(modality)
+        sequence_identifying_values = self.get(SEQUENCE_IDENTIFIERS)
+        for key, value in sequence_identifying_values.items():
+            if value is None:
+                method = getattr(self, key, None)
+                if method is not None:
+                    try:
+                        sequence_identifying_values[key] = method()
+                    except TypeError:
+                        pass
         try:
             return self.sequence_detector.detect(
                 modality, sequence_identifying_values, verbose=verbose
@@ -529,10 +539,20 @@ class Header:
         dict
             Header information
         """
-        return {
+        d = {
             data_element.keyword: self.get(data_element.tag, parsed=parsed)
             for data_element in self.data_elements
         }
+        modality = self.get("Modality")
+        appendices = self.DICTIONARY_APPENDICES.get(modality, [])
+        for appendix in appendices:
+            method = getattr(self, appendix, None)
+            if method is not None:
+                try:
+                    d[appendix] = method()
+                except TypeError:
+                    continue
+        return d
 
     @requires_pandas
     def to_dataframe(

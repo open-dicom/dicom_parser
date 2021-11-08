@@ -21,11 +21,11 @@ DWI = {
     "dir": find_phase_encoding,
     "suffix": "dwi",
 }
-DWI_FIELDMAP = {
-    "data_type": "fmap",
-    "acq": "dwi",
+DWI_SBREF = {
+    "data_type": "dwi",
+    "acq": "singleband",
     "dir": find_phase_encoding,
-    "suffix": "epi",
+    "suffix": "dwi",
 }
 FLAIR = {"data_type": "anat", "suffix": "FLAIR"}
 FUNCTIONAL_FIELDMAP = {
@@ -59,7 +59,7 @@ MR_SEQUENCE_TO_BIDS = {
     "func_sbref": FUNCTIONAL_SBREF,
     "func_fieldmap": FUNCTIONAL_FIELDMAP,
     "dwi": DWI,
-    "dwi_fieldmap": DWI_FIELDMAP,
+    "dwi_sbref": DWI_SBREF,
 }
 #: Known BIDS field values by modality.
 SEQUENCE_TO_BIDS = {"Magnetic Resonance": MR_SEQUENCE_TO_BIDS}

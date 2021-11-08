@@ -6,17 +6,16 @@ FUNCTIONAL_SBREF_RULES = [
     },
     {
         "key": "SequenceVariant",
-        "value": ["Steady State"],
-        "lookup": "in",
+        "value": ("Segmented k-Space", "Steady State", "Oversampling Phase"),
+        "lookup": "exact",
+        "operator": "any",
     },
     {
         "key": "ImageType",
-        "value": ("ORIGINAL", "PRIMARY", "M", "ND", "MOSAIC"),
+        "value": [
+            ("ORIGINAL", "PRIMARY", "M", "ND", "MOSAIC"),
+        ],
         "lookup": "exact",
-    },
-    {
-        "key": "ScanOptions",
-        "value": ("PFP", "FS"),
-        "lookup": "exact",
+        "operator": "any",
     },
 ]

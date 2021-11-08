@@ -88,6 +88,9 @@ def find_task_name(header: dict) -> str:
     return task
 
 
+PHASE_ENCODINGS = ("ap", "pa", "lr", "rl")
+
+
 def find_phase_encoding(header: dict) -> str:
     """
     Finds correct value for the "dir" field of BIDS specification for EPI
@@ -101,8 +104,15 @@ def find_phase_encoding(header: dict) -> str:
     Returns
     -------
     str
-        Phase encoding direction (AP/PA)
+        Phase encoding direction
     """
-    description = header.get("ProtocolName").lower()
-    pe = description.split("_")[-1]
-    return pe
+    try:
+        return header["infer_phase_encoding"]
+    except KeyError:
+        try:
+            description = header.get("ProtocolName").lower()
+            pe = description.split("_")[-1]
+            if pe in PHASE_ENCODINGS:
+                return pe
+        except (AttributeError, IndexError):
+            return
