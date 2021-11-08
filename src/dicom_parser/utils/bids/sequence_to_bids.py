@@ -23,9 +23,9 @@ DWI = {
 }
 DWI_SBREF = {
     "data_type": "dwi",
-    "acq": "singleband",
+    "acq": "dwi",
     "dir": find_phase_encoding,
-    "suffix": "dwi",
+    "suffix": "sbref",
 }
 FLAIR = {"data_type": "anat", "suffix": "FLAIR"}
 FUNCTIONAL_FIELDMAP = {
