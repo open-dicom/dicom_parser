@@ -533,7 +533,7 @@ class Image:
         bool
             Whether the image is a mosaic encoded volume
         """
-        return "MOSAIC" in self.header.get("ImageType")
+        return "MOSAIC" in self.header.get("ImageType", "")
 
     @property
     def is_multi_frame(self) -> bool:
