@@ -20,10 +20,12 @@ from tests.fixtures import (
 class ImageTestCase(TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.image = Image(TEST_IMAGE_PATH)
         cls.rsfmri_image = Image(TEST_RSFMRI_IMAGE_PATH)
         cls.siemens_dwi = Image(TEST_SIEMENS_DWI_PATH)
         cls.multi_frame = Image(TEST_MULTIFRAME)
+
+    def setUp(self):
+        self.image = Image(TEST_IMAGE_PATH)
 
     def test_initialization_with_string_path(self):
         image = Image(TEST_IMAGE_PATH)
@@ -246,3 +248,12 @@ class ImageTestCase(TestCase):
         self.assertIsNone(self.image.multi_frame)
         self.assertIsNone(self.rsfmri_image.multi_frame)
         self.assertIsNone(self.siemens_dwi.multi_frame)
+
+    def test_data_returned_with_missing_image_type(self):
+        del self.image.header.raw["ImageType"]
+        try:
+            self.image.data
+        except Exception as e:
+            self.fail(
+                f"Exception raised retreiving data for an image with a missing ImageType header field: {e}"  # noqa: E501
+            )
