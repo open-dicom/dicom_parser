@@ -120,7 +120,6 @@ class Header:
         self.bids_detector = bids_detector()
         self.raw = read_file(raw, read_data=False)
         self.manufacturer = self.get("Manufacturer")
-        self.detected_sequence = self.detect_sequence()
         self._as_dict = None
 
     def __getitem__(self, key: Union[str, tuple, list]) -> Any:
@@ -821,3 +820,7 @@ class Header:
             Header keywords
         """
         return list(self.as_dict.keys())
+
+    @property
+    def detected_sequence(self) -> str:
+        return self.detect_sequence()
