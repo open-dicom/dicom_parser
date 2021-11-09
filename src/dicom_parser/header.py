@@ -10,7 +10,11 @@ from pydicom.dataelem import DataElement as PydicomDataElement
 from pydicom.dataset import FileDataset
 
 from dicom_parser.data_element import DataElement
-from dicom_parser.messages import INVALID_ELEMENT_IDENTIFIER
+from dicom_parser.messages import (
+    INVALID_ELEMENT_IDENTIFIER,
+    MISSING_HEADER_INFO,
+    UNREGISTERED_MODALITY,
+)
 from dicom_parser.utils import read_file, requires_pandas
 from dicom_parser.utils.bids.bids_detector import BidsDetector
 from dicom_parser.utils.format_header_df import format_header_df
@@ -211,9 +215,14 @@ class Header:
             return
         keys = self.SEQUENCE_IDENTIFIERS.get(modality)
         if keys is None:
-            print(f"No sequence identifiers registered for {modality}!")
+            message = UNREGISTERED_MODALITY.format(modality=modality)
+            print(message)
             return
         values = self.get(keys)
+        if values is None:
+            message = MISSING_HEADER_INFO.format(modality=modality, keys=keys)
+            print(message)
+            return
         for key, value in values.items():
             if value is None:
                 method = getattr(self, key, None)

@@ -12,5 +12,6 @@ EMPTY_SERIES_DIRECTORY: str = (
 INVALID_ELEMENT_IDENTIFIER: str = "Invalid data element identifier: {tag_or_keyword} of type {input_type}!\nData elements may only be queried using a string representing a keyword or a tuple of two strings representing a tag!"
 INVALID_INDEXING_OPERATOR: str = "Invalid indexing operator value ({key})! Must be of type str, tuple, int, or slice."
 INVALID_SERIES_DIRECTORY: str = "Series instances must be initialized with a valid directory path! Could not locate directory {path}."
+UNREGISTERED_MODALITY: str = "No sequence identifiers registered for {modality}!"
 
 # flake8: noqa: E501
