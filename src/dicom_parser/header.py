@@ -66,7 +66,7 @@ class Header:
     PHASE_ENCODING_SIGN: Dict[int, str] = {0: "-", 1: ""}
 
     PHASE_ENCODING: Dict[Plane, Dict[str, str]] = {
-        Plane.AXIAL: {"i": "PA", "i-": "AP", "j": "LR", "j-": "RL"},
+        Plane.AXIAL: {"i": "AP", "i-": "PA", "j": "LR", "j-": "RL"},
         Plane.SAGITTAL: {"i": "SI", "i-": "IS", "j": "PA", "j-": "AP"},
         Plane.CORONAL: {"i": "SI", "i-": "IS", "j": "LR", "j-": "RL"},
     }
