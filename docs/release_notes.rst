@@ -29,6 +29,15 @@ Release Notes
     `#59 <https://github.com/ZviBaratz/dicom_parser/issues/59>`_).
   * Created the :class:`dicom_parser.utils.multi_frame.multi_frame.MultiFrame`
     class to handle multi-frame images.
+  * Improved sequence detection logic and created a new
+    :mod:`~dicom_parser.utils.bids` module, meant to enable automated
+    BIDS-compatible relative path generation based on the detected sequences.
+  * Fixed partial CSA reads to include both the general header and the nested
+    ASCII-encoded (ASCCONV) header as parsed dictionaries.
+  * Fixed `ValueError` raised when calling the
+    :class:`dicom_parser.image.Image` class'
+    :func:`dicom_parser.image.Image.data` property with a missing *ImageType*
+    header field.
 
 1.1.1
 -----
