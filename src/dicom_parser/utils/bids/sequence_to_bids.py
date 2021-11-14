@@ -4,6 +4,7 @@ Definition of the :attr:`SEQUENCE_TO_BIDS` dictionary.
 from dicom_parser.utils.bids.header_queries import (
     find_irepi_acq,
     find_mprage_acq,
+    find_mprage_ce,
     find_phase_encoding,
     find_task_name,
 )
@@ -41,10 +42,15 @@ FUNCTIONAL_SBREF = {
     "suffix": "sbref",
 }
 IREPI = {"data_type": "anat", "inv": find_irepi_acq, "suffix": "IRT1"}
-MPRAGE = {"data_type": "anat", "ce": find_mprage_acq, "suffix": "T1w"}
+MPRAGE = {
+    "data_type": "anat",
+    "ce": find_mprage_ce,
+    "acq": find_mprage_acq,
+    "suffix": "T1w",
+}
 SPGR = {"data_type": "anat", "acq": "spgr", "suffix": "T1w"}
 FSPGR = {"data_type": "anat", "acq": "fspgr", "suffix": "T1w"}
-T2W = {"data_type": "anat", "ce": find_mprage_acq, "suffix": "T2w"}
+T2W = {"data_type": "anat", "ce": find_mprage_ce, "suffix": "T2w"}
 
 #: BIDS fields used in Magnetic Resonance (MR) imaging and their associated
 #: definitions.
