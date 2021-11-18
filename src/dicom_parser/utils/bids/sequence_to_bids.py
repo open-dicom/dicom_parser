@@ -1,11 +1,13 @@
 """
 Definition of the :attr:`SEQUENCE_TO_BIDS` dictionary.
 """
-from dicom_parser.utils.bids.header_queries import (find_irepi_acq,
-                                                    find_mprage_acq,
-                                                    find_mprage_ce,
-                                                    find_phase_encoding,
-                                                    find_task_name)
+from dicom_parser.utils.bids.header_queries import (
+    find_irepi_acq,
+    find_mprage_acq,
+    find_mprage_ce,
+    find_phase_encoding,
+    find_task_name,
+)
 
 # Dictionaries (`Dict[str, Union[str, Callable]]``) associating MR sequences
 # with BIDS key/value pairs.
@@ -48,6 +50,7 @@ MPRAGE = {
 }
 SPGR = {"data_type": "anat", "acq": "spgr", "suffix": "T1w"}
 FSPGR = {"data_type": "anat", "acq": "fspgr", "suffix": "T1w"}
+TIRM = {"data_type": "anat", "acq": "tirm", "suffix": "T1w"}
 T2W = {"data_type": "anat", "ce": find_mprage_ce, "suffix": "T2w"}
 
 #: BIDS fields used in Magnetic Resonance (MR) imaging and their associated
@@ -59,6 +62,7 @@ MR_SEQUENCE_TO_BIDS = {
     "ir_epi": IREPI,
     "t2w": T2W,
     "flair": FLAIR,
+    "tirm": TIRM,
     "bold": BOLD,
     "func_sbref": FUNCTIONAL_SBREF,
     "func_fieldmap": FUNCTIONAL_FIELDMAP,
