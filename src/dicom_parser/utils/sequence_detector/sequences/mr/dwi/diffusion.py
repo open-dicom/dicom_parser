@@ -41,11 +41,6 @@ DWI_RULES_1 = [
         "lookup": "exact",
         "operator": "any",
     },
-    {
-        "key": "ScanOptions",
-        "value": ["PFP"],
-        "lookup": "in",
-    },
 ]
 DWI_RULES_2 = [
     {
