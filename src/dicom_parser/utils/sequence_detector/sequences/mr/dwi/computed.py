@@ -1,7 +1,7 @@
 DWI_COMPUTED_RULES = [
     {
         "key": "ImageType",
-        "value": ["DERIVED", "PRIMARY", "DIFFUSION", "ND", "NORM"],
+        "value": ["DERIVED", "PRIMARY", "DIFFUSION", "ND"],
         "lookup": "in",
         "operator": "all",
     },

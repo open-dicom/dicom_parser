@@ -13,7 +13,7 @@ LOCALIZER_RULES_1 = [
     },
     {
         "key": "ImageType",
-        "value": ["ORIGINAL", "PRIMARY", "M", "NORM"],
+        "value": ["ORIGINAL", "PRIMARY", "M"],
         "lookup": "in",
         "operator": "all",
     },
