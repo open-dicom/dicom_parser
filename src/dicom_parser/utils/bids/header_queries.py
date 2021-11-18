@@ -106,7 +106,7 @@ def find_task_name(header: dict) -> str:
     return task
 
 
-PHASE_ENCODINGS = ("ap", "pa", "lr", "rl")
+PHASE_ENCODINGS = ("ap", "pa", "lr", "rl", "fwd", "rev")
 
 
 def find_phase_encoding(header: dict) -> str:
@@ -125,8 +125,9 @@ def find_phase_encoding(header: dict) -> str:
         Phase encoding direction
     """
     try:
-        return header["infer_phase_encoding"]
-    except KeyError:
+        phase_encoding = header["phase_encoding_direction"]
+        return "REV" if phase_encoding.endswith("-") else "FWD"
+    except (KeyError, AttributeError):
         try:
             description = header.get("ProtocolName").lower()
             pe = description.split("_")[-1]

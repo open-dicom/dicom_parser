@@ -52,7 +52,9 @@ class Header:
         ]
     }
 
-    DICTIONARY_APPENDICES = {"Magnetic Resonance": ["infer_phase_encoding"]}
+    DICTIONARY_APPENDICES = {
+        "Magnetic Resonance": ["phase_encoding_direction"]
+    }
 
     #: Column names to use when converting to dataframe.
     DATAFRAME_COLUMNS: Iterable[str] = ("Tag", "Keyword", "VR", "VM", "Value")
@@ -62,21 +64,8 @@ class Header:
 
     #: Dictionary used to convert in-plane phase encoding direction to the
     #: NIfTI appropriate equivalent.
-    PHASE_ENCODING_DIRECTION: Dict[str, str] = {"COL": "i", "ROW": "j"}
+    PHASE_ENCODING_DIRECTION: Dict[str, str] = {"ROW": "i", "COL": "j"}
     PHASE_ENCODING_SIGN: Dict[int, str] = {0: "-", 1: ""}
-
-    PHASE_ENCODING: Dict[Plane, Dict[str, str]] = {
-        Plane.AXIAL: {"i": "AP", "i-": "PA", "j": "LR", "j-": "RL"},
-        Plane.SAGITTAL: {"i": "SI", "i-": "IS", "j": "PA", "j-": "AP"},
-        Plane.CORONAL: {"i": "SI", "i-": "IS", "j": "LR", "j-": "RL"},
-    }
-    """
-    Experimental phase encoding direction label dictionary.
-    Due to the requirements of my personal dataset I am testing a dictionary
-    which assumes PIR encoding from the top left corner. There should be some
-    header information that can be used to infer the encoding scheme and make
-    this method more robust.
-    """
 
     #: Infer image plane from the rounded ImageOrientationPatient value.
     #: Based on https://stackoverflow.com/a/56670334/4416932
@@ -568,12 +557,12 @@ class Header:
         modality = self.get("Modality")
         appendices = self.DICTIONARY_APPENDICES.get(modality, [])
         for appendix in appendices:
-            method = getattr(self, appendix, None)
-            if method is not None:
+            attribute = getattr(self, appendix, None)
+            if attribute is not None:
                 try:
-                    d[appendix] = method()
+                    d[appendix] = attribute()
                 except TypeError:
-                    continue
+                    d[appendix] = attribute
         return d
 
     @requires_pandas
@@ -717,24 +706,7 @@ class Header:
         if inplane_pe is not None and sign is not None:
             return f"{inplane_pe}{sign}"
 
-    def infer_phase_encoding(self) -> str:
-        """
-        Returns the applied phase encoding as defined in the AP/PA or LR/RL
-        format, based on the acquisition plane and phase encoding direction.
-
-        Returns
-        -------
-        str
-            Phase encoding as AP/PA/LR/RL
-        """
-        plane = self.get_plane()
-        direction = self.get_phase_encoding_direction()
-        try:
-            return self.PHASE_ENCODING[plane][direction]
-        except KeyError:
-            pass
-
-    def get_plane(self) -> Plane:
+    def estimate_acquisition_plane(self) -> Plane:
         """
         Returns the image plane (see :class:`dicom_parser.utils.plane.Plane`)
         based on the header's 'ImageOrientationPatient' (0x20, 0x37) tag.
@@ -820,6 +792,10 @@ class Header:
             Header keywords
         """
         return list(self.as_dict.keys())
+
+    @property
+    def phase_encoding_direction(self) -> str:
+        return self.get_phase_encoding_direction()
 
     @property
     def detected_sequence(self) -> str:
