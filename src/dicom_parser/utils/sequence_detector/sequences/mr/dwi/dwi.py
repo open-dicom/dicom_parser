@@ -1,3 +1,6 @@
+from dicom_parser.utils.sequence_detector.sequences.mr.dwi.computed import (
+    DWI_COMPUTED_RULES,
+)
 from dicom_parser.utils.sequence_detector.sequences.mr.dwi.diffusion import (
     DWI_RULES,
 )
@@ -8,4 +11,5 @@ from dicom_parser.utils.sequence_detector.sequences.mr.dwi.sbref import (
 MR_DIFFUSION_SEQUENCES = {
     "dwi": DWI_RULES,
     "dwi_sbref": DWI_SBREF_RULES,
+    "dwi_computed": DWI_COMPUTED_RULES,
 }
