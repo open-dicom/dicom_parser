@@ -1,10 +1,5 @@
 DWI_COMPUTED_RULES = [
     {
-        "key": "ScanningSequence",
-        "value": "Echo Planar",
-        "lookup": "exact",
-    },
-    {
         "key": "ImageType",
         "value": ["DERIVED", "PRIMARY", "DIFFUSION", "ND", "NORM"],
         "lookup": "in",
