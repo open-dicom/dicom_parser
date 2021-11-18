@@ -6,8 +6,12 @@ T2W_RULES_1 = [
     },
     {
         "key": "SequenceVariant",
-        "value": ("Segmented k-Space", "Spoiled"),
+        "value": [
+            ("Segmented k-Space", "Spoiled"),
+            ("Segmented k-Space", "Spoiled", "Oversampling Phase"),
+        ],
         "lookup": "exact",
+        "operator": "any",
     },
 ]
 T2W_RULES_2 = [
