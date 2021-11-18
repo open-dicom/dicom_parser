@@ -528,7 +528,16 @@ class Header:
             if isinstance(tag_or_keyword, (str, tuple)):
                 value = get_method(tag_or_keyword)
             elif isinstance(tag_or_keyword, list):
-                value = {item: get_method(item) for item in tag_or_keyword}
+                value = {
+                    item: self.get(
+                        item,
+                        default=default,
+                        parsed=parsed,
+                        missing_ok=missing_ok,
+                        as_json=as_json,
+                    )
+                    for item in tag_or_keyword
+                }
         except (KeyError, TypeError):
             if not missing_ok:
                 raise
