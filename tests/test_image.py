@@ -8,13 +8,9 @@ from dicom_parser.image import Image
 from dicom_parser.utils.multi_frame.multi_frame import MultiFrame
 from dicom_parser.utils.siemens.mosaic import Mosaic
 
-from tests.fixtures import (
-    TEST_IMAGE_PATH,
-    TEST_IMAGE_RELATIVE_PATH,
-    TEST_MULTIFRAME,
-    TEST_RSFMRI_IMAGE_PATH,
-    TEST_SIEMENS_DWI_PATH,
-)
+from tests.fixtures import (TEST_IMAGE_PATH, TEST_IMAGE_RELATIVE_PATH,
+                            TEST_MULTIFRAME, TEST_RSFMRI_IMAGE_PATH,
+                            TEST_SIEMENS_DWI_PATH)
 
 
 class ImageTestCase(TestCase):
@@ -257,3 +253,8 @@ class ImageTestCase(TestCase):
             self.fail(
                 f"Exception raised retreiving data for an image with a missing ImageType header field: {e}"  # noqa: E501
             )
+
+    def test_image_with_no_data_returns_none(self):
+        self.image._data = None
+        value = self.image.data
+        self.assertIsNone(value)

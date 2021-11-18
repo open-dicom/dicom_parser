@@ -574,7 +574,8 @@ class Image:
         np.ndarray
             Pixel data array
         """
-        return self.fix_data()
+        if self._data is not None:
+            return self.fix_data()
 
     @property
     def default_relative_path(self) -> Path:
