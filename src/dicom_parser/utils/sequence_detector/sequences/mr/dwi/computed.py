@@ -7,7 +7,7 @@ DWI_COMPUTED_RULES = [
     },
     {
         "key": "ImageType",
-        "value": ["FA", "ADC", "TRACEW"],
+        "value": ["FA", "ADC", "TRACEW", "TENSOR"],
         "lookup": "in",
         "operator": "any",
     },

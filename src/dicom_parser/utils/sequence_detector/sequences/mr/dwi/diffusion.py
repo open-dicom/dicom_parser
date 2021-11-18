@@ -9,6 +9,7 @@ DWI_RULES_1 = [
         "value": [
             ("Segmented k-Space", "Steady State"),
             ("Segmented k-Space", "Spoiled"),
+            ("Segmented k-Space", "Spoiled", "Oversampling Phase"),
         ],
         "lookup": "exact",
         "operator": "any",
