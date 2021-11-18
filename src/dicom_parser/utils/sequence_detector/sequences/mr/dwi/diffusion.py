@@ -33,6 +33,16 @@ DWI_RULES_1 = [
                 "NONE",
                 "MB",
                 "ND",
+                "NORM",
+                "MOSAIC",
+            ),
+            (
+                "ORIGINAL",
+                "PRIMARY",
+                "DIFFUSION",
+                "NONE",
+                "MB",
+                "ND",
                 "MOSAIC",
             ),
             (

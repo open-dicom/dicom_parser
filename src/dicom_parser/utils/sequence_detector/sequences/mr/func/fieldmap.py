@@ -20,7 +20,8 @@ FUNCTIONAL_FIELDMAP_RULES = [
     },
     {
         "key": "ScanOptions",
-        "value": ("PFP", "FS"),
+        "value": [("PFP", "FS"), "FS"],
         "lookup": "exact",
+        "operator": "any",
     },
 ]
