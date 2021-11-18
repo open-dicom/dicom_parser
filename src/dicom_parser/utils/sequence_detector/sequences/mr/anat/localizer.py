@@ -13,8 +13,15 @@ LOCALIZER_RULES_1 = [
     },
     {
         "key": "ImageType",
-        "value": ("ORIGINAL", "PRIMARY", "M", "NORM", "DIS2D"),
-        "lookup": "exact",
+        "value": ["ORIGINAL", "PRIMARY", "M", "NORM"],
+        "lookup": "in",
+        "operator": "all",
+    },
+    {
+        "key": "ImageType",
+        "value": ["DIS2D", "ND"],
+        "lookup": "in",
+        "operator": "any",
     },
 ]
 # GE
