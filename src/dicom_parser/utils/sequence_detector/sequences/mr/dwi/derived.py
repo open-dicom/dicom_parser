@@ -1,4 +1,4 @@
-DWI_COMPUTED_RULES = [
+DWI_DERIVED_RULES = [
     {
         "key": "ImageType",
         "value": ["DERIVED", "PRIMARY", "DIFFUSION"],

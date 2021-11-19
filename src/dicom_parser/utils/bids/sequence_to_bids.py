@@ -1,11 +1,13 @@
 """
 Definition of the :attr:`SEQUENCE_TO_BIDS` dictionary.
 """
-from dicom_parser.utils.bids.header_queries import (find_irepi_acq,
-                                                    find_mprage_acq,
-                                                    find_mprage_ce,
-                                                    find_phase_encoding,
-                                                    find_task_name)
+from dicom_parser.utils.bids.header_queries import (
+    find_irepi_acq,
+    find_mprage_acq,
+    find_mprage_ce,
+    find_phase_encoding,
+    find_task_name,
+)
 
 # Dictionaries (`Dict[str, Union[str, Callable]]``) associating MR sequences
 # with BIDS key/value pairs.
@@ -66,7 +68,7 @@ MR_SEQUENCE_TO_BIDS = {
     "func_fieldmap": FUNCTIONAL_FIELDMAP,
     "dwi": DWI,
     "dwi_sbref": DWI_SBREF,
-    "dwi_computed": False,
+    "dwi_derived": False,
     "physio_log": False,
 }
 #: Known BIDS field values by modality.
