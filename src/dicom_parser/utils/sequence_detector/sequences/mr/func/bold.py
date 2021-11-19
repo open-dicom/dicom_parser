@@ -9,6 +9,7 @@ BOLD_RULES_1 = [
         "value": [
             ("Segmented k-Space", "Steady State"),
             ("Segmented k-Space", "Steady State", "Oversampling Phase"),
+            ("Segmented k-Space", "Spoiled"),
         ],
         "lookup": "exact",
         "operator": "any",
@@ -16,6 +17,7 @@ BOLD_RULES_1 = [
     {
         "key": "ImageType",
         "value": [
+            ("ORIGINAL", "PRIMARY", "M", "ND", "NORM"),
             ("ORIGINAL", "PRIMARY", "M", "MB", "ND", "MOSAIC"),
             ("ORIGINAL", "PRIMARY", "M", "MB", "ND", "NORM", "MOSAIC"),
         ],
