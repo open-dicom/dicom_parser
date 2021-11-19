@@ -14,10 +14,6 @@ DWI_SBREF_RULES = [
         "value": [
             ("ORIGINAL", "PRIMARY", "M", "ND", "MOSAIC"),
             # ("ORIGINAL", "PRIMARY", "PHASE MAP", "ND"),
-            # Siemens computed maps, should be handled separately.
-            # ("DERIVED", "PRIMARY", "DIFFUSION", "ADC", "ND", "NORM"),
-            # ("DERIVED", "PRIMARY", "DIFFUSION", "FA", "ND", "NORM"),
-            # ("DERIVED", "PRIMARY", "DIFFUSION", "TRACEW", "ND", "NORM"),
         ],
         "lookup": "exact",
         "operator": "any",
