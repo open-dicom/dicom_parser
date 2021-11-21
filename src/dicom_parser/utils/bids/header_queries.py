@@ -25,24 +25,6 @@ def find_mprage_ce(header: dict) -> str:
     return "corrected" if "NORM" in image_type else "uncorrected"
 
 
-def find_mprage_acq(header: dict) -> str:
-    """
-    Add the series number to the acq field to prevent duplication in case of
-    multiple scans in the same session.
-
-    Parameters
-    ----------
-    header : dict
-        Dictionary containing DICOM's header
-
-    Returns
-    -------
-    str
-        Series number
-    """
-    return header.get("SeriesNumber")
-
-
 def find_irepi_acq(header: dict) -> str:
     """
     Finds correct value for the "acq" field of BIDS specification for IR-EPI
