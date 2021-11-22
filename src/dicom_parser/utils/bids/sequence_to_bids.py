@@ -22,10 +22,10 @@ DWI = {
     "suffix": "dwi",
 }
 DWI_SBREF = {
-    "data_type": "dwi",
+    "data_type": "fmap",
     "acq": "dwi",
     "dir": find_phase_encoding,
-    "suffix": "sbref",
+    "suffix": "epi",
 }
 FLAIR = {"data_type": "anat", "suffix": "FLAIR"}
 FUNCTIONAL_FIELDMAP = {
