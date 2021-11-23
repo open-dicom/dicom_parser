@@ -1,4 +1,4 @@
-DWI_RULES_1 = [
+DWI_FIELDMAP = [
     {
         "key": "ScanningSequence",
         "value": "Echo Planar",
@@ -24,24 +24,6 @@ DWI_RULES_1 = [
     {
         "key": "phase_encoding_direction",
         "value": "-",
-        "lookup": "in",
+        "lookup": "not in",
     },
 ]
-DWI_RULES_2 = [
-    {
-        "key": "ScanningSequence",
-        "value": ("Echo Planar", "Research Mode"),
-        "lookup": "exact",
-    },
-    {
-        "key": "ImageType",
-        "value": ("ORIGINAL", "PRIMARY", "OTHER"),
-        "lookup": "exact",
-    },
-    {
-        "key": "ScanOptions",
-        "value": ("EPI_GEMS", "PFF"),
-        "lookup": "exact",
-    },
-]
-DWI_RULES = (DWI_RULES_1, DWI_RULES_2)

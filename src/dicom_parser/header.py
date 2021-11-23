@@ -49,6 +49,7 @@ class Header:
             "SeriesDescription",
             "ImageType",
             "ScanOptions",
+            "phase_encoding_direction",
         ]
     }
 
@@ -65,7 +66,7 @@ class Header:
     #: Dictionary used to convert in-plane phase encoding direction to the
     #: NIfTI appropriate equivalent.
     PHASE_ENCODING_DIRECTION: Dict[str, str] = {"ROW": "i", "COL": "j"}
-    PHASE_ENCODING_SIGN: Dict[int, str] = {0: "-", 1: ""}
+    PHASE_ENCODING_SIGN: Dict[int, str] = {0: "", 1: "-"}
 
     #: Infer image plane from the rounded ImageOrientationPatient value.
     #: Based on https://stackoverflow.com/a/56670334/4416932
@@ -451,8 +452,16 @@ class Header:
         Any
             Parsed data element value
         """
-        data_element = self.get_data_element(tag_or_keyword)
-        return data_element.value
+        try:
+            data_element = self.get_data_element(tag_or_keyword)
+        except KeyError:
+            value = getattr(self, tag_or_keyword)
+            try:
+                return value()
+            except TypeError:
+                return value
+        else:
+            return data_element.value
 
     def get_private_tag(self, keyword: str) -> tuple:
         """
