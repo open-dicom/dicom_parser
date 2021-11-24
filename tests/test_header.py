@@ -342,7 +342,7 @@ class HeaderTestCase(TestCase):
 
     def test_get_phase_encoding_direction(self):
         value = self.dwi_header.get_phase_encoding_direction()
-        expected = "i"
+        expected = "i-"
         self.assertEqual(value, expected)
 
     def test_get_phase_encoding_direction_with_none(self):
