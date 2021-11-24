@@ -22,10 +22,14 @@ DWI = {
     "suffix": "dwi",
 }
 DWI_SBREF = {
-    "data_type": "fmap",
-    "acq": "dwi",
+    "data_type": "dwi",
     "dir": find_phase_encoding,
-    "suffix": "epi",
+    "suffix": "sbref",
+}
+DWI_FIELDMAP = {
+    "data_type": "dwi",
+    "dir": find_phase_encoding,
+    "suffix": "dwi",
 }
 FLAIR = {"data_type": "anat", "suffix": "FLAIR"}
 FUNCTIONAL_FIELDMAP = {
@@ -65,6 +69,7 @@ MR_SEQUENCE_TO_BIDS = {
     "func_sbref": FUNCTIONAL_SBREF,
     "func_fieldmap": FUNCTIONAL_FIELDMAP,
     "dwi": DWI,
+    "dwi_fieldmap": DWI_FIELDMAP,
     "dwi_sbref": DWI_SBREF,
     "dwi_derived": False,
     "physio_log": False,

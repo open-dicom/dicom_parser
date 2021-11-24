@@ -22,4 +22,9 @@ FUNCTIONAL_SBREF_RULES = [
         "lookup": "exact",
         "operator": "any",
     },
+    {
+        "key": "ScanOptions",
+        "value": ("PFP", "FS"),
+        "lookup": "exact",
+    },
 ]

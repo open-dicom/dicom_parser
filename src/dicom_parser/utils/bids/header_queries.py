@@ -108,7 +108,7 @@ def find_phase_encoding(header: dict) -> str:
     """
     try:
         phase_encoding = header["phase_encoding_direction"]
-        return "REV" if phase_encoding.endswith("-") else "FWD"
+        return "FWD" if phase_encoding.endswith("-") else "REV"
     except (KeyError, AttributeError):
         try:
             description = header.get("ProtocolName").lower()

@@ -24,6 +24,11 @@ BOLD_RULES_1 = [
         "lookup": "exact",
         "operator": "any",
     },
+    {
+        "key": "ScanOptions",
+        "value": ("PFP", "FS"),
+        "lookup": "exact",
+    },
 ]
 BOLD_RULES_2 = [
     {

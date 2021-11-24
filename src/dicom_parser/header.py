@@ -454,12 +454,17 @@ class Header:
         """
         try:
             data_element = self.get_data_element(tag_or_keyword)
-        except KeyError:
-            value = getattr(self, tag_or_keyword)
+        except KeyError as e:
+            # Look for method or property.
             try:
-                return value()
-            except TypeError:
-                return value
+                value = getattr(self, tag_or_keyword)
+            except AttributeError:
+                raise KeyError(str(e))
+            else:
+                try:
+                    return value()
+                except TypeError:
+                    return value
         else:
             return data_element.value
 
