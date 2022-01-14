@@ -16,7 +16,7 @@ TIRM_RULES = [
     },
     {
         "key": "ScanOptions",
-        "value": ["IR"],
-        "lookup": "in",
+        "value": ("IR", "SAT1"),
+        "lookup": "exact",
     },
 ]
