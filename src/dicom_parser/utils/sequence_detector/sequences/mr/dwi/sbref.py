@@ -1,4 +1,4 @@
-FUNCTIONAL_FIELDMAP_RULES = [
+DWI_SBREF_RULES = [
     {
         "key": "ScanningSequence",
         "value": "Echo Planar",
@@ -6,21 +6,21 @@ FUNCTIONAL_FIELDMAP_RULES = [
     },
     {
         "key": "SequenceVariant",
+        "value": ("Segmented k-Space", "Steady State"),
+        "lookup": "exact",
+    },
+    {
+        "key": "ImageType",
         "value": [
-            ("Segmented k-Space", "Oversampling Phase"),
-            "Segmented k-Space",
+            ("ORIGINAL", "PRIMARY", "M", "ND", "MOSAIC"),
+            # ("ORIGINAL", "PRIMARY", "PHASE MAP", "ND"),
         ],
         "lookup": "exact",
         "operator": "any",
     },
     {
-        "key": "ImageType",
-        "value": ("ORIGINAL", "PRIMARY", "M", "ND", "MOSAIC"),
-        "lookup": "exact",
-    },
-    {
         "key": "ScanOptions",
-        "value": [("PFP", "FS"), "FS"],
+        "value": ["PFP", ""],
         "lookup": "exact",
         "operator": "any",
     },

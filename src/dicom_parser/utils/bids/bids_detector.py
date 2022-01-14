@@ -86,13 +86,18 @@ class BidsDetector:
         fields : dict
             Dictionaty with sequence-specific BIDS fields and values
         """
-        if not fields:
+        # Check for unregistered sequences.
+        if fields is None:
             warnings.warn(INVALID_SEQUENCE.format(sequence=sequence))
+            return False
+        # Check for sequences registered as not BIDS compatible, such as
+        # derived DWI data.
+        if fields is False:
             return False
         for required_key in self.REQUIRED_KEYS:
             if required_key not in fields:
                 message = INVALID_SEQUENCE_KEYS.format(
-                    required_key=required_key
+                    required_key=required_key, fields=fields
                 )
                 raise ValueError(message)
         return True

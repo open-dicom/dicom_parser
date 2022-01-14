@@ -318,7 +318,7 @@ class HeaderTestCase(TestCase):
     def test_to_dict(self):
         value = self.header.to_dict()
         self.assertIsInstance(value, dict)
-        self.assertEqual(len(value), 119)
+        self.assertEqual(len(value), 120)
 
     def test_as_dict(self):
         value = self.header.as_dict
@@ -334,7 +334,7 @@ class HeaderTestCase(TestCase):
     def test_keys(self):
         value = self.header.keys
         self.assertIsInstance(value, list)
-        self.assertEqual(len(value), 119)
+        self.assertEqual(len(value), 120)
 
     def test_unknown_value_representation(self):
         with self.assertRaises(ValueRepresentationError):
@@ -342,7 +342,7 @@ class HeaderTestCase(TestCase):
 
     def test_get_phase_encoding_direction(self):
         value = self.dwi_header.get_phase_encoding_direction()
-        expected = "j"
+        expected = "i-"
         self.assertEqual(value, expected)
 
     def test_get_phase_encoding_direction_with_none(self):

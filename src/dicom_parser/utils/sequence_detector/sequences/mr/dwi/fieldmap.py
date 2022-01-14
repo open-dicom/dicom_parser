@@ -1,25 +1,29 @@
-DWI_FIELDMAP_RULES = [
+DWI_FIELDMAP = [
     {
         "key": "ScanningSequence",
         "value": "Echo Planar",
         "lookup": "exact",
     },
     {
-        "key": "ImageType",
+        "key": "SequenceVariant",
         "value": [
-            ("ORIGINAL", "PRIMARY", "M", "ND", "MOSAIC"),
-            ("ORIGINAL", "PRIMARY", "PHASE MAP", "ND"),
-            ("DERIVED", "PRIMARY", "DIFFUSION", "ADC", "ND", "NORM"),
-            ("DERIVED", "PRIMARY", "DIFFUSION", "FA", "ND", "NORM"),
-            ("DERIVED", "PRIMARY", "DIFFUSION", "TRACEW", "ND", "NORM"),
+            ("Segmented k-Space", "Steady State"),
+            ("Segmented k-Space", "Spoiled"),
+            ("Segmented k-Space", "Spoiled", "Oversampling Phase"),
+            ("Segmented k-Space", "Steady State", "Oversampling Phase"),
         ],
         "lookup": "exact",
         "operator": "any",
     },
     {
-        "key": "ScanOptions",
-        "value": ["PFP", ""],
+        "key": "ImageType",
+        "value": ["ORIGINAL", "PRIMARY", "DIFFUSION", "NONE"],
         "lookup": "in",
-        "operator": "any",
+        "operator": "all",
+    },
+    {
+        "key": "phase_encoding_direction",
+        "value": "-",
+        "lookup": "not in",
     },
 ]

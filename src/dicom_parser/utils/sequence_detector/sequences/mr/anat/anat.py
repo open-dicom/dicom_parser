@@ -19,6 +19,9 @@ from dicom_parser.utils.sequence_detector.sequences.mr.anat.spgr import (
 from dicom_parser.utils.sequence_detector.sequences.mr.anat.t2w import (
     T2W_RULES,
 )
+from dicom_parser.utils.sequence_detector.sequences.mr.anat.tirm import (
+    TIRM_RULES,
+)
 
 MR_ANATOMICAL_SEQUENCES = {
     "flair": FLAIR_RULES,
@@ -28,4 +31,5 @@ MR_ANATOMICAL_SEQUENCES = {
     "spgr": SPGR_RULES,
     "fspgr": FSPGR_RULES,
     "t2w": T2W_RULES,
+    "tirm": TIRM_RULES,
 }

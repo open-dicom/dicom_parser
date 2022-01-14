@@ -5,11 +5,28 @@ BOLD_RULES_1 = [
         "lookup": "exact",
     },
     {
+        "key": "SequenceVariant",
+        "value": [
+            ("Segmented k-Space", "Steady State"),
+            ("Segmented k-Space", "Steady State", "Oversampling Phase"),
+            ("Segmented k-Space", "Spoiled"),
+        ],
+        "lookup": "exact",
+        "operator": "any",
+    },
+    {
         "key": "ImageType",
         "value": [
+            ("ORIGINAL", "PRIMARY", "M", "ND", "NORM"),
             ("ORIGINAL", "PRIMARY", "M", "MB", "ND", "MOSAIC"),
             ("ORIGINAL", "PRIMARY", "M", "MB", "ND", "NORM", "MOSAIC"),
         ],
+        "lookup": "exact",
+        "operator": "any",
+    },
+    {
+        "key": "ScanOptions",
+        "value": [("PFP", "FS"), "FS"],
         "lookup": "exact",
         "operator": "any",
     },

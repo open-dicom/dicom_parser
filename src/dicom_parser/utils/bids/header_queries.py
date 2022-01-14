@@ -6,20 +6,20 @@ BIDS-compatible paths.
 INVALID_CHARACTERS: str = "!@#$%^&*()_-+="
 
 
-def find_mprage_acq(header: dict) -> str:
+def find_mprage_ce(header: dict) -> str:
     """
-    Finds correct value for the "acq" field of BIDS specification for MPRAGE
+    Finds correct value for the "ce" field of BIDS specification for MPRAGE
     sequences.
 
     Parameters
     ----------
     header : dict
-        Dictionary containing DICOM's header.
+        Dictionary containing DICOM's header
 
     Returns
     -------
     str
-        Either "corrected" or "uncorrected" in terms of bias field correction.
+        Either "corrected" or "uncorrected" in terms of bias field correction
     """
     image_type = header.get("ImageType", "")
     return "corrected" if "NORM" in image_type else "uncorrected"
@@ -88,6 +88,9 @@ def find_task_name(header: dict) -> str:
     return task
 
 
+PHASE_ENCODINGS = ("ap", "pa", "lr", "rl", "fwd", "rev")
+
+
 def find_phase_encoding(header: dict) -> str:
     """
     Finds correct value for the "dir" field of BIDS specification for EPI
@@ -101,8 +104,16 @@ def find_phase_encoding(header: dict) -> str:
     Returns
     -------
     str
-        Phase encoding direction (AP/PA)
+        Phase encoding direction
     """
-    description = header.get("ProtocolName").lower()
-    pe = description.split("_")[-1]
-    return pe
+    try:
+        phase_encoding = header["phase_encoding_direction"]
+        return "FWD" if phase_encoding.endswith("-") else "REV"
+    except (KeyError, AttributeError):
+        try:
+            description = header.get("ProtocolName").lower()
+            pe = description.split("_")[-1]
+            if pe in PHASE_ENCODINGS:
+                return pe
+        except (AttributeError, IndexError):
+            return

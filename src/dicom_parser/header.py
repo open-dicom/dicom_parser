@@ -10,7 +10,11 @@ from pydicom.dataelem import DataElement as PydicomDataElement
 from pydicom.dataset import FileDataset
 
 from dicom_parser.data_element import DataElement
-from dicom_parser.messages import INVALID_ELEMENT_IDENTIFIER
+from dicom_parser.messages import (
+    INVALID_ELEMENT_IDENTIFIER,
+    MISSING_HEADER_INFO,
+    UNREGISTERED_MODALITY,
+)
 from dicom_parser.utils import read_file, requires_pandas
 from dicom_parser.utils.bids.bids_detector import BidsDetector
 from dicom_parser.utils.format_header_df import format_header_df
@@ -38,14 +42,19 @@ class Header:
 
     #: Header fields to pass to
     #: :class:`~dicom_parser.utils.sequence_detector.sequence_detector.SequenceDetector`. # noqa: E501
-    sequence_identifiers = {
+    SEQUENCE_IDENTIFIERS = {
         "Magnetic Resonance": [
             "ScanningSequence",
             "SequenceVariant",
             "SeriesDescription",
             "ImageType",
             "ScanOptions",
+            "phase_encoding_direction",
         ]
+    }
+
+    DICTIONARY_APPENDICES = {
+        "Magnetic Resonance": ["phase_encoding_direction"]
     }
 
     #: Column names to use when converting to dataframe.
@@ -56,12 +65,8 @@ class Header:
 
     #: Dictionary used to convert in-plane phase encoding direction to the
     #: NIfTI appropriate equivalent.
-    PHASE_ENCODING_DIRECTION: Dict[str, str] = {"COL": "i", "ROW": "j"}
-    PHASE_ENCODING_SIGN: Dict[int, str] = {0: "-", 1: ""}
-    PHASE_ENCODING: Dict[Plane, Dict[str, str]] = {
-        Plane.AXIAL: {"i": "LR", "i-": "RL", "j": "PA", "j-": "AP"},
-        # Plane.SAGITTAL: {"i": "PA", "i-": "AP", "j": ""}
-    }
+    PHASE_ENCODING_DIRECTION: Dict[str, str] = {"ROW": "i", "COL": "j"}
+    PHASE_ENCODING_SIGN: Dict[int, str] = {0: "", 1: "-"}
 
     #: Infer image plane from the rounded ImageOrientationPatient value.
     #: Based on https://stackoverflow.com/a/56670334/4416932
@@ -105,7 +110,6 @@ class Header:
         self.bids_detector = bids_detector()
         self.raw = read_file(raw, read_data=False)
         self.manufacturer = self.get("Manufacturer")
-        self.detected_sequence = self.detect_sequence()
         self._as_dict = None
 
     def __getitem__(self, key: Union[str, tuple, list]) -> Any:
@@ -196,11 +200,29 @@ class Header:
             Imaging sequence name
         """
         modality = self.get("Modality")
-        sequence_identifiers = self.sequence_identifiers.get(modality)
-        sequence_identifying_values = self.get(sequence_identifiers)
+        if modality is None:
+            return
+        keys = self.SEQUENCE_IDENTIFIERS.get(modality)
+        if keys is None:
+            message = UNREGISTERED_MODALITY.format(modality=modality)
+            print(message)
+            return
+        values = self.get(keys)
+        if values is None:
+            message = MISSING_HEADER_INFO.format(modality=modality, keys=keys)
+            print(message)
+            return
+        for key, value in values.items():
+            if value is None:
+                method = getattr(self, key, None)
+                if method is not None:
+                    try:
+                        values[key] = method()
+                    except TypeError:
+                        pass
         try:
             return self.sequence_detector.detect(
-                modality, sequence_identifying_values, verbose=verbose
+                modality, values, verbose=verbose
             )
         except NotImplementedError:
             pass
@@ -430,8 +452,21 @@ class Header:
         Any
             Parsed data element value
         """
-        data_element = self.get_data_element(tag_or_keyword)
-        return data_element.value
+        try:
+            data_element = self.get_data_element(tag_or_keyword)
+        except KeyError as e:
+            # Look for method or property.
+            try:
+                value = getattr(self, tag_or_keyword)
+            except AttributeError:
+                raise KeyError(str(e))
+            else:
+                try:
+                    return value()
+                except TypeError:
+                    return value
+        else:
+            return data_element.value
 
     def get_private_tag(self, keyword: str) -> tuple:
         """
@@ -507,7 +542,16 @@ class Header:
             if isinstance(tag_or_keyword, (str, tuple)):
                 value = get_method(tag_or_keyword)
             elif isinstance(tag_or_keyword, list):
-                value = {item: get_method(item) for item in tag_or_keyword}
+                value = {
+                    item: self.get(
+                        item,
+                        default=default,
+                        parsed=parsed,
+                        missing_ok=missing_ok,
+                        as_json=as_json,
+                    )
+                    for item in tag_or_keyword
+                }
         except (KeyError, TypeError):
             if not missing_ok:
                 raise
@@ -529,10 +573,20 @@ class Header:
         dict
             Header information
         """
-        return {
+        d = {
             data_element.keyword: self.get(data_element.tag, parsed=parsed)
             for data_element in self.data_elements
         }
+        modality = self.get("Modality")
+        appendices = self.DICTIONARY_APPENDICES.get(modality, [])
+        for appendix in appendices:
+            attribute = getattr(self, appendix, None)
+            if attribute is not None:
+                try:
+                    d[appendix] = attribute()
+                except TypeError:
+                    d[appendix] = attribute
+        return d
 
     @requires_pandas
     def to_dataframe(
@@ -675,24 +729,7 @@ class Header:
         if inplane_pe is not None and sign is not None:
             return f"{inplane_pe}{sign}"
 
-    def infer_phase_encoding(self) -> str:
-        """
-        Returns the applied phase encoding as defined in the AP/PA or LR/RL
-        format, based on the acquisition plane and phase encoding direction.
-
-        Returns
-        -------
-        str
-            Phase encoding as AP/PA/LR/RL
-        """
-        plane = self.get_plane()
-        direction = self.get_phase_encoding_direction()
-        try:
-            return self.PHASE_ENCODING[plane][direction]
-        except KeyError:
-            pass
-
-    def get_plane(self) -> Plane:
+    def estimate_acquisition_plane(self) -> Plane:
         """
         Returns the image plane (see :class:`dicom_parser.utils.plane.Plane`)
         based on the header's 'ImageOrientationPatient' (0x20, 0x37) tag.
@@ -778,3 +815,11 @@ class Header:
             Header keywords
         """
         return list(self.as_dict.keys())
+
+    @property
+    def phase_encoding_direction(self) -> str:
+        return self.get_phase_encoding_direction()
+
+    @property
+    def detected_sequence(self) -> str:
+        return self.detect_sequence()
