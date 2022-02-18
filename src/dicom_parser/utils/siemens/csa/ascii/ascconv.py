@@ -180,10 +180,6 @@ def _create_subscript_in(atom, root):
     return obj
 
 
-class TrashValue:
-    """ Indicates useless value from parsing assignment """
-
-
 def obj_from_atoms(atoms, namespace):
     """ Return object defined by list `atoms` in dict-like `namespace`
 
@@ -198,15 +194,17 @@ def obj_from_atoms(atoms, namespace):
     -------
     obj_root : object
         Namespace such that we can set a desired value to the object defined in
-        `atoms` with ``obj_root[obj_key] = value``.
-    obj_key : str or int
-        Index into list or key into dictionary for `obj_root`.
+        `atoms` with ``obj_root[obj_key] = value``.  None signals that the
+        function wants to discard this assignment.
+    obj_key : str or int or None
+        Index into list or key into dictionary for `obj_root`.  If function
+        rejects assignment, and `obj_root` is None, `obj_key` should be None.
     """
     root_obj = namespace
     atoms = list(atoms)
     # Discard __attribute__ lines.
     if any(e for e in atoms if e.obj_id == '__attribute__' ):
-        return TrashValue, TrashValue
+        return None, None
     for el in atoms:
         prev_root = root_obj
         if isinstance(el.op, (ast.Attribute, ast.Name)):
@@ -264,7 +262,7 @@ def parse_ascconv_text(content, str_delim='"'):
     for assign in tree.body:
         atoms = assign2atoms(assign)
         obj_to_index, key = obj_from_atoms(atoms, prot_dict)
-        if key is not TrashValue:  # Function may have discarded line.
+        if obj_to_index is not None:  # None if obj_from_atoms rejected atoms.
             obj_to_index[key] = _get_value(assign)
     return prot_dict
 
