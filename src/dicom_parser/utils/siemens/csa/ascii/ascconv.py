@@ -78,19 +78,27 @@ class Atom:
 
     Parameters
     ----------
-    op : {'name', 'attr', 'list'}
-        Assignment type.  Assignment to name (root namespace), attribute or
-        list element.
+    target : instance of ast {Name, Attribute, Subscript}
+        Assignment type object.  Should be instance of :class:`ast.Name`,
+        :class:`ast.Attribute` or :class:`ast.Subscript`.
     obj_type : {list, dict, other}
-        Object type being assigned to.
+        Object type being assigned.
     obj_id : str or int
-        Key (``obj_type is dict``) or index (``obj_type is list``)
+        Key str (``obj_type is dict``) or index integer (``obj_type is list``)
     """
 
-    def __init__(self, op, obj_type, obj_id):
-        self.op = op
+    def __init__(self, target, obj_type, obj_id):
+        self.target = target
         self.obj_type = obj_type
         self.obj_id = obj_id
+
+    def __repr__(self):
+        return f'Atom({self.target}, {self.obj_type}, "{self.obj_id}")'
+
+    def __eq__(self, other):
+        return (type(self.target) == type(other.target) and
+                self.obj_type == other.obj_type and
+                self.obj_id == other.obj_id)
 
 
 class NoValue:
@@ -207,10 +215,13 @@ def obj_from_atoms(atoms, namespace):
         return None, None
     for el in atoms:
         prev_root = root_obj
-        if isinstance(el.op, (ast.Attribute, ast.Name)):
+        if isinstance(el.target, (ast.Attribute, ast.Name)):
             root_obj = _create_obj_in(el, root_obj)
-        else:
+        elif isinstance(el.target, ast.Subscript):
             root_obj = _create_subscript_in(el, root_obj)
+        else:
+            raise AscconvParseError(
+                f'Unexpected atom target {el.target} in {el}')
         if not isinstance(root_obj, el.obj_type):
             raise AscconvParseError(
                 f'{el.obj_id} has type {el.obj_type}, but expecting '

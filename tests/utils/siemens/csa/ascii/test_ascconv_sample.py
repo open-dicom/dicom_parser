@@ -1,14 +1,21 @@
 """ Testing Siemens "ASCCONV" parser
 """
 
+import ast
 from collections import OrderedDict
 
 from dicom_parser.utils.siemens.csa.ascii.ascconv import (parse_ascconv,
-                                                          parse_ascconv_text)
+                                                          parse_ascconv_text,
+                                                          AscconvParseError,
+                                                          assign2atoms,
+                                                          obj_from_atoms,
+                                                          Atom)
 
 from numpy.testing import assert_array_equal, assert_array_almost_equal
 
 from tests.fixtures import TEST_ASCCONV_SAMPLE
+
+import pytest
 
 
 def test_ascconv_parse():
@@ -72,6 +79,46 @@ sWipMemBlock.alFree[5]	 = 	1
             {'sWipMemBlock': {'alFree': [2, None, None, None, 1, 1]}})
 
 
+def test_assign2atoms():
+    assign = ast.parse('foo = 64').body[0]
+    atoms = list(assign2atoms(assign))
+    assert atoms == [Atom(ast.Name(), int, 'foo')]
+    assign = ast.parse('foo.bar.baz = 64').body[0]
+    atoms = list(assign2atoms(assign))
+    assert atoms == [Atom(ast.Name(), dict, 'foo'),
+                     Atom(ast.Attribute(), dict, 'bar'),
+                     Atom(ast.Attribute(), int, 'baz')]
+    assign = ast.parse('foo[0].bar.baz = 64').body[0]
+    atoms = list(assign2atoms(assign))
+    assert atoms == [Atom(ast.Name(), list, 'foo'),
+                     Atom(ast.Subscript(), dict, 0),
+                     Atom(ast.Attribute(), dict, 'bar'),
+                     Atom(ast.Attribute(), int, 'baz')]
+    # Can set the default type.
+    atoms = list(assign2atoms(assign, default_class=list))
+    assert atoms == [Atom(ast.Name(), list, 'foo'),
+                     Atom(ast.Subscript(), dict, 0),
+                     Atom(ast.Attribute(), dict, 'bar'),
+                     Atom(ast.Attribute(), list, 'baz')]
+    assign = ast.parse('foo, bar = 1, 2').body[0]
+    with pytest.raises(AscconvParseError):
+        assign2atoms(assign)
+
+
+def test_parse_attribute_return():
+    in_text = "foo.bar.baz = 64"
+    assign = ast.parse(in_text).body[0]
+    atoms = list(assign2atoms(assign))
+    assert obj_from_atoms(atoms, {}) == ({'baz': 0}, 'baz')
+    # Attribute anywhere returns None, None
+    assign = ast.parse('foo.bar.__attribute__ = 64').body[0]
+    atoms = assign2atoms(assign)
+    assert obj_from_atoms(atoms, {}) == (None, None)
+    assign = ast.parse('foo.__attribute__.bar = 64').body[0]
+    atoms = assign2atoms(assign)
+    assert obj_from_atoms(atoms, {}) == (None, None)
+
+
 def test_replace_end_digits():
     in_text = """\
 sComment.0		 = 0x41    # 'A'
@@ -81,3 +128,30 @@ sComment.3		 = 0x61    # 'a'
 """
     out = parse_ascconv_text(in_text)
     assert out == {'sComment': [0x41, 0x78, 0x43, 0x61]}
+
+
+def test_some_errors():
+    in_text = """\
+foo.bar[0] = 1
+foo.bar[1] = 2
+"""
+    out = parse_ascconv_text(in_text)
+    assert out == {'foo': {'bar': [1, 2]}}
+    list_then_dict = """\
+foo.bar[0] = 1
+foo.bar.baz = 2
+"""
+    with pytest.raises(AscconvParseError):
+        out = parse_ascconv_text(list_then_dict)
+    dict_then_list = """\
+foo.bar.baz = 2
+foo.bar[0] = 1
+"""
+    with pytest.raises(AscconvParseError):
+        out = parse_ascconv_text(dict_then_list)
+    val_then_list = """\
+foo.bar = 2
+foo.bar[0] = 1
+"""
+    with pytest.raises(AscconvParseError):
+        out = parse_ascconv_text(val_then_list)
