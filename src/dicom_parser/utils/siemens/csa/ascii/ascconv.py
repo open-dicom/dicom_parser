@@ -56,51 +56,6 @@ class AscconvParseError(Exception):
     """ Error parsing ascconv file """
 
 
-class Atom:
-    """ Object to hold operation, object type and object identifier
-
-    An atom represents an element in an expression.  For example::
-
-        a.b[0].c
-
-    has four elements.  We call these elements "atoms".
-
-    We represent objects (like ``a``) as dicts for convenience.
-
-    The last element (``.c``) is an ``op = ast.Attribute`` operation where the
-    object type (`obj_type`) of ``c`` is not constrained (we can't tell from
-    the operation what type it is).  The `obj_id` is the name of the object --
-    "c".
-
-    The second to last element ``[0]``, is ``op = ast.Subscript``, with object type
-    dict (we know from the subsequent operation ``.c`` that this must be an
-    object, we represent the object by a dict).  The `obj_id` is the index 0.
-
-    Parameters
-    ----------
-    target : instance of ast {Name, Attribute, Subscript}
-        Assignment type object.  Should be instance of :class:`ast.Name`,
-        :class:`ast.Attribute` or :class:`ast.Subscript`.
-    obj_type : {list, dict, other}
-        Object type being assigned.
-    obj_id : str or int
-        Key str (``obj_type is dict``) or index integer (``obj_type is list``)
-    """
-
-    def __init__(self, target, obj_type, obj_id):
-        self.target = target
-        self.obj_type = obj_type
-        self.obj_id = obj_id
-
-    def __repr__(self):
-        return f'Atom({self.target}, {self.obj_type}, "{self.obj_id}")'
-
-    def __eq__(self, other):
-        return (type(self.target) == type(other.target) and
-                self.obj_type == other.obj_type and
-                self.obj_id == other.obj_id)
-
-
 class NoValue:
     """ Signals no value present """
 
@@ -119,8 +74,9 @@ def assign2atoms(assign_ast, default_class=int):
     Returns
     -------
     atoms : list
-        List of :class:`atoms`.  See docstring for :class:`atoms`.  Defines
-        left to right sequence of assignment in `line_ast`.
+        List of length 3 tuples, where tuple values represent ``(target,
+        obj_type, obj_id)``.  Defines left to right sequence of assignment in
+        `line_ast`.
     """
     if not len(assign_ast.targets) == 1:
         raise AscconvParseError('Too many targets in assign')
@@ -129,10 +85,10 @@ def assign2atoms(assign_ast, default_class=int):
     prev_target_type = default_class  # Placeholder for any scalar value
     while True:
         if isinstance(target, ast.Name):
-            atoms.append(Atom(target, prev_target_type, target.id))
+            atoms.append((target, prev_target_type, target.id))
             break
         if isinstance(target, ast.Attribute):
-            atoms.append(Atom(target, prev_target_type, target.attr))
+            atoms.append((target, prev_target_type, target.attr))
             target = target.value
             prev_target_type = dict
         elif isinstance(target, ast.Subscript):
@@ -140,50 +96,47 @@ def assign2atoms(assign_ast, default_class=int):
                 index = target.slice.n
             else:  # PY38
                 index = target.slice.value.n
-            atoms.append(Atom(target, prev_target_type, index))
+            atoms.append((target, prev_target_type, index))
             target = target.value
             prev_target_type = list
         else:
             raise AscconvParseError(f'Unexpected LHS element {target}')
-    return reversed(atoms)
+    return atoms[::-1]
 
 
-def _create_obj_in(atom, root):
-    """ Find / create object defined in `atom` in dict-like given by `root`
+def _create_obj_in(maker, name, root):
+    """ Find / create object `maker` in dict-like `root` with given `name`
 
     Returns corresponding value if there is already a key matching
-    `atom.obj_id` in `root`.
+    `name` in `root`.
 
-    Otherwise, create new object with ``atom.obj_type`, insert into dictionary,
+    Otherwise, create new object with `maker`, insert into dictionary,
     and return new object.
 
     Can therefore modify `root` in place.
     """
-    name = atom.obj_id
     obj = root.get(name, NoValue)
     if obj is not NoValue:
         return obj
-    obj = atom.obj_type()
+    obj = maker()
     root[name] = obj
     return obj
 
 
-def _create_subscript_in(atom, root):
-    """ Find / create and insert object defined by `atom` from list `root`
+def _create_subscript_in(maker, index, root):
+    """ Find / create and insert object of type `maker` in `root` at `index`
 
-    The `atom` has an index, defined in ``atom.obj_id``.  If `root` is long
-    enough to contain this index, return the object at that index.  Otherwise,
-    extend `root` with None elements to contain index ``atom.obj_id``, then
-    create a new object via ``atom.obj_type()``, insert at the end of the list,
-    and return this object.
+    If `root` is long enough to contain this `index`, return the object at that
+    index.  Otherwise, extend `root` with None elements to contain index
+    `index`, then create a new object by calling `maker`, insert at the end of
+    the list, and return this object.
 
     Can therefore modify `root` in place.
     """
     curr_n = len(root)
-    index = atom.obj_id
     if curr_n > index:
         return root[index]
-    obj = atom.obj_type()
+    obj = maker()
     root += [None] * (index - curr_n) + [obj]
     return obj
 
@@ -193,8 +146,9 @@ def obj_from_atoms(atoms, namespace):
 
     Parameters
     ----------
-    atoms : list
-        List of :class:`atoms`
+    atoms : iterable
+        Iterable of atoms, where atoms are length 3 tuples of (target,
+        obj_type, obj_id).
     namespace : dict-like
         Namespace in which object will be defined.
 
@@ -211,22 +165,23 @@ def obj_from_atoms(atoms, namespace):
     root_obj = namespace
     atoms = list(atoms)
     # Discard __attribute__ lines.
-    if any(e for e in atoms if e.obj_id == '__attribute__' ):
+    if any(e for e in atoms if e[2] == '__attribute__' ):
         return None, None
     for el in atoms:
         prev_root = root_obj
-        if isinstance(el.target, (ast.Attribute, ast.Name)):
-            root_obj = _create_obj_in(el, root_obj)
-        elif isinstance(el.target, ast.Subscript):
-            root_obj = _create_subscript_in(el, root_obj)
+        target, maker, name = el
+        if isinstance(target, (ast.Attribute, ast.Name)):
+            root_obj = _create_obj_in(maker, name, root_obj)
+        elif isinstance(target, ast.Subscript):
+            root_obj = _create_subscript_in(maker, name, root_obj)
         else:
             raise AscconvParseError(
-                f'Unexpected atom target {el.target} in {el}')
-        if not isinstance(root_obj, el.obj_type):
+                f'Unexpected target {target} in {el}')
+        if not isinstance(root_obj, maker):
             raise AscconvParseError(
-                f'{el.obj_id} has type {el.obj_type}, but expecting '
+                f'Atom {el} has type {maker}, but expecting '
                 f'type {type(root_obj)}')
-    return prev_root, el.obj_id
+    return prev_root, name
 
 
 def _get_value(assign):
