@@ -8,10 +8,18 @@ PtabAbsStartPosZValid\t = \t0x1
 """
 
 PARSED_ELEMENTS = {
-    'GRADSPEC': {'asGPAData': [
-        {'sEddyCompensationY': {'aflTimeConstant': [None, 0.917683601379]}}]},
-    'TXSPEC': {'asNucleusInfo': [
-        {'CompProtectionValues': {'MaxOfflineTxAmpl': 534.113952637}}]},
-    'SliceArray': {'asSlice': [
-        None, None, {'sNormal': {'dSag': -0.01623302609}}]},
-    'PtabAbsStartPosZValid': 1}
+    "GRADSPEC": {
+        "asGPAData": [
+            {"sEddyCompensationY": {"aflTimeConstant": [None, 0.917683601379]}}
+        ]
+    },
+    "TXSPEC": {
+        "asNucleusInfo": [
+            {"CompProtectionValues": {"MaxOfflineTxAmpl": 534.113952637}}
+        ]
+    },
+    "SliceArray": {
+        "asSlice": [None, None, {"sNormal": {"dSag": -0.01623302609}}]
+    },
+    "PtabAbsStartPosZValid": 1,
+}
