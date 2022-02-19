@@ -20,7 +20,7 @@ class CsaParsingTestCase(TestCase):
         tag = SIEMENS_PRIVATE_TAGS["CSASeriesHeaderInfo"]
         cls.series_header_info = dcm.get(tag).value
         cls.csa_data, cls.first_line_info = parse_ascconv(
-            cls.series_header_info.decode("ISO-8859-1"), str_delim='""'
+            cls.series_header_info.decode("ISO-8859-1"), delimiter='""'
         )
 
     def test_key_and_value_ordered(self):

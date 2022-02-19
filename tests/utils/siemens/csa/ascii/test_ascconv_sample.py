@@ -6,11 +6,13 @@ import ast
 from collections import OrderedDict
 
 import pytest
-from dicom_parser.utils.siemens.csa.ascii.ascconv import (AscconvParseError,
-                                                          assign2atoms,
-                                                          obj_from_atoms,
-                                                          parse_ascconv,
-                                                          parse_ascconv_text)
+from dicom_parser.utils.siemens.csa.ascii.ascconv import (
+    AscconvParseError,
+    assign_to_atoms,
+    obj_from_atoms,
+    parse_ascconv,
+    parse_ascconv_text,
+)
 from numpy.testing import assert_array_almost_equal, assert_array_equal
 from tests.fixtures import TEST_ASCCONV_SAMPLE
 
@@ -18,7 +20,7 @@ from tests.fixtures import TEST_ASCCONV_SAMPLE
 def test_ascconv_parse():
     with open(TEST_ASCCONV_SAMPLE, "rt") as fobj:
         contents = fobj.read()
-    ascconv_dict, attrs = parse_ascconv(contents, str_delim='""')
+    ascconv_dict, attrs = parse_ascconv(contents, delimiter='""')
     assert attrs == OrderedDict()
     assert len(ascconv_dict) == 72
     assert ascconv_dict["tProtocolName"] == "CBU+AF8-DTI+AF8-64D+AF8-1A"
@@ -91,17 +93,21 @@ def atom_seq_same(seq1, seq2):
     if len(seq1) != len(seq2):
         return False
     for a1, a2 in zip(seq1, seq2):
-        if type(a1[0]) != type(a2[0]) or a1[1] != a2[1] or a1[2] != a2[2]:
+        if (
+            not isinstance(a1[0], type(a2[0]))
+            or a1[1] != a2[1]
+            or a1[2] != a2[2]
+        ):
             return False
     return True
 
 
-def test_assign2atoms():
+def test_assign_to_atoms():
     assign = ast.parse("foo = 64").body[0]
-    atoms = assign2atoms(assign)
+    atoms = assign_to_atoms(assign)
     assert atom_seq_same(atoms, [(ast.Name(), int, "foo")])
     assign = ast.parse("foo.bar.baz = 64").body[0]
-    atoms = assign2atoms(assign)
+    atoms = assign_to_atoms(assign)
     assert atom_seq_same(
         atoms,
         [
@@ -111,7 +117,7 @@ def test_assign2atoms():
         ],
     )
     assign = ast.parse("foo[0].bar.baz = 64").body[0]
-    atoms = assign2atoms(assign)
+    atoms = assign_to_atoms(assign)
     assert atom_seq_same(
         atoms,
         [
@@ -122,7 +128,7 @@ def test_assign2atoms():
         ],
     )
     # Can set the default type.
-    atoms = assign2atoms(assign, default_class=list)
+    atoms = assign_to_atoms(assign, default_class=list)
     assert atom_seq_same(
         atoms,
         [
@@ -134,20 +140,20 @@ def test_assign2atoms():
     )
     assign = ast.parse("foo, bar = 1, 2").body[0]
     with pytest.raises(AscconvParseError):
-        assign2atoms(assign)
+        assign_to_atoms(assign)
 
 
 def test_parse_attribute_return():
     in_text = "foo.bar.baz = 64"
     assign = ast.parse(in_text).body[0]
-    atoms = assign2atoms(assign)
+    atoms = assign_to_atoms(assign)
     assert obj_from_atoms(atoms, {}) == ({"baz": 0}, "baz")
     # Attribute anywhere returns None, None
     assign = ast.parse("foo.bar.__attribute__ = 64").body[0]
-    atoms = assign2atoms(assign)
+    atoms = assign_to_atoms(assign)
     assert obj_from_atoms(atoms, {}) == (None, None)
     assign = ast.parse("foo.__attribute__.bar = 64").body[0]
-    atoms = assign2atoms(assign)
+    atoms = assign_to_atoms(assign)
     assert obj_from_atoms(atoms, {}) == (None, None)
 
 
