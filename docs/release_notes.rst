@@ -38,6 +38,7 @@ Release Notes
     :class:`dicom_parser.image.Image` class'
     :func:`dicom_parser.image.Image.data` property with a missing *ImageType*
     header field.
+  * Improved CSA ASCCONV header parsing based on NiBabel's implementation.
 
 1.1.1
 -----
