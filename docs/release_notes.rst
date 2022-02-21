@@ -1,6 +1,10 @@
 Release Notes
 =============
 
+1.2.1
+-----
+  * Fixed Siemens CSA ASCCONV header parsing (#85).
+
 1.2.0
 -----
   * Changed license to MIT.
