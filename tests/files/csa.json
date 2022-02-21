@@ -1,0 +1,3085 @@
+{
+  "UsedPatientWeight": {
+    "index": 0,
+    "VR": "IS",
+    "VM": 1,
+    "value": 67
+  },
+  "NumberOfPrescans": {
+    "index": 1,
+    "VR": "IS",
+    "VM": 1,
+    "value": 0
+  },
+  "TransmitterCalibration": {
+    "index": 2,
+    "VR": "DS",
+    "VM": 1,
+    "value": 247.948205
+  },
+  "PhaseGradientAmplitude": {
+    "index": 3,
+    "VR": "DS",
+    "VM": 1,
+    "value": 0.0
+  },
+  "ReadoutGradientAmplitude": {
+    "index": 4,
+    "VR": "DS",
+    "VM": 1,
+    "value": 0.0
+  },
+  "SelectionGradientAmplitude": {
+    "index": 5,
+    "VR": "DS",
+    "VM": 1,
+    "value": 0.0
+  },
+  "GradientDelayTime": {
+    "index": 6,
+    "VR": "DS",
+    "VM": 3,
+    "value": [
+      36.0,
+      35.0,
+      31.0
+    ]
+  },
+  "RfWatchdogMask": {
+    "index": 7,
+    "VR": "IS",
+    "VM": 1,
+    "value": 0
+  },
+  "RfPowerErrorIndicator": {
+    "index": 8,
+    "VR": "DS",
+    "VM": 1,
+    "value": null
+  },
+  "SarWholeBody": {
+    "index": 9,
+    "VR": "DS",
+    "VM": 3,
+    "value": null
+  },
+  "Sed": {
+    "index": 10,
+    "VR": "DS",
+    "VM": 3,
+    "value": [
+      1000000.0,
+      73.14457223,
+      73.14457223
+    ]
+  },
+  "SequenceFileOwner": {
+    "index": 11,
+    "VR": "SH",
+    "VM": 1,
+    "value": "USER"
+  },
+  "Stim_mon_mode": {
+    "index": 12,
+    "VR": "IS",
+    "VM": 1,
+    "value": 2
+  },
+  "Operation_mode_flag": {
+    "index": 13,
+    "VR": "IS",
+    "VM": 1,
+    "value": 2
+  },
+  "dBdt_max": {
+    "index": 14,
+    "VR": "DS",
+    "VM": 1,
+    "value": 0.0
+  },
+  "t_puls_max": {
+    "index": 15,
+    "VR": "DS",
+    "VM": 1,
+    "value": 0.0
+  },
+  "dBdt_thresh": {
+    "index": 16,
+    "VR": "DS",
+    "VM": 1,
+    "value": 0.0
+  },
+  "dBdt_limit": {
+    "index": 17,
+    "VR": "DS",
+    "VM": 1,
+    "value": 0.0
+  },
+  "SW_korr_faktor": {
+    "index": 18,
+    "VR": "DS",
+    "VM": 1,
+    "value": 1.0
+  },
+  "Stim_max_online": {
+    "index": 19,
+    "VR": "DS",
+    "VM": 3,
+    "value": [
+      1.1827631,
+      1.69404888,
+      34.9418869
+    ]
+  },
+  "Stim_max_ges_norm_online": {
+    "index": 20,
+    "VR": "DS",
+    "VM": 1,
+    "value": 0.96081311
+  },
+  "Stim_lim": {
+    "index": 21,
+    "VR": "DS",
+    "VM": 3,
+    "value": [
+      42.70069885,
+      23.97319984,
+      36.48099899
+    ]
+  },
+  "Stim_faktor": {
+    "index": 22,
+    "VR": "DS",
+    "VM": 1,
+    "value": 1.0
+  },
+  "CoilForGradient": {
+    "index": 23,
+    "VR": "SH",
+    "VM": 1,
+    "value": "void"
+  },
+  "CoilForGradient2": {
+    "index": 24,
+    "VR": "SH",
+    "VM": 1,
+    "value": "AS82"
+  },
+  "CoilTuningReflection": {
+    "index": 25,
+    "VR": "DS",
+    "VM": 2,
+    "value": null
+  },
+  "CoilId": {
+    "index": 26,
+    "VR": "IS",
+    "VM": 0,
+    "value": [
+      255,
+      0,
+      4877,
+      0,
+      0,
+      4875,
+      4876,
+      4865,
+      4866,
+      0,
+      0
+    ]
+  },
+  "MiscSequenceParam": {
+    "index": 27,
+    "VR": "IS",
+    "VM": 38,
+    "value": [
+      40,
+      1,
+      28,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      524288,
+      256,
+      0,
+      0,
+      0,
+      0,
+      2,
+      18646,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "MrProtocolVersion": {
+    "index": 28,
+    "VR": "IS",
+    "VM": 1,
+    "value": 51130001
+  },
+  "DataFileName": {
+    "index": 29,
+    "VR": "LO",
+    "VM": 1,
+    "value": null
+  },
+  "RepresentativeImage": {
+    "index": 30,
+    "VR": "UI",
+    "VM": 1,
+    "value": null
+  },
+  "PositivePCSDirections": {
+    "index": 31,
+    "VR": "SH",
+    "VM": 1,
+    "value": "+LPH"
+  },
+  "RelTablePosition": {
+    "index": 32,
+    "VR": "IS",
+    "VM": 3,
+    "value": [
+      0,
+      0,
+      -16
+    ]
+  },
+  "ReadoutOS": {
+    "index": 33,
+    "VR": "FD",
+    "VM": 1,
+    "value": 2.0
+  },
+  "LongModelName": {
+    "index": 34,
+    "VR": "LO",
+    "VM": 1,
+    "value": "NUMARIS/4"
+  },
+  "SliceArrayConcatenations": {
+    "index": 35,
+    "VR": "IS",
+    "VM": 1,
+    "value": 1
+  },
+  "SliceResolution": {
+    "index": 36,
+    "VR": "DS",
+    "VM": 1,
+    "value": 1.0
+  },
+  "AbsTablePosition": {
+    "index": 37,
+    "VR": "IS",
+    "VM": 1,
+    "value": -1262
+  },
+  "AutoAlignMatrix": {
+    "index": 38,
+    "VR": "FL",
+    "VM": 16,
+    "value": null
+  },
+  "MeasurementIndex": {
+    "index": 39,
+    "VR": "FL",
+    "VM": 1,
+    "value": null
+  },
+  "CoilString": {
+    "index": 40,
+    "VR": "LO",
+    "VM": 1,
+    "value": "HC1-7;NC1"
+  },
+  "PATModeText": {
+    "index": 41,
+    "VR": "LO",
+    "VM": 1,
+    "value": "p2"
+  },
+  "PatReinPattern": {
+    "index": 42,
+    "VR": "ST",
+    "VM": 1,
+    "value": "1;HFS;67.00;27.00;2;0;2;-458578948"
+  },
+  "ProtocolChangeHistory": {
+    "index": 43,
+    "VR": "US",
+    "VM": 1,
+    "value": 0
+  },
+  "Isocentered": {
+    "index": 44,
+    "VR": "US",
+    "VM": 1,
+    "value": 1
+  },
+  "MrPhoenixProtocol": {
+    "index": 45,
+    "VR": "UN",
+    "VM": 1,
+    "value": {
+      "ulVersion": 51130001,
+      "tSequenceFileName": "%CustomerSeq%\\ep2d_advdiff_919B",
+      "tProtocolName": "Ax1D_advdiff_d12D21_TE51_B1000",
+      "tdefaultEVAProt": "%CustomerEvaDefProt%\\DTI\\DTI_919B.evp",
+      "tReferenceImage0": "1.3.12.2.1107.5.2.43.66024.2018050112281934043485452",
+      "tReferenceImage1": "1.3.12.2.1107.5.2.43.66024.2018050112255045600284514",
+      "tReferenceImage2": "1.3.12.2.1107.5.2.43.66024.2018050112254347412284506",
+      "lScanRegionPosTra": -16.0,
+      "ucScanRegionPosValid": 1,
+      "lPtabAbsStartPosZ": -1262,
+      "bPtabAbsStartPosZValid": 1,
+      "ucTablePositioningMode": 4,
+      "ucEnableNoiseAdjust": 1,
+      "lContrasts": 1,
+      "lCombinedEchoes": 1,
+      "ucDisableChangeStoreImages": 1,
+      "ucAAMode": 1,
+      "ucAARegionMode": 1,
+      "ucAARefMode": 1,
+      "ucReconstructionMode": 1,
+      "ucOneSeriesForAllMeas": 1,
+      "ucPHAPSMode": 1,
+      "ulWrapUpMagn": 1,
+      "lAverages": 1,
+      "dAveragesDouble": 1.0,
+      "lScanTimeSec": 77,
+      "lTotalScanTimeSec": 77,
+      "dRefSNR": 25920.0,
+      "dRefSNR_VOI": 25920.0,
+      "ucMotionCorr": 1,
+      "ucCineMode": 1,
+      "ucSequenceType": 4,
+      "ucCoilCombineMode": 2,
+      "ucFlipAngleMode": 1,
+      "lTOM": 1,
+      "lProtID": -169,
+      "lSequenceID": 112,
+      "ucReadOutMode": 1,
+      "ucBold3dPace": 1,
+      "ucForcePositioningOnNDIS": 1,
+      "ucInternalTablePosValid": 1,
+      "ucTmapB0Correction": 1,
+      "ucTmapEval": 1,
+      "ucTmapImageType": 1,
+      "ulOrganUnderExamination": 1,
+      "dTissueT1": 10.0,
+      "dTissueT2": 5.0,
+      "lInvContrasts": 1,
+      "ulReaquisitionMode": 1,
+      "sProtConsistencyInfo": {
+        "tMeasuredBaselineString": "N4_VE11C_LATEST_20160120",
+        "tBaselineString": "N4_VE11C_LATEST_20160120",
+        "tSystemType": "021",
+        "flNominalB0": 2.89362001419,
+        "flGMax": 34.0,
+        "flRiseTime": 5.0,
+        "lMaximumNofRxReceiverChannels": 64,
+        "ulConvFromVersion": 51130001
+      },
+      "sGRADSPEC": {
+        "ucMode": 8,
+        "bShimCurrentValid": 1,
+        "ucNoiseReduction": 1,
+        "asGPAData": [
+          {
+            "bEddyCompensationValid": 1,
+            "bB0CompensationValid": 1,
+            "bCrossTermCompensationValid": 1,
+            "lOffsetX": 1886,
+            "lOffsetY": -9608,
+            "lOffsetZ": 2880,
+            "bOffsetValid": 1,
+            "lDelayX": 36,
+            "lDelayY": 35,
+            "lDelayZ": 31,
+            "bDelayValid": 1,
+            "flSensitivityX": 0.000158816415933,
+            "flSensitivityY": 0.000160199429956,
+            "flSensitivityZ": 0.000163094591699,
+            "bSensitivityValid": 1,
+            "sEddyCompensationX": {
+              "aflAmplitude": [
+                0.00208438397385,
+                0.00280509656295,
+                0.00064353691414,
+                -9.61785335676e-05,
+                0.00081779184984
+              ],
+              "aflTimeConstant": [
+                1.15848863125,
+                0.624319016933,
+                0.16186837852,
+                0.0489454418421,
+                0.000500000023749
+              ]
+            },
+            "sEddyCompensationY": {
+              "aflAmplitude": [
+                8.75212281244e-05,
+                0.00675138318911,
+                0.00042676817975,
+                -0.000227072057896,
+                0.000157843765919
+              ],
+              "aflTimeConstant": [
+                4.97967481613,
+                0.917683601379,
+                0.106783948839,
+                0.0499027855694,
+                0.0016127784038
+              ]
+            },
+            "sEddyCompensationZ": {
+              "aflAmplitude": [
+                0.00015185160737,
+                0.000390234636143,
+                -0.000428424187703,
+                0.00034915166907,
+                -0.000904777203687
+              ],
+              "aflTimeConstant": [
+                4.99863386154,
+                0.356960952282,
+                0.233467683196,
+                0.0378714054823,
+                0.000500555790495
+              ]
+            },
+            "sB0CompensationX": {
+              "aflAmplitude": [
+                0.13007555902,
+                0.00993301253766,
+                0.0129532236606
+              ],
+              "aflTimeConstant": [
+                0.713938295841,
+                0.0855827108026,
+                0.00107308709994
+              ]
+            },
+            "sB0CompensationY": {
+              "aflAmplitude": [
+                0.0106283370405,
+                -0.0335767753422,
+                -0.0105046415702
+              ],
+              "aflTimeConstant": [
+                1.39674472809,
+                0.374731957912,
+                0.000772158906329
+              ]
+            },
+            "sB0CompensationZ": {
+              "aflAmplitude": [
+                -0.00624272134155,
+                -0.0384599789977,
+                -0.0089219994843
+              ],
+              "aflTimeConstant": [
+                1.99665689468,
+                0.509437561035,
+                0.129456222057
+              ]
+            },
+            "sCrossTermCompensationXY": {
+              "aflAmplitude": [
+                -0.00052369752666
+              ],
+              "aflTimeConstant": [
+                0.404473572969
+              ]
+            },
+            "sCrossTermCompensationXZ": {
+              "aflAmplitude": [
+                0.000201051778276
+              ],
+              "aflTimeConstant": [
+                0.594757080078
+              ]
+            },
+            "sCrossTermCompensationYX": {
+              "aflAmplitude": [
+                -0.000919804209843
+              ],
+              "aflTimeConstant": [
+                0.477746754885
+              ]
+            },
+            "sCrossTermCompensationYZ": {
+              "aflAmplitude": [
+                0.000413652625866
+              ],
+              "aflTimeConstant": [
+                0.580002069473
+              ]
+            },
+            "sCrossTermCompensationZX": {
+              "aflAmplitude": [
+                0.000109820954094
+              ],
+              "aflTimeConstant": [
+                0.475813031197
+              ]
+            },
+            "sCrossTermCompensationZY": {
+              "aflAmplitude": [
+                0.000232745151152
+              ],
+              "aflTimeConstant": [
+                0.785369038582
+              ]
+            }
+          }
+        ],
+        "alShimCurrent": [
+          502,
+          -126,
+          -209,
+          198,
+          -33
+        ]
+      },
+      "sTXSPEC": {
+        "bTxScaleFactorsValid": 1,
+        "lNoOfTraPulses": 4,
+        "lBCExcitationMode": 1,
+        "lBCSeqExcitationMode": 4,
+        "flKDynMagnitudeMin": 0.5,
+        "flKDynMagnitudeMax": 1.5,
+        "flKDynMagnitudeClipLow": 1.0,
+        "flKDynMagnitudeClipHigh": 1.0,
+        "flKDynPhaseMax": 0.698131978512,
+        "flKDynPhaseClip": 0.174532994628,
+        "bKDynValid": 1,
+        "ucRFPulseType": 2,
+        "ucExcitMode": 32,
+        "ucSimultaneousExcitation": 1,
+        "ucBCExcitationModeValid": 1,
+        "lB1ShimMode": 1,
+        "asNucleusInfo": [
+          {
+            "tNucleus": "1H",
+            "lCoilSelectIndex": 0,
+            "lFrequency": 123259898,
+            "bFrequencyValid": 1,
+            "flReferenceAmplitude": 247.94821167,
+            "bReferenceAmplitudeValid": 1,
+            "flCompProtectionRefAmpl": 247.94821167,
+            "bCompProtectionRefAmplValid": 1,
+            "flCompProtectionB1PlusRefAmpl": 211.370742798,
+            "bCompProtectionB1PlusRefAmplValid": 1,
+            "flAmplitudeCorrection": 1.0,
+            "bAmplitudeCorrectionValid": 1,
+            "bCompProtectionValuesValid": 1,
+            "CompProtectionValues": {
+              "MaxOfflineTxAmpl": 509.447845459,
+              "WorstCasePulseScaleRefAmpl": 247.94821167,
+              "WorstCaseMaxOfflineTxAmpl": 509.447845459,
+              "DecouplingMatrixValid": 1,
+              "ZZMatrixVectorUUID": "ac184512b29b27772d0b374eb25f258a040ffd23",
+              "ScatterMatrixValid": 1,
+              "MaxOnlineTxAmpl": [
+                364.588165283,
+                366.710845947
+              ],
+              "WorstCaseMaxOnlineTxAmpl": [
+                364.588165283,
+                366.710845947
+              ],
+              "adGainVariation": [
+                1.01209676266,
+                1.01798927784
+              ],
+              "DecouplingMatrix": {
+                "Size1": 2,
+                "Size2": 2,
+                "ComplexData": [
+                  {
+                    "dRe": -0.893597536416,
+                    "dIm": 0.474860556534
+                  },
+                  {
+                    "dRe": -0.00977149498447,
+                    "dIm": -0.0244451961423
+                  },
+                  {
+                    "dRe": -0.00873407056407,
+                    "dIm": -0.0242449641005
+                  },
+                  {
+                    "dRe": -1.10237014675,
+                    "dIm": 0.330276629131
+                  }
+                ]
+              },
+              "ScatterMatrix": {
+                "Size1": 2,
+                "Size2": 2,
+                "ComplexData": [
+                  {
+                    "dRe": 0.0255660306068,
+                    "dIm": -0.335871459899
+                  },
+                  {
+                    "dRe": 0.0125154573544,
+                    "dIm": 0.060438154242
+                  },
+                  {
+                    "dRe": 0.0125808400032,
+                    "dIm": 0.059066790976
+                  },
+                  {
+                    "dRe": 0.40676903114,
+                    "dIm": 0.118096628235
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "lCoilSelectIndex": -1
+          }
+        ],
+        "aRFPULSE": [
+          {
+            "tName": "ExtExciteRF",
+            "flAmplitude": 230.575714111,
+            "flAmplitudeNL": 230.575714111,
+            "bAmplitudeValid": 1
+          },
+          {
+            "tName": "RTEIdentDRF0",
+            "flAmplitude": 305.08404541,
+            "flAmplitudeNL": 305.08404541,
+            "bAmplitudeValid": 1
+          },
+          {
+            "tName": "optfsOptfs",
+            "flAmplitude": 98.5394897461,
+            "flAmplitudeNL": 98.5394897461,
+            "bAmplitudeValid": 1
+          },
+          {
+            "tName": "SRFpresc",
+            "flAmplitude": 39.3468704224,
+            "flAmplitudeNL": 39.3468704224,
+            "bAmplitudeValid": 1
+          },
+          {
+            "flAmplitudeNL": 43.4810256958
+          },
+          {
+            "flAmplitudeNL": 67.5439147949
+          },
+          {
+            "flAmplitudeNL": 430.80255127
+          },
+          {
+            "flAmplitudeNL": 861.497802734
+          },
+          {
+            "flAmplitudeNL": 430.802642822
+          },
+          {
+            "flAmplitudeNL": 67.5439147949
+          },
+          {
+            "flAmplitudeNL": 43.4810256958
+          },
+          {
+            "flAmplitudeNL": 67.5439147949
+          }
+        ],
+        "aTxScaleFactor": [
+          {
+            "dRe": 0.707099974155
+          },
+          {
+            "dIm": 0.707099974155
+          },
+          {
+            "dRe": 1.0
+          },
+          {
+            "dRe": 1.0
+          },
+          {
+            "dRe": 1.0
+          },
+          {
+            "dRe": 1.0
+          },
+          {
+            "dRe": 1.0
+          },
+          {
+            "dRe": 1.0
+          },
+          {
+            "dRe": 1.0
+          },
+          {
+            "dRe": 1.0
+          }
+        ],
+        "aPTXRFPulse": [
+          {
+            "lPulseType": 1,
+            "lTrajectoryType": 1,
+            "lB1ShimType": 1,
+            "lB0CorrectionType": 1,
+            "dPulseAcceleration": 1.0
+          }
+        ],
+        "B1CorrectionParameters": {
+          "bValid": 1,
+          "bActive": 1,
+          "flCorrectionFactorMax": 1.10000002384,
+          "flPeakReserveFactor": 0.10000000149
+        }
+      },
+      "sRXSPEC": {
+        "lGain": 1,
+        "bGainValid": 1,
+        "UseDoubleDataRate": 0,
+        "asNucleusInfo": [
+          {
+            "tNucleus": "1H",
+            "lCoilSelectIndex": 0
+          },
+          {
+            "lCoilSelectIndex": -1
+          }
+        ],
+        "alDwellTime": [
+          2400
+        ]
+      },
+      "sAdjData": {
+        "uiAdjFreMode": 1,
+        "uiAdjShimMode": 4,
+        "uiAdjWatSupMode": 1,
+        "uiAdjRFMapMode": 1,
+        "uiAdjMDSMode": 1,
+        "uiAdjTableTolerance": 2,
+        "uiAdjProtID": 39,
+        "uiAdjFreProtRelated": 1,
+        "lCoupleAdjVolTo": 1,
+        "uiAdjB0AcqMode": 1,
+        "uiAdjB1AcqMode": 1,
+        "sAdjVolume": {
+          "dThickness": 27.0,
+          "dPhaseFOV": 192.0,
+          "dReadoutFOV": 192.0,
+          "sPosition": {
+            "dSag": -3.72341877504,
+            "dCor": -11.3129324589,
+            "dTra": 0.480607993517
+          },
+          "sNormal": {
+            "dSag": 0.9989202863,
+            "dCor": 0.03414153355,
+            "dTra": 0.03150583084
+          }
+        }
+      },
+      "alTR": [
+        2500000
+      ],
+      "alTI": [
+        2500000
+      ],
+      "alTE": [
+        51000
+      ],
+      "acFlowComp": [
+        1
+      ],
+      "sSliceArray": {
+        "lSize": 9,
+        "lSag": 9,
+        "lConc": 1,
+        "ucMode": 4,
+        "ucAnatomicalSliceMode": 4,
+        "asSlice": [
+          {
+            "dThickness": 3.0,
+            "dPhaseFOV": 192.0,
+            "dReadoutFOV": 192.0,
+            "sPosition": {
+              "dSag": -15.7104622106,
+              "dCor": -11.7226308615,
+              "dTra": 0.102538023437
+            },
+            "sNormal": {
+              "dSag": 0.9989202863,
+              "dCor": 0.03414153355,
+              "dTra": 0.03150583084
+            }
+          },
+          {
+            "dThickness": 3.0,
+            "dPhaseFOV": 192.0,
+            "dReadoutFOV": 192.0,
+            "sPosition": {
+              "dSag": -12.7137013517,
+              "dCor": -11.6202062608,
+              "dTra": 0.197055515957
+            },
+            "sNormal": {
+              "dSag": 0.9989202863,
+              "dCor": 0.03414153355,
+              "dTra": 0.03150583084
+            }
+          },
+          {
+            "dThickness": 3.0,
+            "dPhaseFOV": 192.0,
+            "dReadoutFOV": 192.0,
+            "sPosition": {
+              "dSag": -9.71694049284,
+              "dCor": -11.5177816602,
+              "dTra": 0.291573008477
+            },
+            "sNormal": {
+              "dSag": 0.9989202863,
+              "dCor": 0.03414153355,
+              "dTra": 0.03150583084
+            }
+          },
+          {
+            "dThickness": 3.0,
+            "dPhaseFOV": 192.0,
+            "dReadoutFOV": 192.0,
+            "sPosition": {
+              "dSag": -6.72017963394,
+              "dCor": -11.4153570595,
+              "dTra": 0.386090500997
+            },
+            "sNormal": {
+              "dSag": 0.9989202863,
+              "dCor": 0.03414153355,
+              "dTra": 0.03150583084
+            }
+          },
+          {
+            "dThickness": 3.0,
+            "dPhaseFOV": 192.0,
+            "dReadoutFOV": 192.0,
+            "sPosition": {
+              "dSag": -3.72341877504,
+              "dCor": -11.3129324589,
+              "dTra": 0.480607993517
+            },
+            "sNormal": {
+              "dSag": 0.9989202863,
+              "dCor": 0.03414153355,
+              "dTra": 0.03150583084
+            }
+          },
+          {
+            "dThickness": 3.0,
+            "dPhaseFOV": 192.0,
+            "dReadoutFOV": 192.0,
+            "sPosition": {
+              "dSag": -0.726657916137,
+              "dCor": -11.2105078582,
+              "dTra": 0.575125486037
+            },
+            "sNormal": {
+              "dSag": 0.9989202863,
+              "dCor": 0.03414153355,
+              "dTra": 0.03150583084
+            }
+          },
+          {
+            "dThickness": 3.0,
+            "dPhaseFOV": 192.0,
+            "dReadoutFOV": 192.0,
+            "sPosition": {
+              "dSag": 2.27010294276,
+              "dCor": -11.1080832576,
+              "dTra": 0.669642978557
+            },
+            "sNormal": {
+              "dSag": 0.9989202863,
+              "dCor": 0.03414153355,
+              "dTra": 0.03150583084
+            }
+          },
+          {
+            "dThickness": 3.0,
+            "dPhaseFOV": 192.0,
+            "dReadoutFOV": 192.0,
+            "sPosition": {
+              "dSag": 5.26686380166,
+              "dCor": -11.0056586569,
+              "dTra": 0.764160471077
+            },
+            "sNormal": {
+              "dSag": 0.9989202863,
+              "dCor": 0.03414153355,
+              "dTra": 0.03150583084
+            }
+          },
+          {
+            "dThickness": 3.0,
+            "dPhaseFOV": 192.0,
+            "dReadoutFOV": 192.0,
+            "sPosition": {
+              "dSag": 8.26362466056,
+              "dCor": -10.9032340563,
+              "dTra": 0.858677963597
+            },
+            "sNormal": {
+              "dSag": 0.9989202863,
+              "dCor": 0.03414153355,
+              "dTra": 0.03150583084
+            }
+          }
+        ],
+        "alSliceAcqOrder": [
+          null,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "anAsc": [
+          null,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "anPos": [
+          null,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "sTSat": {
+          "dThickness": 50.0,
+          "ulShape": 1
+        }
+      },
+      "sGroupArray": {
+        "lSize": 1,
+        "asGroup": [
+          {
+            "nSize": 9
+          }
+        ],
+        "anMember": [
+          null,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          -1
+        ],
+        "sPSat": {
+          "dThickness": 100.0,
+          "dGap": 10.0,
+          "ulShape": 1
+        }
+      },
+      "sRSatArray": {
+        "asElm": [
+          {
+            "ulShape": 1
+          },
+          {
+            "ulShape": 1
+          },
+          {
+            "ulShape": 1
+          },
+          {
+            "ulShape": 1
+          },
+          {
+            "ulShape": 1
+          },
+          {
+            "ulShape": 1
+          },
+          {
+            "ulShape": 1
+          },
+          {
+            "ulShape": 1
+          }
+        ]
+      },
+      "sAutoAlign": {
+        "dAAMatrix": [
+          1.0,
+          null,
+          null,
+          null,
+          null,
+          1.0,
+          null,
+          null,
+          null,
+          null,
+          1.0,
+          null,
+          null,
+          null,
+          null,
+          1.0
+        ]
+      },
+      "sNavigatorPara": {
+        "lBreathHoldDuration_us": 15000000,
+        "lBreathHoldMeas": 1,
+        "lRespComp": 4
+      },
+      "sBladePara": {
+        "dBladeCoverage": 100.0,
+        "ucMotionCorr": 2
+      },
+      "sPrepPulses": {
+        "ucFatSat": 32,
+        "ucWaterSat": 4,
+        "ucInversion": 4,
+        "ucSatRecovery": 1,
+        "ucT2Prep": 1,
+        "ucTIScout": 1,
+        "ucFatSatMode": 1,
+        "dDarkBloodThickness": 200.0,
+        "dDarkBloodFlipAngle": 200.0,
+        "dIRPulseThicknessFactor": 0.77,
+        "ucBloodSuppression": 1,
+        "lPhaseCorrectionMode": 1,
+        "ucIRScheme": 1,
+        "lFatSupOpt": 1,
+        "adT2PrepDuration": [
+          40.0
+        ]
+      },
+      "sKSpace": {
+        "dPhaseResolution": 1.0,
+        "dSliceResolution": 1.0,
+        "dAngioDynCentralRegionA": 20.0,
+        "dAngioDynSamplingDensityB": 25.0,
+        "dSeqPhasePartialFourierForSNR": 1.0,
+        "lBaseResolution": 128,
+        "lPhaseEncodingLines": 128,
+        "lPartitions": 64,
+        "lImagesPerSlab": 64,
+        "lRadialViews": 64,
+        "lRadialInterleavesPerImage": 2,
+        "lLinesPerShot": 1,
+        "unReordering": 1,
+        "ucPhasePartialFourier": 4,
+        "ucSlicePartialFourier": 16,
+        "ucAveragingMode": 2,
+        "ucMultiSliceMode": 2,
+        "ucDimension": 2,
+        "ucTrajectory": 1,
+        "ucViewSharing": 1,
+        "ucAsymmetricEchoMode": 1,
+        "ucPOCS": 1,
+        "ucReadoutPartialFourier": 16
+      },
+      "sFastImaging": {
+        "lEPIFactor": 128,
+        "lTurboFactor": 1,
+        "lSliceTurboFactor": 1,
+        "lSegments": 1,
+        "ulEnableRFSpoiling": 1,
+        "ucPhaseEncRE": 0,
+        "ucSegmentationMode": 1,
+        "lShots": 1,
+        "lEchoTrainDuration": 700
+      },
+      "sPhysioImaging": {
+        "lSignal1": 1,
+        "lMethod1": 1,
+        "lSignal2": 1,
+        "lMethod2": 1,
+        "lPhases": 1,
+        "lRetroGatedImages": 16,
+        "lDummyHeartbeats": 0,
+        "sPhysioECG": {
+          "lTriggerPulses": 1,
+          "lTriggerWindow": 5,
+          "lArrhythmiaDetection": 1,
+          "lCardiacGateOnThreshold": 100000,
+          "lCardiacGateOffThreshold": 700000,
+          "lTriggerIntervals": 1
+        },
+        "sPhysioPulse": {
+          "lTriggerPulses": 1,
+          "lTriggerWindow": 5,
+          "lArrhythmiaDetection": 1,
+          "lCardiacGateOnThreshold": 100000,
+          "lCardiacGateOffThreshold": 700000,
+          "lTriggerIntervals": 1
+        },
+        "sPhysioExt": {
+          "lTriggerPulses": 1,
+          "lTriggerWindow": 5,
+          "lArrhythmiaDetection": 1,
+          "lCardiacGateOnThreshold": 100000,
+          "lCardiacGateOffThreshold": 700000,
+          "lTriggerIntervals": 1
+        },
+        "sPhysioExt2": {
+          "lTriggerIntervals": 1
+        },
+        "sPhysioResp": {
+          "lRespGateThreshold": 20,
+          "lRespGatePhase": 2,
+          "dGatingRatio": 0.3
+        },
+        "sPhysioNative": {
+          "ucMode": 1,
+          "ucFlowSenMode": 1
+        }
+      },
+      "sSpecPara": {
+        "lPhaseCyclingType": 1,
+        "lPhaseEncodingType": 1,
+        "lRFExcitationBandwidth": 1,
+        "ucRemoveOversampling": 1,
+        "lAutoRefScanMode": 1,
+        "lAutoRefScanNo": 1,
+        "lDecouplingType": 1,
+        "lNOEType": 1,
+        "lExcitationType": 1,
+        "lSpecAppl": 1,
+        "lSpectralSuppression": 1,
+        "sVoI": {
+          "sPosition": {
+            "dTra": 16.0
+          }
+        }
+      },
+      "sDiffusion": {
+        "lDiffWeightings": 2,
+        "lNoiseLevel": 40,
+        "lDiffDirections": 27,
+        "ulMode": 128,
+        "dsScheme": 2,
+        "ulQSpaceCoverage": 1,
+        "ulQSpaceSampling": 1,
+        "lQSpaceMaxBValue": 5,
+        "lQSpaceSteps": 1,
+        "alBValue": [
+          null,
+          1000
+        ],
+        "alAverages": [
+          1,
+          1
+        ],
+        "sFreeDiffusionData": {
+          "sComment": [
+            65,
+            120,
+            67,
+            97,
+            108,
+            105,
+            98,
+            101,
+            114,
+            49,
+            68,
+            95,
+            50,
+            55,
+            81,
+            86,
+            97,
+            108,
+            95,
+            48,
+            48,
+            49,
+            46,
+            100,
+            118,
+            115,
+            10
+          ],
+          "lDiffDirections": 27,
+          "ulCoordinateSystem": 1,
+          "ulNormalization": 1,
+          "asDiffDirVector": [
+            null,
+            null,
+            {
+              "dTra": 0.04
+            },
+            {
+              "dTra": 0.08
+            },
+            {
+              "dTra": 0.12
+            },
+            {
+              "dTra": 0.16
+            },
+            {
+              "dTra": 0.2
+            },
+            {
+              "dTra": 0.24
+            },
+            {
+              "dTra": 0.28
+            },
+            {
+              "dTra": 0.32
+            },
+            {
+              "dTra": 0.36
+            },
+            {
+              "dTra": 0.4
+            },
+            {
+              "dTra": 0.44
+            },
+            {
+              "dTra": 0.48
+            },
+            {
+              "dTra": 0.52
+            },
+            {
+              "dTra": 0.56
+            },
+            {
+              "dTra": 0.6
+            },
+            {
+              "dTra": 0.64
+            },
+            {
+              "dTra": 0.68
+            },
+            {
+              "dTra": 0.72
+            },
+            {
+              "dTra": 0.76
+            },
+            {
+              "dTra": 0.8
+            },
+            {
+              "dTra": 0.84
+            },
+            {
+              "dTra": 0.88
+            },
+            {
+              "dTra": 0.92
+            },
+            {
+              "dTra": 0.96
+            },
+            {
+              "dTra": 1.0
+            }
+          ]
+        }
+      },
+      "sAngio": {
+        "ucPCFlowMode": 2,
+        "ucTOFInflow": 4,
+        "lDynamicReconMode": 1,
+        "lTemporalInterpolation": 1
+      },
+      "sPreScanNormalizeFilter": {
+        "ucMode": 2
+      },
+      "sRawFilter": {
+        "lSlope_256": 25,
+        "ucOn": 1,
+        "ucMode": 1
+      },
+      "sDistortionCorrFilter": {
+        "ucMode": 2
+      },
+      "sNoiseDecorrData": {
+        "lNoiseDecorrDefaultMode": 4
+      },
+      "sPat": {
+        "lAccelFactPE": 2,
+        "lAccelFact3D": 1,
+        "lRefLinesPE": 38,
+        "ucPATMode": 2,
+        "ucRefScanMode": 4,
+        "ucTPatAverageAllFrames": 1,
+        "ulCaipirinhaMode": 1
+      },
+      "sMds": {
+        "ulMdsModeMask": 1,
+        "ulMdsVariableResolution": 1,
+        "lTableSpeedNumerator": 1,
+        "lmdsLinesPerSegment": 15,
+        "lMdsPtabAbsStartPosZ": 0,
+        "bMdsPtabAbsStartPosZValid": 0,
+        "lMdsPtabAbsEndPosZ": 0,
+        "bMdsPtabAbsEndPosZValid": 0,
+        "ulMdsReconMode": 1,
+        "dMdsRangeExtension": 600.0,
+        "lSweeps": 1,
+        "ucSweepMode": 1,
+        "dDCSIlluminationScale": 2.0,
+        "ucExcitDir": 1,
+        "ucFreqShimPerSlice": 1,
+        "ucSliceFollowing": 1,
+        "ucDynamicCoilSwitching": 1,
+        "ucPhaseNav": 0,
+        "sMdsEndPosSBCS_mm": {
+          "dTra": 600.0
+        },
+        "sMdsPreScanNormalize": {
+          "ucMode": 2,
+          "ucStackMode": 4,
+          "lNPELin": 18
+        }
+      },
+      "sAAInitialOffset": {
+        "Laterality": 0,
+        "SliceInformation": {
+          "sPosition": {
+            "dSag": -3.72341877504,
+            "dCor": -11.3129324589,
+            "dTra": -15.5193920065
+          },
+          "sNormal": {
+            "dSag": 0.998920286264,
+            "dCor": 0.0341415335488,
+            "dTra": 0.0315058308389
+          }
+        }
+      },
+      "adFlipAngleDegree": [
+        180.0
+      ],
+      "sCoilSelectMeas": {
+        "dOverallImageScaleFactor": 0.592592592593,
+        "dOverallImageScaleCorrectionFactor": 1.0,
+        "sCoilStringForConversion": "HC1-7;NC1",
+        "dAutoCoilSelectIlluRangeScale": 0.699999988079,
+        "aRxCoilSelectData": [
+          {
+            "ucNoiseDecorrMode": 1,
+            "tNucleus": "1H",
+            "iUsedRFactor": 3,
+            "IgnoreCoilGroups": 0,
+            "BCCombineMode": 1,
+            "bSuppressMandatoryProperties": 0,
+            "asList": [
+              {
+                "lElementSelected": 1,
+                "lMuxChannelConnected": 24,
+                "lRxChannelConnected": 10,
+                "lADCChannelConnected": 19,
+                "uiInsertionTime": 3940,
+                "sCoilElementID": {
+                  "tCoilID": "HeadNeck_64",
+                  "lCoilCopy": 1,
+                  "tElement": "N32",
+                  "ulUniqueKey": -554693503
+                },
+                "sCoilProperties": {
+                  "eCoilType": 4
+                }
+              },
+              {
+                "lElementSelected": 1,
+                "lMuxChannelConnected": 22,
+                "lRxChannelConnected": 20,
+                "lADCChannelConnected": 40,
+                "uiInsertionTime": 3940,
+                "sCoilElementID": {
+                  "tCoilID": "HeadNeck_64",
+                  "lCoilCopy": 1,
+                  "tElement": "N30",
+                  "tCoilClass": "Head_Rx",
+                  "ulUniqueKey": -1540333599
+                },
+                "sCoilProperties": {
+                  "eCoilType": 4
+                }
+              },
+              {
+                "lElementSelected": 1,
+                "lMuxChannelConnected": 22,
+                "lRxChannelConnected": 20,
+                "lADCChannelConnected": 39,
+                "uiInsertionTime": 3940,
+                "sCoilElementID": {
+                  "tCoilID": "HeadNeck_64",
+                  "lCoilCopy": 1,
+                  "tElement": "N10",
+                  "ulUniqueKey": -369557782
+                },
+                "sCoilProperties": {
+                  "eCoilType": 4
+                }
+              },
+              {
+                "lElementSelected": 1,
+                "lMuxChannelConnected": 23,
+                "lRxChannelConnected": 14,
+                "lADCChannelConnected": 28,
+                "uiInsertionTime": 3940,
+                "sCoilElementID": {
+                  "tCoilID": "HeadNeck_64",
+                  "lCoilCopy": 1,
+                  "tElement": "N31",
+                  "ulUniqueKey": -1722780079
+                },
+                "sCoilProperties": {
+                  "eCoilType": 4
+                }
+              },
+              {
+                "lElementSelected": 1,
+                "lMuxChannelConnected": 23,
+                "lRxChannelConnected": 14,
+                "lADCChannelConnected": 27,
+                "uiInsertionTime": 3940,
+                "sCoilElementID": {
+                  "tCoilID": "HeadNeck_64",
+                  "lCoilCopy": 1,
+                  "tElement": "N11",
+                  "ulUniqueKey": -728180902
+                },
+                "sCoilProperties": {
+                  "eCoilType": 4
+                }
+              },
+              {
+                "lElementSelected": 1,
+                "lMuxChannelConnected": 24,
+                "lRxChannelConnected": 10,
+                "lADCChannelConnected": 20,
+                "uiInsertionTime": 3940,
+                "sCoilElementID": {
+                  "tCoilID": "HeadNeck_64",
+                  "lCoilCopy": 1,
+                  "tElement": "N12",
+                  "ulUniqueKey": -1825002102
+                },
+                "sCoilProperties": {
+                  "eCoilType": 4
+                }
+              },
+              {
+                "lElementSelected": 1,
+                "lMuxChannelConnected": 14,
+                "lRxChannelConnected": 26,
+                "lADCChannelConnected": 51,
+                "uiInsertionTime": 3939,
+                "sCoilElementID": {
+                  "tCoilID": "HeadNeck_64",
+                  "lCoilCopy": 1,
+                  "tElement": "H12",
+                  "ulUniqueKey": -253192016
+                },
+                "sCoilProperties": {
+                  "eCoilType": 4
+                }
+              },
+              {
+                "lElementSelected": 1,
+                "lMuxChannelConnected": 13,
+                "lRxChannelConnected": 5,
+                "lADCChannelConnected": 9,
+                "uiInsertionTime": 3939,
+                "sCoilElementID": {
+                  "tCoilID": "HeadNeck_64",
+                  "lCoilCopy": 1,
+                  "tElement": "H10",
+                  "tCoilClass": "Head_Rx",
+                  "ulUniqueKey": -1977037872
+                },
+                "sCoilProperties": {
+                  "eCoilType": 4
+                }
+              },
+              {
+                "lElementSelected": 1,
+                "lMuxChannelConnected": 13,
+                "lRxChannelConnected": 5,
+                "lADCChannelConnected": 10,
+                "uiInsertionTime": 3939,
+                "sCoilElementID": {
+                  "tCoilID": "HeadNeck_64",
+                  "lCoilCopy": 1,
+                  "tElement": "H11",
+                  "ulUniqueKey": -1219960224
+                },
+                "sCoilProperties": {
+                  "eCoilType": 4
+                }
+              },
+              {
+                "lElementSelected": 1,
+                "lMuxChannelConnected": 14,
+                "lRxChannelConnected": 26,
+                "lADCChannelConnected": 52,
+                "uiInsertionTime": 3939,
+                "sCoilElementID": {
+                  "tCoilID": "HeadNeck_64",
+                  "lCoilCopy": 1,
+                  "tElement": "H13",
+                  "ulUniqueKey": -846679808
+                },
+                "sCoilProperties": {
+                  "eCoilType": 4
+                }
+              },
+              {
+                "lElementSelected": 1,
+                "lMuxChannelConnected": 49,
+                "lRxChannelConnected": 9,
+                "lADCChannelConnected": 17,
+                "uiInsertionTime": 3938,
+                "sCoilElementID": {
+                  "tCoilID": "HeadNeck_64",
+                  "lCoilCopy": 1,
+                  "tElement": "H20",
+                  "ulUniqueKey": 213694846
+                },
+                "sCoilProperties": {
+                  "eCoilType": 4
+                }
+              },
+              {
+                "lElementSelected": 1,
+                "lMuxChannelConnected": 49,
+                "lRxChannelConnected": 9,
+                "lADCChannelConnected": 18,
+                "uiInsertionTime": 3938,
+                "sCoilElementID": {
+                  "tCoilID": "HeadNeck_64",
+                  "lCoilCopy": 1,
+                  "tElement": "H21",
+                  "tCoilClass": "Head_Rx",
+                  "ulUniqueKey": 836538574
+                },
+                "sCoilProperties": {
+                  "eCoilType": 4
+                }
+              },
+              {
+                "lElementSelected": 1,
+                "lMuxChannelConnected": 50,
+                "lRxChannelConnected": 23,
+                "lADCChannelConnected": 45,
+                "uiInsertionTime": 3938,
+                "sCoilElementID": {
+                  "tCoilID": "HeadNeck_64",
+                  "lCoilCopy": 1,
+                  "tElement": "H22",
+                  "ulUniqueKey": 1987897886
+                },
+                "sCoilProperties": {
+                  "eCoilType": 4
+                }
+              },
+              {
+                "lElementSelected": 1,
+                "lMuxChannelConnected": 50,
+                "lRxChannelConnected": 23,
+                "lADCChannelConnected": 46,
+                "uiInsertionTime": 3938,
+                "sCoilElementID": {
+                  "tCoilID": "HeadNeck_64",
+                  "lCoilCopy": 1,
+                  "tElement": "H23",
+                  "ulUniqueKey": 1260176302
+                },
+                "sCoilProperties": {
+                  "eCoilType": 4
+                }
+              },
+              {
+                "lElementSelected": 1,
+                "lMuxChannelConnected": 61,
+                "lRxChannelConnected": 22,
+                "lADCChannelConnected": 43,
+                "uiInsertionTime": 3938,
+                "sCoilElementID": {
+                  "tCoilID": "HeadNeck_64",
+                  "lCoilCopy": 1,
+                  "tElement": "H24",
+                  "ulUniqueKey": -113500226
+                },
+                "sCoilProperties": {
+                  "eCoilType": 4
+                }
+              },
+              {
+                "lElementSelected": 1,
+                "lMuxChannelConnected": 61,
+                "lRxChannelConnected": 22,
+                "lADCChannelConnected": 44,
+                "uiInsertionTime": 3938,
+                "sCoilElementID": {
+                  "tCoilID": "HeadNeck_64",
+                  "lCoilCopy": 1,
+                  "tElement": "H25",
+                  "ulUniqueKey": -1000589810
+                },
+                "sCoilProperties": {
+                  "eCoilType": 4
+                }
+              },
+              {
+                "lElementSelected": 1,
+                "lMuxChannelConnected": 68,
+                "lRxChannelConnected": 29,
+                "lADCChannelConnected": 58,
+                "uiInsertionTime": 3937,
+                "sCoilElementID": {
+                  "tCoilID": "HeadNeck_64",
+                  "lCoilCopy": 1,
+                  "tElement": "H84",
+                  "ulUniqueKey": 1487355096
+                },
+                "sCoilProperties": {
+                  "eCoilType": 4
+                }
+              },
+              {
+                "lElementSelected": 1,
+                "lMuxChannelConnected": 55,
+                "lRxChannelConnected": 7,
+                "lADCChannelConnected": 13,
+                "uiInsertionTime": 3937,
+                "sCoilElementID": {
+                  "tCoilID": "HeadNeck_64",
+                  "lCoilCopy": 1,
+                  "tElement": "H80",
+                  "tCoilClass": "Head_Rx",
+                  "ulUniqueKey": -1389913576
+                },
+                "sCoilProperties": {
+                  "eCoilType": 4
+                }
+              },
+              {
+                "lElementSelected": 1,
+                "lMuxChannelConnected": 55,
+                "lRxChannelConnected": 7,
+                "lADCChannelConnected": 14,
+                "uiInsertionTime": 3937,
+                "sCoilElementID": {
+                  "tCoilID": "HeadNeck_64",
+                  "lCoilCopy": 1,
+                  "tElement": "H81",
+                  "ulUniqueKey": -1874349144
+                },
+                "sCoilProperties": {
+                  "eCoilType": 4
+                }
+              },
+              {
+                "lElementSelected": 1,
+                "lMuxChannelConnected": 56,
+                "lRxChannelConnected": 30,
+                "lADCChannelConnected": 60,
+                "uiInsertionTime": 3937,
+                "sCoilElementID": {
+                  "tCoilID": "HeadNeck_64",
+                  "lCoilCopy": 1,
+                  "tElement": "H82",
+                  "ulUniqueKey": -672675464
+                },
+                "sCoilProperties": {
+                  "eCoilType": 4
+                }
+              },
+              {
+                "lElementSelected": 1,
+                "lMuxChannelConnected": 56,
+                "lRxChannelConnected": 30,
+                "lADCChannelConnected": 59,
+                "uiInsertionTime": 3937,
+                "sCoilElementID": {
+                  "tCoilID": "HeadNeck_64",
+                  "lCoilCopy": 1,
+                  "tElement": "H83",
+                  "ulUniqueKey": -360193848
+                },
+                "sCoilProperties": {
+                  "eCoilType": 4
+                }
+              },
+              {
+                "lElementSelected": 1,
+                "lMuxChannelConnected": 68,
+                "lRxChannelConnected": 29,
+                "lADCChannelConnected": 57,
+                "uiInsertionTime": 3937,
+                "sCoilElementID": {
+                  "tCoilID": "HeadNeck_64",
+                  "lCoilCopy": 1,
+                  "tElement": "H85",
+                  "ulUniqueKey": 1707545960
+                },
+                "sCoilProperties": {
+                  "eCoilType": 4
+                }
+              },
+              {
+                "lElementSelected": 1,
+                "lMuxChannelConnected": 69,
+                "lRxChannelConnected": 19,
+                "lADCChannelConnected": 37,
+                "uiInsertionTime": 3937,
+                "sCoilElementID": {
+                  "tCoilID": "HeadNeck_64",
+                  "lCoilCopy": 1,
+                  "tElement": "H86",
+                  "ulUniqueKey": 577204152
+                },
+                "sCoilProperties": {
+                  "eCoilType": 4
+                }
+              },
+              {
+                "lElementSelected": 1,
+                "lMuxChannelConnected": 69,
+                "lRxChannelConnected": 19,
+                "lADCChannelConnected": 38,
+                "uiInsertionTime": 3937,
+                "sCoilElementID": {
+                  "tCoilID": "HeadNeck_64",
+                  "lCoilCopy": 1,
+                  "tElement": "H87",
+                  "ulUniqueKey": 520570376
+                },
+                "sCoilProperties": {
+                  "eCoilType": 4
+                }
+              },
+              {
+                "lElementSelected": 1,
+                "lMuxChannelConnected": 16,
+                "lRxChannelConnected": 3,
+                "lADCChannelConnected": 6,
+                "uiInsertionTime": 3936,
+                "sCoilElementID": {
+                  "tCoilID": "HeadNeck_64",
+                  "lCoilCopy": 1,
+                  "tElement": "H32",
+                  "ulUniqueKey": -1121961541
+                },
+                "sCoilProperties": {
+                  "eCoilType": 4
+                }
+              },
+              {
+                "lElementSelected": 1,
+                "lMuxChannelConnected": 15,
+                "lRxChannelConnected": 24,
+                "lADCChannelConnected": 48,
+                "uiInsertionTime": 3936,
+                "sCoilElementID": {
+                  "tCoilID": "HeadNeck_64",
+                  "lCoilCopy": 1,
+                  "tElement": "H30",
+                  "tCoilClass": "Head_Rx",
+                  "ulUniqueKey": -941593893
+                },
+                "sCoilProperties": {
+                  "eCoilType": 4
+                }
+              },
+              {
+                "lElementSelected": 1,
+                "lMuxChannelConnected": 15,
+                "lRxChannelConnected": 24,
+                "lADCChannelConnected": 47,
+                "uiInsertionTime": 3936,
+                "sCoilElementID": {
+                  "tCoilID": "HeadNeck_64",
+                  "lCoilCopy": 1,
+                  "tElement": "H31",
+                  "ulUniqueKey": -92257429
+                },
+                "sCoilProperties": {
+                  "eCoilType": 4
+                }
+              },
+              {
+                "lElementSelected": 1,
+                "lMuxChannelConnected": 16,
+                "lRxChannelConnected": 3,
+                "lADCChannelConnected": 5,
+                "uiInsertionTime": 3936,
+                "sCoilElementID": {
+                  "tCoilID": "HeadNeck_64",
+                  "lCoilCopy": 1,
+                  "tElement": "H33",
+                  "ulUniqueKey": -2143285237
+                },
+                "sCoilProperties": {
+                  "eCoilType": 4
+                }
+              },
+              {
+                "lElementSelected": 1,
+                "lMuxChannelConnected": 17,
+                "lRxChannelConnected": 11,
+                "lADCChannelConnected": 22,
+                "uiInsertionTime": 3936,
+                "sCoilElementID": {
+                  "tCoilID": "HeadNeck_64",
+                  "lCoilCopy": 1,
+                  "tElement": "H34",
+                  "ulUniqueKey": 845204507
+                },
+                "sCoilProperties": {
+                  "eCoilType": 4
+                }
+              },
+              {
+                "lElementSelected": 1,
+                "lMuxChannelConnected": 17,
+                "lRxChannelConnected": 11,
+                "lADCChannelConnected": 21,
+                "uiInsertionTime": 3936,
+                "sCoilElementID": {
+                  "tCoilID": "HeadNeck_64",
+                  "lCoilCopy": 1,
+                  "tElement": "H35",
+                  "ulUniqueKey": 251717035
+                },
+                "sCoilProperties": {
+                  "eCoilType": 4
+                }
+              },
+              {
+                "lElementSelected": 1,
+                "lMuxChannelConnected": 64,
+                "lRxChannelConnected": 32,
+                "lADCChannelConnected": 64,
+                "uiInsertionTime": 3935,
+                "sCoilElementID": {
+                  "tCoilID": "HeadNeck_64",
+                  "lCoilCopy": 1,
+                  "tElement": "H49",
+                  "ulUniqueKey": -671795182
+                },
+                "sCoilProperties": {
+                  "eCoilType": 4
+                }
+              },
+              {
+                "lElementSelected": 1,
+                "lMuxChannelConnected": 51,
+                "lRxChannelConnected": 2,
+                "lADCChannelConnected": 3,
+                "uiInsertionTime": 3935,
+                "sCoilElementID": {
+                  "tCoilID": "HeadNeck_64",
+                  "lCoilCopy": 1,
+                  "tElement": "H40",
+                  "tCoilClass": "Head_Rx",
+                  "ulUniqueKey": -622503325
+                },
+                "sCoilProperties": {
+                  "eCoilType": 4
+                }
+              },
+              {
+                "lElementSelected": 1,
+                "lMuxChannelConnected": 51,
+                "lRxChannelConnected": 2,
+                "lADCChannelConnected": 4,
+                "uiInsertionTime": 3935,
+                "sCoilElementID": {
+                  "tCoilID": "HeadNeck_64",
+                  "lCoilCopy": 1,
+                  "tElement": "H41",
+                  "ulUniqueKey": -410684461
+                },
+                "sCoilProperties": {
+                  "eCoilType": 4
+                }
+              },
+              {
+                "lElementSelected": 1,
+                "lMuxChannelConnected": 52,
+                "lRxChannelConnected": 18,
+                "lADCChannelConnected": 35,
+                "uiInsertionTime": 3935,
+                "sCoilElementID": {
+                  "tCoilID": "HeadNeck_64",
+                  "lCoilCopy": 1,
+                  "tElement": "H42",
+                  "ulUniqueKey": -1608185597
+                },
+                "sCoilProperties": {
+                  "eCoilType": 4
+                }
+              },
+              {
+                "lElementSelected": 1,
+                "lMuxChannelConnected": 52,
+                "lRxChannelConnected": 18,
+                "lADCChannelConnected": 36,
+                "uiInsertionTime": 3935,
+                "sCoilElementID": {
+                  "tCoilID": "HeadNeck_64",
+                  "lCoilCopy": 1,
+                  "tElement": "H43",
+                  "ulUniqueKey": -1656414029
+                },
+                "sCoilProperties": {
+                  "eCoilType": 4
+                }
+              },
+              {
+                "lElementSelected": 1,
+                "lMuxChannelConnected": 62,
+                "lRxChannelConnected": 15,
+                "lADCChannelConnected": 30,
+                "uiInsertionTime": 3935,
+                "sCoilElementID": {
+                  "tCoilID": "HeadNeck_64",
+                  "lCoilCopy": 1,
+                  "tElement": "H44",
+                  "ulUniqueKey": 795212963
+                },
+                "sCoilProperties": {
+                  "eCoilType": 4
+                }
+              },
+              {
+                "lElementSelected": 1,
+                "lMuxChannelConnected": 62,
+                "lRxChannelConnected": 15,
+                "lADCChannelConnected": 29,
+                "uiInsertionTime": 3935,
+                "sCoilElementID": {
+                  "tCoilID": "HeadNeck_64",
+                  "lCoilCopy": 1,
+                  "tElement": "H45",
+                  "ulUniqueKey": 302372115
+                },
+                "sCoilProperties": {
+                  "eCoilType": 4
+                }
+              },
+              {
+                "lElementSelected": 1,
+                "lMuxChannelConnected": 63,
+                "lRxChannelConnected": 25,
+                "lADCChannelConnected": 49,
+                "uiInsertionTime": 3935,
+                "sCoilElementID": {
+                  "tCoilID": "HeadNeck_64",
+                  "lCoilCopy": 1,
+                  "tElement": "H46",
+                  "ulUniqueKey": 1436921795
+                },
+                "sCoilProperties": {
+                  "eCoilType": 4
+                }
+              },
+              {
+                "lElementSelected": 1,
+                "lMuxChannelConnected": 63,
+                "lRxChannelConnected": 25,
+                "lADCChannelConnected": 50,
+                "uiInsertionTime": 3935,
+                "sCoilElementID": {
+                  "tCoilID": "HeadNeck_64",
+                  "lCoilCopy": 1,
+                  "tElement": "H47",
+                  "ulUniqueKey": 1757775475
+                },
+                "sCoilProperties": {
+                  "eCoilType": 4
+                }
+              },
+              {
+                "lElementSelected": 1,
+                "lMuxChannelConnected": 64,
+                "lRxChannelConnected": 32,
+                "lADCChannelConnected": 63,
+                "uiInsertionTime": 3935,
+                "sCoilElementID": {
+                  "tCoilID": "HeadNeck_64",
+                  "lCoilCopy": 1,
+                  "tElement": "H48",
+                  "ulUniqueKey": -359329374
+                },
+                "sCoilProperties": {
+                  "eCoilType": 4
+                }
+              },
+              {
+                "lElementSelected": 1,
+                "lMuxChannelConnected": 66,
+                "lRxChannelConnected": 17,
+                "lADCChannelConnected": 34,
+                "uiInsertionTime": 3934,
+                "sCoilElementID": {
+                  "tCoilID": "HeadNeck_64",
+                  "lCoilCopy": 1,
+                  "tElement": "H66",
+                  "ulUniqueKey": 409800392
+                },
+                "sCoilProperties": {
+                  "eCoilType": 4
+                }
+              },
+              {
+                "lElementSelected": 1,
+                "lMuxChannelConnected": 53,
+                "lRxChannelConnected": 12,
+                "lADCChannelConnected": 24,
+                "uiInsertionTime": 3934,
+                "sCoilElementID": {
+                  "tCoilID": "HeadNeck_64",
+                  "lCoilCopy": 1,
+                  "tElement": "H60",
+                  "tCoilClass": "Head_Rx",
+                  "ulUniqueKey": -1758594200
+                },
+                "sCoilProperties": {
+                  "eCoilType": 4
+                }
+              },
+              {
+                "lElementSelected": 1,
+                "lMuxChannelConnected": 53,
+                "lRxChannelConnected": 12,
+                "lADCChannelConnected": 23,
+                "uiInsertionTime": 3934,
+                "sCoilElementID": {
+                  "tCoilID": "HeadNeck_64",
+                  "lCoilCopy": 1,
+                  "tElement": "H61",
+                  "ulUniqueKey": -1437740328
+                },
+                "sCoilProperties": {
+                  "eCoilType": 4
+                }
+              },
+              {
+                "lElementSelected": 1,
+                "lMuxChannelConnected": 54,
+                "lRxChannelConnected": 28,
+                "lADCChannelConnected": 56,
+                "uiInsertionTime": 3934,
+                "sCoilElementID": {
+                  "tCoilID": "HeadNeck_64",
+                  "lCoilCopy": 1,
+                  "tElement": "H62",
+                  "ulUniqueKey": -303192056
+                },
+                "sCoilProperties": {
+                  "eCoilType": 4
+                }
+              },
+              {
+                "lElementSelected": 1,
+                "lMuxChannelConnected": 54,
+                "lRxChannelConnected": 28,
+                "lADCChannelConnected": 55,
+                "uiInsertionTime": 3934,
+                "sCoilElementID": {
+                  "tCoilID": "HeadNeck_64",
+                  "lCoilCopy": 1,
+                  "tElement": "H63",
+                  "ulUniqueKey": -796032584
+                },
+                "sCoilProperties": {
+                  "eCoilType": 4
+                }
+              },
+              {
+                "lElementSelected": 1,
+                "lMuxChannelConnected": 65,
+                "lRxChannelConnected": 31,
+                "lADCChannelConnected": 62,
+                "uiInsertionTime": 3934,
+                "sCoilElementID": {
+                  "tCoilID": "HeadNeck_64",
+                  "lCoilCopy": 1,
+                  "tElement": "H64",
+                  "ulUniqueKey": 1655528872
+                },
+                "sCoilProperties": {
+                  "eCoilType": 4
+                }
+              },
+              {
+                "lElementSelected": 1,
+                "lMuxChannelConnected": 65,
+                "lRxChannelConnected": 31,
+                "lADCChannelConnected": 61,
+                "uiInsertionTime": 3934,
+                "sCoilElementID": {
+                  "tCoilID": "HeadNeck_64",
+                  "lCoilCopy": 1,
+                  "tElement": "H65",
+                  "ulUniqueKey": 1607300120
+                },
+                "sCoilProperties": {
+                  "eCoilType": 4
+                }
+              },
+              {
+                "lElementSelected": 1,
+                "lMuxChannelConnected": 66,
+                "lRxChannelConnected": 17,
+                "lADCChannelConnected": 33,
+                "uiInsertionTime": 3934,
+                "sCoilElementID": {
+                  "tCoilID": "HeadNeck_64",
+                  "lCoilCopy": 1,
+                  "tElement": "H67",
+                  "ulUniqueKey": 621619064
+                },
+                "sCoilProperties": {
+                  "eCoilType": 4
+                }
+              },
+              {
+                "lElementSelected": 1,
+                "lMuxChannelConnected": 67,
+                "lRxChannelConnected": 16,
+                "lADCChannelConnected": 32,
+                "uiInsertionTime": 3934,
+                "sCoilElementID": {
+                  "tCoilID": "HeadNeck_64",
+                  "lCoilCopy": 1,
+                  "tElement": "H68",
+                  "ulUniqueKey": -1487032151
+                },
+                "sCoilProperties": {
+                  "eCoilType": 4
+                }
+              },
+              {
+                "lElementSelected": 1,
+                "lMuxChannelConnected": 67,
+                "lRxChannelConnected": 16,
+                "lADCChannelConnected": 31,
+                "uiInsertionTime": 3934,
+                "sCoilElementID": {
+                  "tCoilID": "HeadNeck_64",
+                  "lCoilCopy": 1,
+                  "tElement": "H69",
+                  "ulUniqueKey": -1707239143
+                },
+                "sCoilProperties": {
+                  "eCoilType": 4
+                }
+              },
+              {
+                "lElementSelected": 1,
+                "lMuxChannelConnected": 18,
+                "lRxChannelConnected": 21,
+                "lADCChannelConnected": 42,
+                "uiInsertionTime": 3933,
+                "sCoilElementID": {
+                  "tCoilID": "HeadNeck_64",
+                  "lCoilCopy": 1,
+                  "tElement": "H51",
+                  "ulUniqueKey": 752459894
+                },
+                "sCoilProperties": {
+                  "eCoilType": 4
+                }
+              },
+              {
+                "lElementSelected": 1,
+                "lMuxChannelConnected": 18,
+                "lRxChannelConnected": 21,
+                "lADCChannelConnected": 41,
+                "uiInsertionTime": 3933,
+                "sCoilElementID": {
+                  "tCoilID": "HeadNeck_64",
+                  "lCoilCopy": 1,
+                  "tElement": "H52",
+                  "ulUniqueKey": 1803147942
+                },
+                "sCoilProperties": {
+                  "eCoilType": 4
+                }
+              },
+              {
+                "lElementSelected": 1,
+                "lMuxChannelConnected": 19,
+                "lRxChannelConnected": 27,
+                "lADCChannelConnected": 54,
+                "uiInsertionTime": 3933,
+                "sCoilElementID": {
+                  "tCoilID": "HeadNeck_64",
+                  "lCoilCopy": 1,
+                  "tElement": "H53",
+                  "ulUniqueKey": 1444541206
+                },
+                "sCoilProperties": {
+                  "eCoilType": 4
+                }
+              },
+              {
+                "lElementSelected": 1,
+                "lMuxChannelConnected": 19,
+                "lRxChannelConnected": 27,
+                "lADCChannelConnected": 53,
+                "uiInsertionTime": 3933,
+                "sCoilElementID": {
+                  "tCoilID": "HeadNeck_64",
+                  "lCoilCopy": 1,
+                  "tElement": "H54",
+                  "ulUniqueKey": -466014458
+                },
+                "sCoilProperties": {
+                  "eCoilType": 4
+                }
+              },
+              {
+                "lElementSelected": 1,
+                "lMuxChannelConnected": 20,
+                "lRxChannelConnected": 13,
+                "lADCChannelConnected": 26,
+                "uiInsertionTime": 3933,
+                "sCoilElementID": {
+                  "tCoilID": "HeadNeck_64",
+                  "lCoilCopy": 1,
+                  "tElement": "H70",
+                  "ulUniqueKey": 1550919885
+                },
+                "sCoilProperties": {
+                  "eCoilType": 4
+                }
+              },
+              {
+                "lElementSelected": 1,
+                "lMuxChannelConnected": 20,
+                "lRxChannelConnected": 13,
+                "lADCChannelConnected": 25,
+                "uiInsertionTime": 3933,
+                "sCoilElementID": {
+                  "tCoilID": "HeadNeck_64",
+                  "lCoilCopy": 1,
+                  "tElement": "H50",
+                  "tCoilClass": "Head_Rx",
+                  "ulUniqueKey": 297372102
+                },
+                "sCoilProperties": {
+                  "eCoilType": 4
+                }
+              },
+              {
+                "lElementSelected": 1,
+                "lMuxChannelConnected": 21,
+                "lRxChannelConnected": 1,
+                "lADCChannelConnected": 1,
+                "uiInsertionTime": 3933,
+                "sCoilElementID": {
+                  "tCoilID": "HeadNeck_64",
+                  "lCoilCopy": 1,
+                  "tElement": "H71",
+                  "ulUniqueKey": 1628504445
+                },
+                "sCoilProperties": {
+                  "eCoilType": 4
+                }
+              },
+              {
+                "lElementSelected": 1,
+                "lMuxChannelConnected": 21,
+                "lRxChannelConnected": 1,
+                "lADCChannelConnected": 2,
+                "uiInsertionTime": 3933,
+                "sCoilElementID": {
+                  "tCoilID": "HeadNeck_64",
+                  "lCoilCopy": 1,
+                  "tElement": "H55",
+                  "ulUniqueKey": -648477002
+                },
+                "sCoilProperties": {
+                  "eCoilType": 4
+                }
+              }
+            ],
+            "aFFT_SCALE": [
+              {
+                "flFactor": 4.6430683136,
+                "lADCChannel": 19,
+                "bValid": 1
+              },
+              {
+                "flFactor": 4.86774587631,
+                "lADCChannel": 40,
+                "bValid": 1
+              },
+              {
+                "flFactor": 4.84835624695,
+                "lADCChannel": 39,
+                "bValid": 1
+              },
+              {
+                "flFactor": 4.67082166672,
+                "lADCChannel": 28,
+                "bValid": 1
+              },
+              {
+                "flFactor": 4.46369791031,
+                "lADCChannel": 27,
+                "bValid": 1
+              },
+              {
+                "flFactor": 5.00401878357,
+                "lADCChannel": 20,
+                "bValid": 1
+              },
+              {
+                "flFactor": 4.48956918716,
+                "lADCChannel": 51,
+                "bValid": 1
+              },
+              {
+                "flFactor": 4.82101535797,
+                "lADCChannel": 9,
+                "bValid": 1
+              },
+              {
+                "flFactor": 4.66001987457,
+                "lADCChannel": 10,
+                "bValid": 1
+              },
+              {
+                "flFactor": 4.80661869049,
+                "lADCChannel": 52,
+                "bValid": 1
+              },
+              {
+                "flFactor": 4.85681962967,
+                "lADCChannel": 17,
+                "bValid": 1
+              },
+              {
+                "flFactor": 4.95814418793,
+                "lADCChannel": 18,
+                "bValid": 1
+              },
+              {
+                "flFactor": 4.81108570099,
+                "lADCChannel": 45,
+                "bValid": 1
+              },
+              {
+                "flFactor": 4.96416473389,
+                "lADCChannel": 46,
+                "bValid": 1
+              },
+              {
+                "flFactor": 4.55331373215,
+                "lADCChannel": 43,
+                "bValid": 1
+              },
+              {
+                "flFactor": 4.83080720901,
+                "lADCChannel": 44,
+                "bValid": 1
+              },
+              {
+                "flFactor": 5.1023311615,
+                "lADCChannel": 58,
+                "bValid": 1
+              },
+              {
+                "flFactor": 4.6044716835,
+                "lADCChannel": 13,
+                "bValid": 1
+              },
+              {
+                "flFactor": 4.97520685196,
+                "lADCChannel": 14,
+                "bValid": 1
+              },
+              {
+                "flFactor": 8.10970497131,
+                "lADCChannel": 60,
+                "bValid": 1
+              },
+              {
+                "flFactor": 4.76953029633,
+                "lADCChannel": 59,
+                "bValid": 1
+              },
+              {
+                "flFactor": 4.82698917389,
+                "lADCChannel": 57,
+                "bValid": 1
+              },
+              {
+                "flFactor": 4.85111713409,
+                "lADCChannel": 37,
+                "bValid": 1
+              },
+              {
+                "flFactor": 4.96732664108,
+                "lADCChannel": 38,
+                "bValid": 1
+              },
+              {
+                "flFactor": 4.68883609772,
+                "lADCChannel": 6,
+                "bValid": 1
+              },
+              {
+                "flFactor": 4.79941701889,
+                "lADCChannel": 48,
+                "bValid": 1
+              },
+              {
+                "flFactor": 4.49202251434,
+                "lADCChannel": 47,
+                "bValid": 1
+              },
+              {
+                "flFactor": 4.53779506683,
+                "lADCChannel": 5,
+                "bValid": 1
+              },
+              {
+                "flFactor": 4.96085786819,
+                "lADCChannel": 22,
+                "bValid": 1
+              },
+              {
+                "flFactor": 4.80341148376,
+                "lADCChannel": 21,
+                "bValid": 1
+              },
+              {
+                "flFactor": 4.73857307434,
+                "lADCChannel": 64,
+                "bValid": 1
+              },
+              {
+                "flFactor": 4.45735216141,
+                "lADCChannel": 3,
+                "bValid": 1
+              },
+              {
+                "flFactor": 4.70837163925,
+                "lADCChannel": 4,
+                "bValid": 1
+              },
+              {
+                "flFactor": 4.81890535355,
+                "lADCChannel": 35,
+                "bValid": 1
+              },
+              {
+                "flFactor": 5.15765476227,
+                "lADCChannel": 36,
+                "bValid": 1
+              },
+              {
+                "flFactor": 4.58520507813,
+                "lADCChannel": 30,
+                "bValid": 1
+              },
+              {
+                "flFactor": 4.78966236115,
+                "lADCChannel": 29,
+                "bValid": 1
+              },
+              {
+                "flFactor": 4.90161848068,
+                "lADCChannel": 49,
+                "bValid": 1
+              },
+              {
+                "flFactor": 5.19300079346,
+                "lADCChannel": 50,
+                "bValid": 1
+              },
+              {
+                "flFactor": 4.51329851151,
+                "lADCChannel": 63,
+                "bValid": 1
+              },
+              {
+                "flFactor": 4.97101020813,
+                "lADCChannel": 34,
+                "bValid": 1
+              },
+              {
+                "flFactor": 4.98526859283,
+                "lADCChannel": 24,
+                "bValid": 1
+              },
+              {
+                "flFactor": 4.81277227402,
+                "lADCChannel": 23,
+                "bValid": 1
+              },
+              {
+                "flFactor": 4.82957696915,
+                "lADCChannel": 56,
+                "bValid": 1
+              },
+              {
+                "flFactor": 4.75852012634,
+                "lADCChannel": 55,
+                "bValid": 1
+              },
+              {
+                "flFactor": 4.9239654541,
+                "lADCChannel": 62,
+                "bValid": 1
+              },
+              {
+                "flFactor": 4.86408519745,
+                "lADCChannel": 61,
+                "bValid": 1
+              },
+              {
+                "flFactor": 4.85921287537,
+                "lADCChannel": 33,
+                "bValid": 1
+              },
+              {
+                "flFactor": 4.68580961227,
+                "lADCChannel": 32,
+                "bValid": 1
+              },
+              {
+                "flFactor": 4.66428565979,
+                "lADCChannel": 31,
+                "bValid": 1
+              },
+              {
+                "flFactor": 4.91829967499,
+                "lADCChannel": 42,
+                "bValid": 1
+              },
+              {
+                "flFactor": 4.61452817917,
+                "lADCChannel": 41,
+                "bValid": 1
+              },
+              {
+                "flFactor": 5.1173043251,
+                "lADCChannel": 54,
+                "bValid": 1
+              },
+              {
+                "flFactor": 4.89719009399,
+                "lADCChannel": 53,
+                "bValid": 1
+              },
+              {
+                "flFactor": 4.82807254791,
+                "lADCChannel": 26,
+                "bValid": 1
+              },
+              {
+                "flFactor": 4.88583040237,
+                "lADCChannel": 25,
+                "bValid": 1
+              },
+              {
+                "flFactor": 4.8123550415,
+                "lADCChannel": 1,
+                "bValid": 1
+              },
+              {
+                "flFactor": 4.95936012268,
+                "lADCChannel": 2,
+                "bValid": 1
+              }
+            ]
+          },
+          {
+            "IgnoreCoilGroups": 0,
+            "BCCombineMode": 1,
+            "bSuppressMandatoryProperties": 0
+          }
+        ],
+        "aTxCoilSelectData": [
+          {
+            "tNucleus": "1H",
+            "asList": [
+              {
+                "lElementSelected": 1,
+                "sCoilElementID": {
+                  "tCoilID": "Body",
+                  "lCoilCopy": 1,
+                  "tElement": "BC",
+                  "ulUniqueKey": 776254261
+                },
+                "sTxScaleFactorCP": {
+                  "dRe": 0.7071
+                },
+                "sTxScaleFactorEP": {
+                  "dRe": 0.4752
+                },
+                "sCoilProperties": {
+                  "eCoilType": 1,
+                  "tCoilManufacturer": "Siemens"
+                }
+              },
+              {
+                "lElementSelected": 1,
+                "lTxChannelConnected": 1,
+                "sCoilElementID": {
+                  "tCoilID": "Body",
+                  "lCoilCopy": 1,
+                  "tElement": "BC2",
+                  "ulUniqueKey": -626865618
+                },
+                "sTxScaleFactorCP": {
+                  "dIm": 0.7071
+                },
+                "sTxScaleFactorEP": {
+                  "dRe": -0.566,
+                  "dIm": 0.6743
+                },
+                "sCoilProperties": {
+                  "eCoilType": 1,
+                  "tCoilManufacturer": "Siemens"
+                }
+              }
+            ]
+          }
+        ],
+        "CoilPlugs": {
+          "Plug": [
+            {
+              "IdPart": [
+                255
+              ]
+            },
+            null,
+            {
+              "IdPart": [
+                4877
+              ]
+            },
+            null,
+            null,
+            {
+              "IdPart": [
+                4875
+              ]
+            },
+            {
+              "IdPart": [
+                4876
+              ]
+            },
+            {
+              "IdPart": [
+                4865
+              ]
+            },
+            {
+              "IdPart": [
+                4866
+              ]
+            }
+          ]
+        }
+      },
+      "sCoilSelectUI": {
+        "dOverallImageScaleFactor": 1.0,
+        "dOverallImageScaleCorrectionFactor": 1.0,
+        "dAutoCoilSelectIlluRangeScale": 0.7,
+        "aRxCoilSelectData": [
+          {
+            "IgnoreCoilGroups": 0,
+            "BCCombineMode": 1,
+            "bSuppressMandatoryProperties": 0
+          },
+          {
+            "IgnoreCoilGroups": 0,
+            "BCCombineMode": 1,
+            "bSuppressMandatoryProperties": 0
+          }
+        ]
+      },
+      "sWipMemBlock": {
+        "tFree": "WIP_Identifier: WIP#919B(Fri Feb 10 09:46:48 2017)",
+        "alFree": [
+          2,
+          null,
+          null,
+          null,
+          1,
+          1,
+          1,
+          null,
+          1,
+          1,
+          20900,
+          12000,
+          1,
+          null,
+          1,
+          1,
+          1,
+          2,
+          2,
+          null,
+          2,
+          null,
+          12000,
+          20900,
+          2,
+          255,
+          2,
+          1
+        ]
+      },
+      "sParametricMapping": {
+        "ucParametricMap": 1
+      },
+      "sAsl": {
+        "ulMode": 1
+      },
+      "sWorkflow": {
+        "eConflictSolverStrategy": 1,
+        "ucDotVoiceSettingsOverride": 1,
+        "ucDotPauseSettingsOverride": 1
+      },
+      "sDynDistCorrFilter": {
+        "ucMode": 1
+      },
+      "sChannelMatrix": {
+        "ucChannelMixingMode": 1,
+        "ucChannelDiscardMode": 1
+      },
+      "sPTXData": {
+        "uiPTXTargetMagMode": 1,
+        "sPTXMPRSliceArray": {
+          "sTSat": {
+            "ulShape": 1
+          }
+        },
+        "sPTXMPRGroupArray": {
+          "sPSat": {
+            "ulShape": 1
+          }
+        }
+      },
+      "sInlineCardioEval": {
+        "lInlineEvaMode": 1,
+        "lNoOfPreps": 1,
+        "alRecoveryDuration": [
+          1
+        ],
+        "alSamplingDuration": [
+          1
+        ]
+      },
+      "sInteractive": {
+        "ucTracking": 0,
+        "ucSliceFollowing": 1,
+        "ucSliceFollowingMode": 1,
+        "lTrackingBackgroundSuppr": 5,
+        "lTrackingSensitivity": 1,
+        "lTrackingFlipAngle": 10,
+        "ucPause": 0,
+        "ucMosaic": 0,
+        "ucSkipPhysioTrigger": 0
+      },
+      "sDixonData": {
+        "ucDixon": 0,
+        "ucDixonEvaluation": 0,
+        "ucFastDixon": 0,
+        "sMrDixonOptions": {
+          "ucDixonFat": 0,
+          "ucDixonWater": 0,
+          "ucDixonInPhase": 0,
+          "ucDixonOpposedPhase": 0,
+          "ucDixonOriginalEchoes": 1
+        },
+        "sMrDixonEvaluationOptions": {
+          "ucDixonEvaWaterFraction": 0,
+          "ucDixonEvaFatFraction": 0,
+          "ucDixonEvaT2Star": 0,
+          "ucDixonEvaR2Star": 0,
+          "ucDixonEvaReport": 0
+        }
+      },
+      "sSliceAcceleration": {
+        "lMultiBandFactor": 1,
+        "lFOVShiftFactor": 1
+      }
+    }
+  },
+  "GradientMode": {
+    "index": 46,
+    "VR": "SH",
+    "VM": 1,
+    "value": ""
+  },
+  "FlowCompensation": {
+    "index": 47,
+    "VR": "SH",
+    "VM": 1,
+    "value": "No"
+  },
+  "PostProcProtocol": {
+    "index": 48,
+    "VR": "UT",
+    "VM": 1,
+    "value": null
+  },
+  "RFSWDOperationMode": {
+    "index": 49,
+    "VR": "SS",
+    "VM": 1,
+    "value": 0
+  },
+  "RFSWDMostCriticalAspect": {
+    "index": 50,
+    "VR": "SH",
+    "VM": 1,
+    "value": "Head"
+  },
+  "SARMostCriticalAspect": {
+    "index": 51,
+    "VR": "DS",
+    "VM": 3,
+    "value": [
+      3.2,
+      0.62229416,
+      0.0
+    ]
+  },
+  "TablePositionOrigin": {
+    "index": 52,
+    "VR": "SL",
+    "VM": 3,
+    "value": [
+      0,
+      0,
+      -1246
+    ]
+  },
+  "MrProtocol": {
+    "index": 53,
+    "VR": "UN",
+    "VM": 1,
+    "value": null
+  },
+  "MrEvaProtocol": {
+    "index": 54,
+    "VR": "UN",
+    "VM": 1,
+    "value": null
+  },
+  "VFModelInfo": {
+    "index": 55,
+    "VR": "UN",
+    "VM": 1,
+    "value": null
+  },
+  "VFSettings": {
+    "index": 56,
+    "VR": "UN",
+    "VM": 1,
+    "value": null
+  },
+  "AutoAlignData": {
+    "index": 57,
+    "VR": "UT",
+    "VM": 1,
+    "value": null
+  },
+  "FmriModelParameters": {
+    "index": 58,
+    "VR": "UT",
+    "VM": 1,
+    "value": null
+  },
+  "FmriModelInfo": {
+    "index": 59,
+    "VR": "UT",
+    "VM": 1,
+    "value": null
+  },
+  "FmriExternalParameters": {
+    "index": 60,
+    "VR": "UT",
+    "VM": 1,
+    "value": null
+  },
+  "FmriExternalInfo": {
+    "index": 61,
+    "VR": "UT",
+    "VM": 1,
+    "value": null
+  },
+  "FmriAcquisitionDescriptionSequence": {
+    "index": 62,
+    "VR": "UT",
+    "VM": 1,
+    "value": null
+  },
+  "B1rms": {
+    "index": 63,
+    "VR": "DS",
+    "VM": 2,
+    "value": [
+      100.0,
+      1.23888158
+    ]
+  },
+  "B1rmsSupervision": {
+    "index": 64,
+    "VR": "CS",
+    "VM": 1,
+    "value": "NO"
+  },
+  "TalesReferencePower": {
+    "index": 65,
+    "VR": "DS",
+    "VM": 1,
+    "value": 1104.00936
+  },
+  "PhaseSliceOversampling": {
+    "index": 66,
+    "VR": "CS",
+    "VM": 1,
+    "value": "NONE"
+  },
+  "SafetyStandard": {
+    "index": 67,
+    "VR": "CS",
+    "VM": 1,
+    "value": "IEC"
+  },
+  "DICOMImageFlavor": {
+    "index": 68,
+    "VR": "CS",
+    "VM": 1,
+    "value": ""
+  },
+  "DICOMAcquisitionContrast": {
+    "index": 69,
+    "VR": "CS",
+    "VM": 1,
+    "value": ""
+  },
+  "EchoTrainLength": {
+    "index": 70,
+    "VR": "IS",
+    "VM": 1,
+    "value": 47
+  },
+  "RFEchoTrainLength": {
+    "index": 71,
+    "VR": "US",
+    "VM": 1,
+    "value": 1
+  },
+  "GradientEchoTrainLength": {
+    "index": 72,
+    "VR": "US",
+    "VM": 1,
+    "value": 47
+  },
+  "Laterality4MF": {
+    "index": 73,
+    "VR": "CS",
+    "VM": 1,
+    "value": "U"
+  },
+  "ArterialSpinLabelingContrast": {
+    "index": 74,
+    "VR": "CS",
+    "VM": 1,
+    "value": null
+  },
+  "ConfigFileInfo": {
+    "index": 75,
+    "VR": "UT",
+    "VM": 1,
+    "value": null
+  },
+  "UserDefinedSeries": {
+    "index": 76,
+    "VR": "UT",
+    "VM": 1,
+    "value": null
+  },
+  "AASpineModelVerificationStatus": {
+    "index": 77,
+    "VR": "SL",
+    "VM": 1,
+    "value": null
+  },
+  "AASpineModelData": {
+    "index": 78,
+    "VR": "UT",
+    "VM": 1,
+    "value": null
+  }
+}

@@ -19,7 +19,7 @@ class Mosaic:
     """
 
     CSA_ASCII_HEADER_KEY: str = "MrPhoenixProtocol"
-    CSA_ASCII_SLICE_ARRAY_KEY: str = "SliceArray"
+    CSA_ASCII_SLICE_ARRAY_KEY: str = "sSliceArray"
     CSA_SERIES_INFO_KEY: str = "CSASeriesHeaderInfo"
 
     def __init__(self, mosaic_array: np.ndarray, header: Header):
@@ -55,7 +55,7 @@ class Mosaic:
         self.slice_array = self.ascii_header.get(
             self.CSA_ASCII_SLICE_ARRAY_KEY, {}
         )
-        self.ascending = "Asc" in self.slice_array
+        self.ascending = "anAsc" in self.slice_array
         self.volume_shape = self.get_volume_shape()
         self.mosaic_dimensions = self.get_mosaic_dimensions()
 
@@ -98,7 +98,7 @@ class Mosaic:
         """
         image_shape = self.get_image_shape()
         if image_shape is not None:
-            z = self.slice_array.get("Size", 0)
+            z = self.slice_array.get("lSize", 0)
             return (*image_shape, z)
 
     def get_image_position(

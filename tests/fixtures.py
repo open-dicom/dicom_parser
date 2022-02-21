@@ -47,6 +47,8 @@ value_multiplicity                 1
 value                      012345678"""
 TEST_DATA_ELEMENT_BYTES_VALUE: str = "HC1-7;NC1"
 
+TEST_ASCCONV_SAMPLE = os.path.join(TEST_FILES_PATH, "ascconv_sample.txt")
+
 
 class ChoiceEnumDefinition(ChoiceEnum):
     A = "A"

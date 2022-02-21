@@ -3,14 +3,9 @@ Fixtures for data element tests.
 """
 import os
 from datetime import date, time
+import json
 
 import numpy as np
-
-# pickle5 is required for to parse the pickled fixtures in Python before 3.8.
-try:
-    import pickle5 as pickle
-except ModuleNotFoundError:
-    import pickle
 
 from dicom_parser.utils.value_representation import ValueRepresentation
 from tests.fixtures import TEST_FILES_PATH
@@ -124,12 +119,12 @@ PRIVATE_DATA_ELEMENTS = {
     (0x29, 0x1018): "MR",
 }
 
-#: Path of a pickled parsed CSA header.
-TEST_CSA_PATH = os.path.join(TEST_FILES_PATH, "csa.pickle")
+#: Path of a JSON for parsed CSA header.
+TEST_CSA_PATH = os.path.join(TEST_FILES_PATH, "csa.json")
 
 with open(TEST_CSA_PATH, "rb") as f:
     #: Parsed CSA header serialized as a Python dictionary.
-    CSA_DATA = pickle.load(f)
+    CSA_DATA = json.load(f)
 
 #: Expected parsed values of various private Siemens elements.
 SIEMENS_DWI_ELEMENTS = {
