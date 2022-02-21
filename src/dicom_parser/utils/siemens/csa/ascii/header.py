@@ -1,7 +1,5 @@
 """
-Definition of the :class:`CsaAsciiHeader` class which handles the parsing of
-`CSA header <https://nipy.org/nibabel/dicom/siemens_csa.html>`_ values
-returned by `pydicom <https://github.com/pydicom/pydicom>`_ as bytes.
+Definition of the :class:`CsaAsciiHeader`.
 """
 from typing import Union
 
@@ -9,8 +7,13 @@ from dicom_parser.utils.siemens.csa.ascii.ascconv import parse_ascconv
 
 
 class CsaAsciiHeader:
+    """
+    Represents and handles the parsing of
+    `CSA header <https://nipy.org/nibabel/dicom/siemens_csa.html>`_ values
+    returned by `pydicom <https://github.com/pydicom/pydicom>`_ as bytes.
+    """
 
-    # The header's ASCII-based character encoding.
+    #: The header's ASCII-based character encoding.
     ENCODING = "ISO-8859-1"
 
     def __init__(self, header: Union[str, bytes]):
@@ -44,7 +47,7 @@ class CsaAsciiHeader:
 
         Returns
         -------
-        hdr_dict : dict
+        dict
             Header information as a dictionary
         """
         # Return read dictionary, discard values in ASCCONV BEGIN line.
