@@ -356,7 +356,7 @@ class Header:
             raise TypeError(message)
         else:
             raw_element = tag_or_keyword
-        DataElementClass = get_data_element_class(raw_element.VR)
+        DataElementClass = get_data_element_class(raw_element)
         data_element = DataElementClass(raw_element)
         # This prevents a circular import but it's far from optimal.
         if data_element.VALUE_REPRESENTATION == ValueRepresentation.SQ:
