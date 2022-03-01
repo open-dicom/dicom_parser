@@ -337,8 +337,10 @@ class HeaderTestCase(TestCase):
         self.assertEqual(len(value), 120)
 
     def test_unknown_value_representation(self):
+        data_element = self.header.get_data_element("SeriesDate").raw
+        data_element.VR = "??"
         with self.assertRaises(ValueRepresentationError):
-            get_data_element_class("invalid")
+            get_data_element_class(data_element)
 
     def test_get_phase_encoding_direction(self):
         value = self.dwi_header.get_phase_encoding_direction()
