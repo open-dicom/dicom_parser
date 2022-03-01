@@ -2,8 +2,6 @@
 Utilities to associate a given data element with its appropriate
 :class:`dicom_parser.data_element.DataElement` subclass.
 """
-from pydicom.dataelem import DataElement as PydicomDataElement
-
 from dicom_parser.data_element import DataElement
 from dicom_parser.data_elements.age_string import AgeString
 from dicom_parser.data_elements.application_entity import ApplicationEntity
@@ -29,7 +27,9 @@ from dicom_parser.data_elements.other_long import OtherLong
 from dicom_parser.data_elements.other_word import OtherWord
 from dicom_parser.data_elements.person_name import PersonName
 from dicom_parser.data_elements.private_data_element import (
-    PrivateDataElement, TAG_TO_DEFINITION as PRIVATE_TAG_TO_DEFINITION)
+    TAG_TO_DEFINITION as PRIVATE_TAG_TO_DEFINITION,
+)
+from dicom_parser.data_elements.private_data_element import PrivateDataElement
 from dicom_parser.data_elements.sequence_of_items import SequenceOfItems
 from dicom_parser.data_elements.short_string import ShortString
 from dicom_parser.data_elements.short_text import ShortText
@@ -48,10 +48,12 @@ from dicom_parser.data_elements.unsigned_64bit_very_long import (
 from dicom_parser.data_elements.unsigned_long import UnsignedLong
 from dicom_parser.data_elements.unsigned_short import UnsignedShort
 from dicom_parser.data_elements.url import Url
+from dicom_parser.utils.parse_tag import parse_tag
 from dicom_parser.utils.value_representation import (
     ValueRepresentation,
     get_value_representation,
 )
+from pydicom.dataelem import DataElement as PydicomDataElement
 
 #: A dictionary associating the various value representations with their
 #: appropriate :class:`dicom_parser.data_element.DataElement` subclasses.
@@ -108,7 +110,7 @@ def get_data_element_class(element: PydicomDataElement) -> DataElement:
     DataElement
         Some subclass of DataElement
     """
-    if element.tag in PRIVATE_TAG_TO_DEFINITION:
+    if parse_tag(element.tag) in PRIVATE_TAG_TO_DEFINITION:
         return PrivateDataElement
     vr = get_value_representation(element.VR)
     return VR_TO_DATA_ELEMENT[vr]
