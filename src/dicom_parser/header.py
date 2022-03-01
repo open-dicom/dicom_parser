@@ -23,7 +23,10 @@ from dicom_parser.utils.private_tags import PRIVATE_TAGS
 from dicom_parser.utils.sequence_detector.sequence_detector import (
     SequenceDetector,
 )
-from dicom_parser.utils.value_representation import ValueRepresentation
+from dicom_parser.utils.value_representation import (
+    ValueRepresentation,
+    get_value_representation,
+)
 from dicom_parser.utils.vr_to_data_element import get_data_element_class
 
 
@@ -358,6 +361,10 @@ class Header:
             raw_element = tag_or_keyword
         DataElementClass = get_data_element_class(raw_element)
         data_element = DataElementClass(raw_element)
+        # Fix private data elements with an explicit VR.
+        if data_element.is_private and raw_element.VR != "UN":
+            value_representation = get_value_representation(raw_element.VR)
+            data_element.VALUE_REPRESENTATION = value_representation
         # This prevents a circular import but it's far from optimal.
         if data_element.VALUE_REPRESENTATION == ValueRepresentation.SQ:
             data_element._value = [
