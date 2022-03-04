@@ -1,0 +1,25 @@
+{
+    "creators": [
+        {
+            "name": "Aharony, Noam"
+        },
+        {
+            "affiliation": "Sagol School of Neuroscience, Tel Aviv University",
+            "name": "Baratz, Zvi",
+            "orcid": "0000-0001-7159-1387"
+        },
+        {
+            "affiliation": "Sagol School of Neuroscience, Tel Aviv University",
+            "name": "Ben-Zvi, Gal"
+        },
+        {
+            "name": "Brett, Matthew"
+        }
+    ],
+    "keywords": [
+        "dicom",
+        "python"
+    ],
+    "license": "MIT",
+    "upload_type": "software"
+}
