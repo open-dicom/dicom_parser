@@ -67,6 +67,10 @@ It's a good practice to create [a new branch](https://help.github.com/articles/a
 
 A new pull request for your changes should be created from your fork of the repository.
 
+**5. Install pre-commit.**
+
+[pre-commit](https://pre-commit.com/) is a git hook for running operations at commit time. To use it in your environment, do `pip install pre-commit` following by `pre-commit install` inside your source directory.
+
 Pull requests should be submitted early and often (please don't mix too many unrelated changes within one PR)!
 If your pull request is not yet ready to be merged, please also include the **[WIP]** prefix (you can remove it once your PR is ready to be merged) or label it is a "draft". This tells the development team that your pull request is a "work-in-progress", and that you plan to continue working on it.
 
