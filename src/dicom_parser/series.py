@@ -2,10 +2,11 @@
 Definition of the :class:`Series` class.
 """
 from pathlib import Path
-from typing import Any, Generator, Tuple
+from typing import Any, Generator, Iterable, Optional, Tuple
 
 import numpy as np
 
+from dicom_parser import messages
 from dicom_parser.image import Image
 from dicom_parser.messages import (
     EMPTY_SERIES_DIRECTORY,
@@ -22,25 +23,43 @@ class Series:
     from a single directory and ordered by InstanceNumber.
     """
 
-    def __init__(self, path: Path, mime: bool = False):
+    def __init__(
+        self,
+        path: Optional[Path] = None,
+        images: Optional[Iterable[Image]] = None,
+        mime: bool = False,
+    ):
         """
         The Series class should be initialized with a string or a
         :class:`~pathlib.Path` instance representing the path of single
-        `DICOM series`_.
+        `DICOM series`_, or an iterable or :class:`dicom_parser.image.Image`
+        instances (one of *path* or *images* must be provided).
 
         .. _DICOM series:
            https://dcm4che.atlassian.net/wiki/spaces/d2/pages/1835038/A+Very+Basic+DICOM+Introduction
 
         Parameters
         ----------
-        path : :class:`~pathlib.Path` or str
-            Directory containing .dcm files.
+        path : :class:`~pathlib.Path` or str, optional
+            Directory containing .dcm files
+        images : Iterable[Image], optional
+            Image instances that make up the series
         mime : bool, optional
             Whether to find DICOM images by file mime type instead of
             extension, defaults to False
         """
-        self.path = self.check_path(path)
-        self.images = self.get_images(mime)
+        # Find images in series directory path, if provided.
+        if isinstance(path, (Path, str)):
+            self.path = self.check_path(path)
+            self.images = self.get_images(mime)
+        # Tupelize any iterable of images.
+        elif images is not None:
+            self.images = tuple(images)
+        # Otherwise, raise an exception.
+        else:
+            raise ValueError(messages.MISSING_SERIES_SOURCE)
+
+        # Pixel array cache.
         self._data = None
 
     def __len__(self) -> int:

@@ -16,5 +16,6 @@ UNREGISTERED_MODALITY: str = (
     "No sequence identifiers registered for {modality}!"
 )
 MISSING_HEADER_INFO: str = "No header information found for {modality} sequence detection using {keys}!"
+MISSING_SERIES_SOURCE: str = "Series instances must be initialized with a path or an iterable of image instances!"
 
 # flake8: noqa: E501

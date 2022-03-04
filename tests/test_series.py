@@ -168,3 +168,13 @@ class SeriesTestCase(TestCase):
         series = Series(TEST_SERIES_PATH)
         value = series.spatial_resolution
         self.assertTupleEqual(value, SERIES_SPATIAL_RESOLUTION)
+
+    def test_series_from_images(self):
+        images = [Image(dcm) for dcm in Path(TEST_SERIES_PATH).rglob("*.dcm")]
+        from_images = Series(images=images)
+        from_path = Series(TEST_SERIES_PATH)
+        self.assertEqual(len(from_images), len(from_path))
+
+    def test_series_init_without_path_or_images_raises_valueerror(self):
+        with self.assertRaises(ValueError):
+            Series()
