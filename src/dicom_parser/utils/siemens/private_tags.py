@@ -3,7 +3,7 @@ Siemens specific private tags they may not be accessible by keyword using
 `pydicom <https://github.com/pydicom/pydicom>`_.
 """
 import array
-from typing import Type, Union
+from typing import Union
 
 import numpy as np
 from dicom_parser.utils.siemens import messages
@@ -245,6 +245,20 @@ def parse_siemens_bandwith_per_pixel_phase_encode(
 
 
 def parse_siemens_csa_header(value: bytes) -> dict:
+    """
+    Parses a Siemens CSA header to a dictionary using the
+    :class:`~dicom_parser.utils.siemens.csa.header.CsaHeader` class.
+
+    Parameters
+    ----------
+    value : bytes
+        Raw CSA header
+
+    Returns
+    -------
+    dict
+        Parsed CSA header information
+    """
     return CsaHeader(value).read()
 
 
