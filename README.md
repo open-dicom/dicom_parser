@@ -5,7 +5,7 @@
 [![GitHub Actions](https://github.com/ZviBaratz/dicom_parser/actions/workflows/tests.yml/badge.svg)](https://github.com/ZviBaratz/dicom_parser/actions/workflows/tests.yml)
 [![Documentation Status](https://readthedocs.org/projects/dicom-parser/badge/?version=latest)](http://dicom-parser.readthedocs.io/?badge=latest)
 
-[![codecov.io](https://codecov.io/gh/ZviBaratz/dicom_parser/coverage.svg?branch=master)](https://codecov.io/github/ZviBaratz/dicom_parser?branch=master)
+[![codecov.io](https://codecov.io/gh/ZviBaratz/dicom_parser/coverage.svg?branch=main)](https://codecov.io/github/ZviBaratz/dicom_parser?branch=main)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/c8d047121709494a94f612e183922121)](https://www.codacy.com/gh/ZviBaratz/dicom_parser/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ZviBaratz/dicom_parser&amp;utm_campaign=Badge_Grade)
 [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/ZviBaratz/dicom_parser.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/ZviBaratz/dicom_parser/context:python)
 
