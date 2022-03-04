@@ -27,7 +27,7 @@ from dicom_parser.data_elements.other_long import OtherLong
 from dicom_parser.data_elements.other_word import OtherWord
 from dicom_parser.data_elements.person_name import PersonName
 from dicom_parser.data_elements.private_data_element import (
-    TAG_TO_DEFINITION as PRIVATE_TAG_TO_DEFINITION,
+    TAG_TO_PARSER as PRIVATE_TAG_TO_PARSER,
 )
 from dicom_parser.data_elements.private_data_element import PrivateDataElement
 from dicom_parser.data_elements.sequence_of_items import SequenceOfItems
@@ -110,7 +110,7 @@ def get_data_element_class(element: PydicomDataElement) -> DataElement:
     DataElement
         Some subclass of DataElement
     """
-    if parse_tag(element.tag) in PRIVATE_TAG_TO_DEFINITION:
+    if parse_tag(element.tag) in PRIVATE_TAG_TO_PARSER:
         return PrivateDataElement
     vr = get_value_representation(element.VR)
     return VR_TO_DATA_ELEMENT[vr]
