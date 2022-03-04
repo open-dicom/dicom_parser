@@ -65,14 +65,14 @@ class PrivateDataElement(DataElement):
         # Try to call a custom parser function.
         method: FunctionType = TAG_TO_PARSER.get(self.tag)
         if method:
-            return method(self.raw.value)
+            return method(value)
 
         # Try to decode.
-        elif isinstance(self.raw.value, bytes):
+        elif isinstance(value, bytes):
             try:
-                return self.raw.value.decode().strip()
+                return value.decode().strip()
             except UnicodeDecodeError:
                 pass
 
         # Otherwise, simply return the raw value.
-        return self.raw.value
+        return value

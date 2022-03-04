@@ -3,6 +3,7 @@ Siemens specific private tags they may not be accessible by keyword using
 `pydicom <https://github.com/pydicom/pydicom>`_.
 """
 import array
+from typing import Type, Union
 
 import numpy as np
 from dicom_parser.utils.siemens import messages
@@ -58,8 +59,34 @@ def parse_siemens_gradient_direction(value: bytes) -> list:
     return [float(value) for value in list(array.array("d", value))]
 
 
-def parse_siemens_number_of_slices_in_mosaic(value: bytes) -> int:
-    return int.from_bytes(value, byteorder="little")
+def parse_siemens_number_of_slices_in_mosaic(value: Union[bytes, int]) -> int:
+    """
+    Parses the NumberOfImagesInMosaic (0019, 100a) private tag value.
+
+    Parameters
+    ----------
+    value : Union[bytes, int]
+        Raw element value
+
+    Returns
+    -------
+    int
+        Parsed number of images in mosaic value
+
+    Raises
+    ------
+    TypeError
+        Bad value type
+    """
+    if isinstance(value, int):
+        return value
+    elif isinstance(value, bytes):
+        return int.from_bytes(value, byteorder="little")
+    else:
+        message = messages.N_IMAGES_IN_MOSAIC_TYPEERROR.format(
+            bad_type=type(value)
+        )
+        raise TypeError(message)
 
 
 def parse_siemens_b_matrix(value: bytes) -> np.ndarray:
@@ -185,8 +212,36 @@ def nearest_pos_semi_def(b_matrix: np.ndarray):
     return np.dot(vecs, np.dot(np.diag(scalers), vecs.T))
 
 
-def parse_siemens_bandwith_per_pixel_phase_encode(value: bytes):
-    return array.array("d", value)[0]
+def parse_siemens_bandwith_per_pixel_phase_encode(
+    value: Union[bytes, float]
+) -> float:
+    """
+    Parses the BandwidthPerPixelPhaseEncode (0019, 1028) private tag value.
+
+    Parameters
+    ----------
+    value : bytes
+        Raw element value
+
+    Returns
+    -------
+    float
+        Parsed value
+
+    Raises
+    ------
+    TypeError
+        Bad value type
+    """
+    if isinstance(value, float):
+        return value
+    elif isinstance(value, bytes):
+        return array.array("d", value)[0]
+    else:
+        message = messages.BANDWITH_PER_PIXEL_TYPEERROR.format(
+            bad_type=type(value)
+        )
+        raise TypeError(message)
 
 
 def parse_siemens_csa_header(value: bytes) -> dict:
