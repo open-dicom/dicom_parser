@@ -1,13 +1,10 @@
 # dicom_parser
 
-[![PyPI version](https://img.shields.io/pypi/v/dicom_parser.svg)](https://pypi.python.org/pypi/pylabber/)
-[![PyPI status](https://img.shields.io/pypi/status/dicom_parser.svg)](https://pypi.python.org/pypi/pylabber/)
-[![GitHub Actions](https://github.com/ZviBaratz/dicom_parser/actions/workflows/tests.yml/badge.svg)](https://github.com/ZviBaratz/dicom_parser/actions/workflows/tests.yml)
-[![Documentation Status](https://readthedocs.org/projects/dicom-parser/badge/?version=latest)](http://dicom-parser.readthedocs.io/?badge=latest)
+| Documentation | [![Documentation Status](https://readthedocs.org/projects/dicom-parser/badge/?version=latest)](http://dicom-parser.readthedocs.io/?badge=latest) |
+|:---:|---|
+| Testing | [![GitHub Actions](https://github.com/open-dicom/dicom_parser/actions/workflows/tests.yml/badge.svg)](https://github.com/open-dicom/dicom_parser/actions/workflows/tests.yml) [![codecov.io](https://codecov.io/gh/open-dicom/dicom_parser/coverage.svg?branch=main)](https://codecov.io/github/open-dicom/dicom_parser?branch=main)<br />[![Codacy Badge](https://app.codacy.com/project/badge/Grade/c8d047121709494a94f612e183922121)](https://www.codacy.com/gh/open-dicom/dicom_parser/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=open-dicom/dicom_parser&amp;utm_campaign=Badge_Grade) [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/open-dicom/dicom_parser.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/open-dicom/dicom_parser/context:python) [![Requires.io](https://requires.io/github/open-dicom/dicom_parser/requirements.svg?branch=main)](https://requires.io/github/open-dicom/dicom_parser/requirements/?branch=main) |
+| Packaging | [![PyPI version](https://img.shields.io/pypi/v/dicom_parser.svg)](https://pypi.python.org/pypi/pylabber/) [![PyPI status](https://img.shields.io/pypi/status/dicom_parser.svg)](https://pypi.python.org/pypi/pylabber/)<br />[![Supported Versions](https://img.shields.io/pypi/pyversions/dicom_parser.svg)](https://pypi.org/project/dicom-parser) [![Supported Implementations](https://img.shields.io/pypi/implementation/dicom-parser.svg)](https://pypi.org/project/dicom-parser) [![PyPI Wheel](https://img.shields.io/pypi/wheel/dicom-parser.svg)](https://pypi.org/project/dicom-parser) |
 
-[![codecov.io](https://codecov.io/gh/ZviBaratz/dicom_parser/coverage.svg?branch=main)](https://codecov.io/github/ZviBaratz/dicom_parser?branch=main)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/c8d047121709494a94f612e183922121)](https://www.codacy.com/gh/ZviBaratz/dicom_parser/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ZviBaratz/dicom_parser&amp;utm_campaign=Badge_Grade)
-[![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/ZviBaratz/dicom_parser.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/ZviBaratz/dicom_parser/context:python)
 
 *dicom_parser* is a utility python package meant to facilitate access to
 [DICOM](https://www.dicomstandard.org/) header information by extending the
@@ -30,10 +27,16 @@ For more information, please see [the documentation site][].
 
 ## Installation
 
-To install the latest version of `dicom_parser`, simply run:
+To install the latest stable release of `dicom_parser`, simply run:
 
 ```bash
     pip install dicom_parser
+```
+
+Or, to install the latest development version:
+
+```bash
+    pip install https://github.com/open-dicom/dicom_parser/archive/main.zip
 ```
 
 ---
