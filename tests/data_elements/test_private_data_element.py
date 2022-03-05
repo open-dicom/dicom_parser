@@ -12,7 +12,7 @@ from tests.fixtures import TEST_SIEMENS_DWI_PATH
 from tests.test_data_element import DataElementTestCase
 
 
-class PrivateDataElementTestCase(DataElementTestCase):
+class PrivateDataElementTestCaseBase(DataElementTestCase):
     """
     Base class for private data element tests.
     """
@@ -39,7 +39,7 @@ class PrivateDataElementTestCase(DataElementTestCase):
         self.assertTrue(element.is_private)
 
 
-class PrivateDataElementTestCase(PrivateDataElementTestCase):
+class PrivateDataElementTestCase(PrivateDataElementTestCaseBase):
     """
     Tests normal bytes encoded private data elements.
     """
@@ -47,7 +47,7 @@ class PrivateDataElementTestCase(PrivateDataElementTestCase):
     VALUES = PRIVATE_DATA_ELEMENTS
 
 
-class SiemensTestCase(PrivateDataElementTestCase):
+class SiemensTestCase(PrivateDataElementTestCaseBase):
     """
     Tests private Siemens tags with custom parsing methods.
     """

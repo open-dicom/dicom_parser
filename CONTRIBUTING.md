@@ -102,7 +102,7 @@ You're awesome. :wave::smiley:
 [link_github]: https://github.com/
 [link_rep]: https://github.com/open-dicom/dicom_parser
 [link_signupinstructions]: https://help.github.com/articles/signing-up-for-a-new-github-account
-[link_react]: https://github.com/blog/2119-add-reactions-to-pull-requests-issues-and-comments
+2119-add-reactions-to-pull-requests-issues-and-comments
 [link_issues]: https://github.com/open-dicom/dicom_parser/issues
 [link_labels]: https://github.com/open-dicom/dicom_parser/labels
 [link_discussingissues]: https://help.github.com/articles/discussing-projects-in-issues-and-pull-requests
@@ -116,7 +116,5 @@ You're awesome. :wave::smiley:
 [link_fork]: https://help.github.com/articles/fork-a-repo/
 [link_pushpullblog]: https://www.igvita.com/2011/12/19/dont-push-your-pull-requests/
 [link_updateupstreamwiki]: https://help.github.com/articles/syncing-a-fork/
-[link_new_interfaces]: http://nipype.readthedocs.io/en/latest/devel/interface_specs.html
-[link_cloning]: https://help.github.com/articles/cloning-a-repository/
 [link_nipype]: https://github.com/nipy/nipype
 [link_zenodo]: https://github.com/open-dicom/dicom_parser/blob/master/.zenodo.json
