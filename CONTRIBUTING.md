@@ -11,8 +11,8 @@ Already know what you're looking for in this guide? Jump to the following sectio
   - [Issue labels](#issue-labels)
   - [Making a change](#making-a-change)
   - [Notes for New Code](#notes-for-new-code)
-      - [Testing](#testing)
-  - [Recognizing Contributions](#recognizing-contributions)
+    - [Testing](#testing)
+    - [Recognizing Contributions](#recognizing-contributions)
   - [Thank you!](#thank-you)
 
 ## Issue labels
@@ -80,10 +80,10 @@ One your PR is ready a member of the development team will review your changes t
 
 ## Notes for New Code
 
-#### Testing
+### Testing
 New code should be tested, whenever feasible. Bug fixes should include an example that exposes the issue. Any new features should have tests that show at least a minimal example. If you're not sure what this means for your code, please ask in your pull request.
 
-## Recognizing Contributions
+### Recognizing Contributions
 
 We welcome and recognize all contributions from documentation to testing to code development.
 
