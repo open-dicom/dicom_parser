@@ -4,7 +4,7 @@ Welcome to the *dicom_parser* repository! We're excited you're here and want to 
 
 These guidelines are designed to make it as easy as possible to get involved. If you have any questions that aren't discussed below, please let us know by opening an [issue][link_issues]!
 
-Before you start you'll need to set up a free [GitHub][link_github] account and sign in. Here are some [instructions][link_signupinstructions].
+Before you start you'll need to set up a free [GitHub][link_github] account and sign in.
 
 Already know what you're looking for in this guide? Jump to the following sections:
 - [Contribution Guidelines](#contribution-guidelines)
@@ -101,8 +101,6 @@ You're awesome. :wave::smiley:
 
 [link_github]: https://github.com/
 [link_rep]: https://github.com/open-dicom/dicom_parser
-[link_signupinstructions]: https://help.github.com/articles/signing-up-for-a-new-github-account
-2119-add-reactions-to-pull-requests-issues-and-comments
 [link_issues]: https://github.com/open-dicom/dicom_parser/issues
 [link_labels]: https://github.com/open-dicom/dicom_parser/labels
 [link_discussingissues]: https://help.github.com/articles/discussing-projects-in-issues-and-pull-requests
