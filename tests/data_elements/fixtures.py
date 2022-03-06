@@ -1,12 +1,11 @@
 """
 Fixtures for data element tests.
 """
+import json
 import os
 from datetime import date, time
-import json
 
 import numpy as np
-
 from dicom_parser.utils.value_representation import ValueRepresentation
 from tests.fixtures import TEST_FILES_PATH
 
@@ -136,7 +135,7 @@ SIEMENS_DWI_ELEMENTS = {
         [[1.0, 1.0, 1.0], [1.0, 1.0, 1.0], [1.0, 1.0, 1.0]]
     ),
     (0x19, 0x1028): 22.321,
-    (0x19, 0x1029): [
+    (0x19, 0x1029): (
         0.0,
         1380.0,
         277.5,
@@ -146,8 +145,42 @@ SIEMENS_DWI_ELEMENTS = {
         827.5,
         2205.0,
         1102.5,
-    ],
+    ),
     (0x29, 0x1020): CSA_DATA,
+}
+SIEMENS_EXPLICIT_VR_ELEMENTS = {
+    (0x19, 0x100A): 28,
+    (0x19, 0x1028): 43.403,
+    (0x19, 0x1029): (
+        740.00000002,
+        0.0,
+        795.00000001,
+        55.00000002,
+        847.5,
+        107.50000001,
+        899.99999999,
+        160.0,
+        952.50000001,
+        212.49999999,
+        1005.0,
+        265.00000001,
+        1057.5,
+        317.5,
+        1110.00000002,
+        370.0,
+        1165.00000001,
+        425.00000002,
+        1217.5,
+        477.50000001,
+        1270.00000002,
+        530.0,
+        1322.50000001,
+        582.50000002,
+        1375.0,
+        635.00000001,
+        1427.50000002,
+        687.5,
+    ),
 }
 
 TEST_OW_ELEMENT = (0x00720069, "OW", b"Test")

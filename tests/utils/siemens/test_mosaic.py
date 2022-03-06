@@ -3,11 +3,9 @@ from unittest import TestCase
 import numpy as np
 from dicom_parser.image import Image
 from dicom_parser.utils.siemens.mosaic import Mosaic
-from tests.fixtures import (
-    TEST_RSFMRI_IMAGE_PATH,
-    TEST_RSFMRI_IMAGE_VOLUME,
-    TEST_RSFMRI_SERIES_PIXEL_ARRAY,
-)
+from tests.fixtures import (TEST_RSFMRI_IMAGE_PATH, TEST_RSFMRI_IMAGE_VOLUME,
+                            TEST_RSFMRI_SERIES_PIXEL_ARRAY,
+                            TEST_SIEMENS_EXPLICIT_VR)
 
 
 class MosaicTestCase(TestCase):
@@ -49,3 +47,12 @@ class MosaicTestCase(TestCase):
         nii_data = np.load(TEST_RSFMRI_SERIES_PIXEL_ARRAY)
         nii_volume = nii_data[:, :, :, 0]
         self.assertTrue(np.array_equal(volume, nii_volume))
+
+    def test_no_exceptions_for_explicit_vr(self):
+        image = Image(TEST_SIEMENS_EXPLICIT_VR)
+        try:
+            image.data
+        except (ValueError, TypeError):
+            self.fail(
+                "Mosaic data parsing failed for a Siemens image with explicit private tag value representations."  # noqa: E501
+            )
