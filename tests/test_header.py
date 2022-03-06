@@ -174,7 +174,7 @@ class HeaderTestCase(TestCase):
 
     def test_indexing_operator_with_invalid_key_raises_key_error(self):
         with self.assertRaises(KeyError):
-            self.header["invalid_key"]
+            self.header["invalid_key"]  # pylint: disable=W0104
 
     def test_get_with_default_and_existing_key_return_key_value(self):
         expected = TEST_FIELDS["StudyDate"]

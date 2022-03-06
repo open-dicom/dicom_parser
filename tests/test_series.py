@@ -144,13 +144,13 @@ class SeriesTestCase(TestCase):
 
     def test_indexing_operator_with_invalid_key_raises_key_error(self):
         with self.assertRaises(KeyError):
-            self.localizer["MissingKey"]
+            self.localizer["MissingKey"]  # pylint: disable=W0104
 
     def test_indexing_operator_with_invalid_type_raises_type_error(self):
         invalid_types = True, 4.20, b"bytes", [1, 2, 3]
         for value_type in invalid_types:
             with self.assertRaises(TypeError):
-                self.localizer[value_type]
+                self.localizer[value_type]  # pylint: disable=W0104
 
     def test_get_spatial_resolution(self):
         series = Series(TEST_SERIES_PATH)

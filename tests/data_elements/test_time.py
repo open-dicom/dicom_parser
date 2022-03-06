@@ -33,7 +33,7 @@ class TimeTestCase(DataElementTestCase):
         self.raw_element.value = "not_a_time"
         element = self.TEST_CLASS(self.raw_element)
         with self.assertRaises(ValueError):
-            element.value
+            element.value  # pylint: disable=W0104
         self.raw_element.value = original_value
 
     def test_type_error(self):
