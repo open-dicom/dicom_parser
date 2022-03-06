@@ -3,7 +3,7 @@ Siemens specific private tags they may not be accessible by keyword using
 `pydicom <https://github.com/pydicom/pydicom>`_.
 """
 import array
-from typing import Union
+from typing import Tuple, Union
 
 import numpy as np
 from dicom_parser.utils.siemens import messages
@@ -14,7 +14,9 @@ from dicom_parser.utils.siemens.csa.header import CsaHeader
 B_MATRIX_INDICES = np.array([0, 1, 2, 1, 3, 4, 2, 4, 5])
 
 
-def parse_siemens_slice_timing(value: bytes) -> list:
+def parse_siemens_slice_timing(
+    value: Union[bytes, float]
+) -> Union[float, Tuple[float]]:
     """
     Parses a SIEMENS MR image's slice timing as saved in the private
     (0019, 1029) `MosaicRefAcqTimes`_ tag to a list of floats representing
@@ -25,17 +27,28 @@ def parse_siemens_slice_timing(value: bytes) -> list:
 
     Parameters
     ----------
-    value : bytes
+    value : bytes or float
         SIEMENS private MosaicRefAcqTimes data element
 
     Returns
     -------
-    list
+    Tuple[float]
         Slice times in milliseconds
     """
-    return [
-        round(slice_time, 5) for slice_time in list(array.array("d", value))
-    ]
+    if isinstance(value, float):
+        return value
+    elif isinstance(value, bytes):
+        return tuple(
+            [
+                round(slice_time, 5)
+                for slice_time in list(array.array("d", value))
+            ]
+        )
+    else:
+        message = messages.ACQUISITION_TIMES_TYPEERROR.format(
+            value=value, bad_type=(type(value))
+        )
+        raise TypeError(message)
 
 
 def parse_siemens_gradient_direction(value: bytes) -> list:
@@ -84,7 +97,7 @@ def parse_siemens_number_of_slices_in_mosaic(value: Union[bytes, int]) -> int:
         return int.from_bytes(value, byteorder="little")
     else:
         message = messages.N_IMAGES_IN_MOSAIC_TYPEERROR.format(
-            bad_type=type(value)
+            value=value, bad_type=type(value)
         )
         raise TypeError(message)
 
@@ -126,7 +139,7 @@ def b_matrix_to_q_vector(
     -------
     np.ndarray
         q-vector
-    """
+    """  # noqa: E501
     if b_matrix is None:
         return None
     is_symmetric = np.allclose(b_matrix, b_matrix.T)
@@ -179,7 +192,7 @@ def nearest_pos_semi_def(b_matrix: np.ndarray):
     array([[0.75, 0.  , 0.  ],
            [0.  , 0.75, 0.  ],
            [0.  , 0.  , 0.  ]])
-    """
+    """  # noqa: E501
     B = np.asarray(b_matrix)
     vals, vecs = np.linalg.eigh(B)
     # indices of eigenvalues in descending order
