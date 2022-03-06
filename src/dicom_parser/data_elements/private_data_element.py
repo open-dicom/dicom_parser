@@ -19,18 +19,16 @@ from pydicom.dataelem import DataElement as PydicomDataElement
 
 #: A dictionary matching private data elements to their appropriate parsing
 #: method.
-TAG_TO_DEFINITION = {
-    ("0019", "100a"): {"method": parse_siemens_number_of_slices_in_mosaic},
-    ("0019", "100b"): {"method": float},
-    ("0019", "100c"): {"method": int},
-    ("0019", "100e"): {"method": parse_siemens_gradient_direction},
-    ("0019", "1027"): {"method": parse_siemens_b_matrix},
-    ("0019", "1028"): {
-        "method": parse_siemens_bandwith_per_pixel_phase_encode
-    },
-    ("0019", "1029"): {"method": parse_siemens_slice_timing},
-    ("0029", "1010"): {"method": parse_siemens_csa_header},
-    ("0029", "1020"): {"method": parse_siemens_csa_header},
+TAG_TO_PARSER = {
+    ("0019", "100a"): parse_siemens_number_of_slices_in_mosaic,
+    ("0019", "100b"): float,
+    ("0019", "100c"): int,
+    ("0019", "100e"): parse_siemens_gradient_direction,
+    ("0019", "1027"): parse_siemens_b_matrix,
+    ("0019", "1028"): parse_siemens_bandwith_per_pixel_phase_encode,
+    ("0019", "1029"): parse_siemens_slice_timing,
+    ("0029", "1010"): parse_siemens_csa_header,
+    ("0029", "1020"): parse_siemens_csa_header,
 }
 
 
@@ -48,22 +46,11 @@ class PrivateDataElement(DataElement):
             pydicom's representation of this data element
         """
         super().__init__(raw)
-        self.definition = TAG_TO_DEFINITION.get(self.tag, {})
-        self.update_from_definition()
-
-    def update_from_definition(self) -> None:
-        """
-        Update this data element's value_representation using a custom
-        definition.
-        """
-        self.value_representation = self.definition.get(
-            "value_representation", self.VALUE_REPRESENTATION
-        )
 
     def parse_value(self, value: bytes) -> Any:
         """
-        Tries to parse private data element values using a custom method or by
-        simply calling :func:`bytes.decode`.
+        Tries to parse private data element values using a custom function or
+        by simply calling :func:`bytes.decode`.
 
         Parameters
         ----------
@@ -75,17 +62,17 @@ class PrivateDataElement(DataElement):
         Any
             Parsed private data element value
         """
-        # Try to call a custom method
-        method: FunctionType = self.definition.get("method")
+        # Try to call a custom parser function.
+        method: FunctionType = TAG_TO_PARSER.get(self.tag)
         if method:
-            return method(self.raw.value)
+            return method(value)
 
-        # Try to decode
-        elif isinstance(self.raw.value, bytes):
+        # Try to decode.
+        elif isinstance(value, bytes):
             try:
-                return self.raw.value.decode().strip()
+                return value.decode().strip()
             except UnicodeDecodeError:
                 pass
 
-        # Otherwise, simply return the raw value
-        return self.raw.value
+        # Otherwise, simply return the raw value.
+        return value

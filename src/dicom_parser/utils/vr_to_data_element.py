@@ -26,6 +26,9 @@ from dicom_parser.data_elements.other_float import OtherFloat
 from dicom_parser.data_elements.other_long import OtherLong
 from dicom_parser.data_elements.other_word import OtherWord
 from dicom_parser.data_elements.person_name import PersonName
+from dicom_parser.data_elements.private_data_element import (
+    TAG_TO_PARSER as PRIVATE_TAG_TO_PARSER,
+)
 from dicom_parser.data_elements.private_data_element import PrivateDataElement
 from dicom_parser.data_elements.sequence_of_items import SequenceOfItems
 from dicom_parser.data_elements.short_string import ShortString
@@ -45,10 +48,12 @@ from dicom_parser.data_elements.unsigned_64bit_very_long import (
 from dicom_parser.data_elements.unsigned_long import UnsignedLong
 from dicom_parser.data_elements.unsigned_short import UnsignedShort
 from dicom_parser.data_elements.url import Url
+from dicom_parser.utils.parse_tag import parse_tag
 from dicom_parser.utils.value_representation import (
     ValueRepresentation,
     get_value_representation,
 )
+from pydicom.dataelem import DataElement as PydicomDataElement
 
 #: A dictionary associating the various value representations with their
 #: appropriate :class:`dicom_parser.data_element.DataElement` subclasses.
@@ -90,20 +95,22 @@ VR_TO_DATA_ELEMENT = {
 }
 
 
-def get_data_element_class(key: str) -> DataElement:
+def get_data_element_class(element: PydicomDataElement) -> DataElement:
     """
     Returns the appropriate :class:`dicom_parser.data_element.DataElement`
-    subclass based on a value representation key.
+    subclass based on the `element`'s value.
 
     Parameters
     ----------
-    key : str
-        Value representation key
+    element : PydicomDataElement
+        DICOM element, with, at least, attributes ``tag`` and ``VR``.
 
     Returns
     -------
     DataElement
         Some subclass of DataElement
     """
-    vr = get_value_representation(key)
+    if parse_tag(element.tag) in PRIVATE_TAG_TO_PARSER:
+        return PrivateDataElement
+    vr = get_value_representation(element.VR)
     return VR_TO_DATA_ELEMENT[vr]

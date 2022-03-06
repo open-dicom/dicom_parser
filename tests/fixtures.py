@@ -23,6 +23,7 @@ TEST_RSFMRI_SERIES_PIXEL_ARRAY = os.path.join(
 )
 TEST_GE_LOCALIZER_PATH = os.path.join(TEST_FILES_PATH, "GE_localizer.dcm")
 TEST_SIEMENS_DWI_PATH = os.path.join(TEST_FILES_PATH, "siemens_dwi", "1.dcm")
+TEST_SIEMENS_EXPLICIT_VR = os.path.join(TEST_FILES_PATH, "siemens_vr.dcm")
 TEST_SERIES_PATH = os.path.join(TEST_FILES_PATH, "series")
 TEST_UTILS_DIRECTORY = os.path.join(TESTS_DIRECTORY, "utils")
 TEST_MULTIFRAME = os.path.join(TEST_FILES_PATH, "4d_multiframe_test.dcm")
