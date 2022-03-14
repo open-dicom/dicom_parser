@@ -16,6 +16,8 @@ from dicom_parser.messages import (
 from dicom_parser.utils.mime_generator import generate_by_mime
 from dicom_parser.utils.peek import peek
 
+DEFAULT_EXTENSIONS = (".dcm", ".ima")
+
 
 class Series:
     """
@@ -27,6 +29,7 @@ class Series:
         self,
         path: Optional[Path] = None,
         images: Optional[Iterable[Image]] = None,
+        extension: Optional[Iterable[str]] = DEFAULT_EXTENSIONS,
         mime: bool = False,
     ):
         """
@@ -41,9 +44,11 @@ class Series:
         Parameters
         ----------
         path : :class:`~pathlib.Path` or str, optional
-            Directory containing .dcm files
+            Directory containing stored DICOM images
         images : Iterable[Image], optional
             Image instances that make up the series
+        extension : Iterable[str], optional
+            Extensions to filter files in parent directory by
         mime : bool, optional
             Whether to find DICOM images by file mime type instead of
             extension, defaults to False
@@ -51,7 +56,7 @@ class Series:
         # Find images in series directory path, if provided.
         if isinstance(path, (Path, str)):
             self.path = self.check_path(path)
-            self.images = self.get_images(mime)
+            self.images = self.get_images(mime=mime, extension=extension)
         # Tupelize any iterable of images.
         elif images is not None:
             self.images = tuple(images)
@@ -127,7 +132,11 @@ class Series:
             raise ValueError(message)
         return path
 
-    def get_dcm_paths(self, mime: bool = False) -> Generator:
+    def get_dcm_paths(
+        self,
+        mime: bool = False,
+        extension: Optional[Iterable[str]] = DEFAULT_EXTENSIONS,
+    ) -> Generator:
         """
         Returns a generator of DICOM files within the provided directory path.
 
@@ -136,6 +145,8 @@ class Series:
         mime : bool, optional
             Whether to return files by mime type (instead of extension), by
             default False
+        extension : Iterable[str], optional
+            Extensions to filter files in parent directory by
 
         Returns
         -------
@@ -147,16 +158,25 @@ class Series:
         FileNotFoundError
             No DICOM images found under provided directory
         """
-        dcm_paths = (
-            generate_by_mime(self.path) if mime else self.path.rglob("*.dcm")
-        )
+        if mime:
+            dcm_paths = generate_by_mime(self.path)
+        else:
+            dcm_paths = (
+                path
+                for path in self.path.rglob("*")
+                if path.suffix.lower() in extension
+            )
         # Use peek to convert dcm_paths to None if the generator is "empty"
         _, dcm_paths = peek(dcm_paths)
         if not dcm_paths:
             raise FileNotFoundError(EMPTY_SERIES_DIRECTORY)
         return dcm_paths
 
-    def get_images(self, mime: bool = False) -> tuple:
+    def get_images(
+        self,
+        mime: bool = False,
+        extension: Optional[Iterable[str]] = DEFAULT_EXTENSIONS,
+    ) -> tuple:
         """
         Returns a tuple of :class:`~dicom_parser.image.Image` instances
         ordered by instance number.
@@ -168,8 +188,13 @@ class Series:
         mime : bool, optional
             Whether to find DICOM images by file mime type instead of
             extension, defaults to False
+        extension : Iterable[str], optional
+            Extensions to filter files in parent directory by
         """
-        images = [Image(dcm_path) for dcm_path in self.get_dcm_paths(mime)]
+        images = [
+            Image(dcm_path)
+            for dcm_path in self.get_dcm_paths(mime=mime, extension=extension)
+        ]
         return tuple(
             sorted(
                 images, key=lambda image: image.header.get("InstanceNumber")

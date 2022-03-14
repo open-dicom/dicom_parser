@@ -173,7 +173,10 @@ class SeriesTestCase(TestCase):
         images = [Image(dcm) for dcm in Path(TEST_SERIES_PATH).rglob("*.dcm")]
         from_images = Series(images=images)
         from_path = Series(TEST_SERIES_PATH)
-        self.assertEqual(len(from_images), len(from_path))
+        # One image in the test series path is a *.ima* file to test for
+        # extensions included by default, so the preceding *images* will not
+        # produce it with the "*.dcm" argument.
+        self.assertEqual(len(from_images), len(from_path) - 1)
 
     def test_series_init_without_path_or_images_raises_valueerror(self):
         with self.assertRaises(ValueError):
