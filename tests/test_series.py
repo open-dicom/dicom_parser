@@ -47,20 +47,20 @@ class SeriesTestCase(TestCase):
 
     def test_get_images_got_correct_number_of_images(self):
         series = Series(TEST_SERIES_PATH)
-        self.assertEqual(len(series.images), 11)
+        self.assertEqual(len(series.images), 10)
 
     def test_images_are_ordered_by_instance_number(self):
         series = Series(TEST_SERIES_PATH)
         instance_numbers = tuple(
             [image.header.get("InstanceNumber") for image in series.images]
         )
-        expected = tuple(range(1, 12))
+        expected = tuple(range(1, 11))
         self.assertTupleEqual(instance_numbers, expected)
 
     def test_data_property(self):
         series = Series(TEST_SERIES_PATH)
         self.assertIsInstance(series.data, np.ndarray)
-        self.assertTupleEqual(series.data.shape, (512, 512, 11))
+        self.assertTupleEqual(series.data.shape, (512, 512, 10))
 
     def test_mosaic_series_returns_as_4d(self):
         series = Series(TEST_RSFMRI_SERIES_PATH)
@@ -75,7 +75,7 @@ class SeriesTestCase(TestCase):
 
     def test_len(self):
         rsfmri = Series(TEST_RSFMRI_SERIES_PATH)
-        self.assertEqual(len(self.localizer), 11)
+        self.assertEqual(len(self.localizer), 10)
         self.assertEqual(len(rsfmri), 3)
 
     def test_get_method_with_single_value_keyword(self):
@@ -90,7 +90,7 @@ class SeriesTestCase(TestCase):
 
     def test_get_method_with_multiple_values_keyword(self):
         result = self.localizer.get("InstanceNumber")
-        expected = list(range(1, 12))
+        expected = list(range(1, 11))
         self.assertListEqual(result, expected)
 
     def test_get_method_with_multiple_values_tuple(self):
@@ -106,7 +106,6 @@ class SeriesTestCase(TestCase):
             "1.3.12.2.1107.5.2.43.66024.2018012410461190213200575",
             "1.3.12.2.1107.5.2.43.66024.2018012410455394762200553",
             "1.3.12.2.1107.5.2.43.66024.2018012410461517027500577",
-            "1.3.12.2.1107.5.2.43.66024.2018012410455755378100557",
         ]
         self.assertListEqual(result, expected)
 
@@ -126,7 +125,7 @@ class SeriesTestCase(TestCase):
 
     def test_indexing_operator_with_tag_and_multiple_values(self):
         result = self.localizer[("0020", "0013")]
-        expected = list(range(1, 12))
+        expected = list(range(1, 11))
         self.assertListEqual(result, expected)
 
     def test_indexing_operator_with_int_returns_image_instance(self):
@@ -168,6 +167,12 @@ class SeriesTestCase(TestCase):
         series = Series(TEST_SERIES_PATH)
         value = series.spatial_resolution
         self.assertTupleEqual(value, SERIES_SPATIAL_RESOLUTION)
+
+    def test_series_with_custom_extension(self):
+        extension = (".dcm", ".ima", "")
+        series = Series(TEST_SERIES_PATH)
+        series_extended = Series(TEST_SERIES_PATH, extension=extension)
+        self.assertEqual(len(series_extended), len(series) + 1)
 
     def test_series_from_images(self):
         images = [Image(dcm) for dcm in Path(TEST_SERIES_PATH).rglob("*.dcm")]

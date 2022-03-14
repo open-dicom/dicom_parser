@@ -164,7 +164,7 @@ class Series:
             dcm_paths = (
                 path
                 for path in self.path.rglob("*")
-                if path.suffix.lower() in extension
+                if path.is_file() and path.suffix.lower() in extension
             )
         # Use peek to convert dcm_paths to None if the generator is "empty"
         _, dcm_paths = peek(dcm_paths)
