@@ -15,11 +15,15 @@ class ImageGeneratorTestCase(TestCase):
 
     def test_default_extensions_filtering(self):
         paths = tuple(generate_images(self.series_path))
-        self.assertEqual(len(paths), 12)
+        self.assertEqual(len(paths), 10)
 
     def test_custom_extensions_filtering(self):
         paths = tuple(generate_images(self.series_path, extension=(".ima",)))
         self.assertEqual(len(paths), 1)
+
+    def test_no_extension_filtering(self):
+        paths = tuple(generate_images(self.series_path, extension=None))
+        self.assertEqual(len(paths), 11)
 
     def test_allow_empty(self):
         try:

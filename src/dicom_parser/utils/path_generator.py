@@ -69,7 +69,7 @@ def generate_paths(
             if p.is_file() and p.suffix.lower() in extension
         )
     else:
-        matches = path.rglob("*")
+        matches = (p for p in path.rglob("*") if p.is_file())
     if not allow_empty:
         # Use peek to convert matches to None if the generator is "empty"
         _, matches = peek(matches)

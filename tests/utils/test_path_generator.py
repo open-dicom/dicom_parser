@@ -13,11 +13,11 @@ class PathGeneratorTestCase(TestCase):
         self.series_path = Path(TEST_SERIES_PATH)
         return super().setUp()
 
-    def test_default_extensions_filtering(self):
+    def test_no_filtering(self):
         paths = tuple(generate_paths(self.series_path))
-        self.assertEqual(len(paths), 12)
+        self.assertEqual(len(paths), 11)
 
-    def test_custom_extensions_filtering(self):
+    def test_extensions_filtering(self):
         paths = tuple(generate_paths(self.series_path, extension=(".ima",)))
         self.assertEqual(len(paths), 1)
 
