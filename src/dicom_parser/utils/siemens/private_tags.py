@@ -8,6 +8,7 @@ from typing import Tuple, Union
 import numpy as np
 from dicom_parser.utils.siemens import messages
 from dicom_parser.utils.siemens.csa.header import CsaHeader
+from dicom_parser.utils.siemens.messages import bad_private_tag_type
 
 #: The raw (6, 1) vector returned represents the upper triangle of a symmetric
 #: B matrix.
@@ -32,7 +33,7 @@ def parse_siemens_slice_timing(
 
     Returns
     -------
-    Tuple[float]
+    Union[float, Tuple[float]]
         Slice times in milliseconds
     """
     if isinstance(value, float):
@@ -45,13 +46,15 @@ def parse_siemens_slice_timing(
             ]
         )
     else:
-        message = messages.ACQUISITION_TIMES_TYPEERROR.format(
-            value=value, bad_type=(type(value))
+        message = bad_private_tag_type(
+            name="MosaicRefAcqTimes", valid_types=(bytes, float), value=value
         )
         raise TypeError(message)
 
 
-def parse_siemens_gradient_direction(value: bytes) -> list:
+def parse_siemens_gradient_direction(
+    value: Union[bytes, float],
+) -> Union[float, Tuple[float]]:
     """
     Parses a SIEMENS MR image's B-vector as represented in the private
     (0019, 100E) `DiffusionGradientDirection`_ DICOM tag.
@@ -61,15 +64,25 @@ def parse_siemens_gradient_direction(value: bytes) -> list:
 
     Parameters
     ----------
-    value : bytes
+    value : Union[bytes, float]
         SIEMENS private DiffusionGradientDirection data element.
 
     Returns
     -------
-    list
+    Union[float, Tuple[float]]
         Gradient directions (B-vector)
     """
-    return [float(value) for value in list(array.array("d", value))]
+    if isinstance(value, float):
+        return value
+    elif isinstance(value, bytes):
+        return tuple([float(value) for value in list(array.array("d", value))])
+    else:
+        message = bad_private_tag_type(
+            name="DiffusionGradientDirection",
+            valid_types=(bytes, float),
+            value=value,
+        )
+        raise TypeError(message)
 
 
 def parse_siemens_number_of_slices_in_mosaic(value: Union[bytes, int]) -> int:
@@ -96,19 +109,21 @@ def parse_siemens_number_of_slices_in_mosaic(value: Union[bytes, int]) -> int:
     elif isinstance(value, bytes):
         return int.from_bytes(value, byteorder="little")
     else:
-        message = messages.N_IMAGES_IN_MOSAIC_TYPEERROR.format(
-            value=value, bad_type=type(value)
+        message = bad_private_tag_type(
+            name="NumberOfImagesInMosaic",
+            valid_types=(bytes, int),
+            value=value,
         )
         raise TypeError(message)
 
 
-def parse_siemens_b_matrix(value: bytes) -> np.ndarray:
+def parse_siemens_b_matrix(value: Union[float, bytes]) -> np.ndarray:
     """
     Parses the Siemens B matrix header field value.
 
     Parameters
     ----------
-    value : bytes
+    value : Union[float, bytes]
         Raw B matrix header field value
 
     Returns
@@ -116,8 +131,16 @@ def parse_siemens_b_matrix(value: bytes) -> np.ndarray:
     np.ndarray
         Parsed B matrix
     """
-    raw = list(array.array("d", value))
-    return np.array(raw)[B_MATRIX_INDICES].reshape(3, 3)
+    if isinstance(value, float):
+        return value
+    elif isinstance(value, bytes):
+        raw = list(array.array("d", value))
+        return np.array(raw)[B_MATRIX_INDICES].reshape(3, 3)
+    else:
+        message = bad_private_tag_type(
+            name="B_matrix", valid_types=(bytes, float), value=value
+        )
+        raise ValueError(message)
 
 
 def b_matrix_to_q_vector(
@@ -251,8 +274,10 @@ def parse_siemens_bandwith_per_pixel_phase_encode(
     elif isinstance(value, bytes):
         return array.array("d", value)[0]
     else:
-        message = messages.BANDWITH_PER_PIXEL_TYPEERROR.format(
-            bad_type=type(value)
+        message = bad_private_tag_type(
+            name="BandwidthPerPixelPhaseEncode",
+            valid_types=(bytes, float),
+            value=value,
         )
         raise TypeError(message)
 
