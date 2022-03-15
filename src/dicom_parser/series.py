@@ -2,19 +2,17 @@
 Definition of the :class:`Series` class.
 """
 from pathlib import Path
-from typing import Any, Generator, Iterable, Optional, Tuple
+from typing import Any, Iterable, Optional, Tuple
 
 import numpy as np
 
 from dicom_parser import messages
 from dicom_parser.image import Image
 from dicom_parser.messages import (
-    EMPTY_SERIES_DIRECTORY,
     INVALID_INDEXING_OPERATOR,
     INVALID_SERIES_DIRECTORY,
 )
-from dicom_parser.utils.mime_generator import generate_by_mime
-from dicom_parser.utils.peek import peek
+from dicom_parser.utils.image_generator import generate_images
 
 DEFAULT_EXTENSIONS = (".dcm", ".ima")
 
@@ -132,46 +130,6 @@ class Series:
             raise ValueError(message)
         return path
 
-    def get_dcm_paths(
-        self,
-        mime: bool = False,
-        extension: Optional[Iterable[str]] = DEFAULT_EXTENSIONS,
-    ) -> Generator:
-        """
-        Returns a generator of DICOM files within the provided directory path.
-
-        Parameters
-        ----------
-        mime : bool, optional
-            Whether to return files by mime type (instead of extension), by
-            default False
-        extension : Iterable[str], optional
-            Extensions to filter files in parent directory by
-
-        Returns
-        -------
-        GeneratorType
-            DICOM images generator
-
-        Raises
-        ------
-        FileNotFoundError
-            No DICOM images found under provided directory
-        """
-        if mime:
-            dcm_paths = generate_by_mime(self.path)
-        else:
-            dcm_paths = (
-                path
-                for path in self.path.rglob("*")
-                if path.is_file() and path.suffix.lower() in extension
-            )
-        # Use peek to convert dcm_paths to None if the generator is "empty"
-        _, dcm_paths = peek(dcm_paths)
-        if not dcm_paths:
-            raise FileNotFoundError(EMPTY_SERIES_DIRECTORY)
-        return dcm_paths
-
     def get_images(
         self,
         mime: bool = False,
@@ -191,10 +149,9 @@ class Series:
         extension : Iterable[str], optional
             Extensions to filter files in parent directory by
         """
-        images = [
-            Image(dcm_path)
-            for dcm_path in self.get_dcm_paths(mime=mime, extension=extension)
-        ]
+        images = generate_images(
+            self.path, extension=extension, mime=mime, allow_empty=False
+        )
         return tuple(
             sorted(
                 images, key=lambda image: image.header.get("InstanceNumber")
