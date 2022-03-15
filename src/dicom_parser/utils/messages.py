@@ -21,4 +21,17 @@ pip install dicom_parser[magic]"""
 WINDOWS = """Unfortunately, DICOM generation by mime type is not supported in
 Windows."""
 
+#: Message to display for empty path generation by extension.
+EMPTY_BY_EXTENSION: str = (
+    "No files with the extensions {extension} detected in {path}!"
+)
+
+#: Message to display for empty path generation by mime.
+EMPTY_BY_MIME: str = (
+    "No files with the application/dicom mime-type detected in {path}!"
+)
+
+#: Message to display for an empty directory.
+EMPTY_DIRECTORY: str = "No files found in {path}!"
+
 # flake8: noqa: E501
