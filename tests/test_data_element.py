@@ -55,16 +55,16 @@ class DataElementTestCase(TestCase):
                 value = self.TEST_CLASS(raw).value
                 if isinstance(value, np.ndarray):
                     self.assertTrue(np.array_equal(value, expected))
-                elif (
-                    self._is_nonempty_float_sequence(expected) and
-                    self._is_nonempty_float_sequence(value)
-                ):
+                elif self._is_nonempty_float_sequence(
+                    expected
+                ) and self._is_nonempty_float_sequence(value):
                     self.assertEqual(len(value), len(expected))
                     self.assertEqual(type(value), type(expected))
-                    self.assertTrue(all(
-                        math.isclose(a, b)
-                        for a, b in zip(value, expected)
-                    ))
+                    self.assertTrue(
+                        all(
+                            math.isclose(a, b) for a, b in zip(value, expected)
+                        )
+                    )
                 else:
                     self.assertEqual(value, expected)
 
@@ -89,15 +89,14 @@ class DataElementTestCase(TestCase):
     @classmethod
     def _is_nonempty_float_sequence(cls, value):
         return (
-            isinstance(value, Sequence) and
-            value and
-            isinstance(value[0], float)
+            isinstance(value, Sequence)
+            and value
+            and isinstance(value[0], float)
         )
 
     def assertEqualFloatSequences(self, first, second, msg=None):
         self.assertEqual(len(first), len(second), msg=msg)
         self.assertEqual(type(first), type(second), msg=msg)
-        self.assertTrue(all(
-            math.isclose(a, b)
-            for a, b in zip(first, second)
-        ), msg=msg)
+        self.assertTrue(
+            all(math.isclose(a, b) for a, b in zip(first, second)), msg=msg
+        )

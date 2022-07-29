@@ -35,7 +35,7 @@ class PersonName(DataElement):
             Parsed person name components
         """
         if not value:
-            value = PydicomPersonName('')
+            value = PydicomPersonName("")
         elif not isinstance(value, PydicomPersonName):
             return value
         return {
