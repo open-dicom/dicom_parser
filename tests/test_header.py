@@ -84,6 +84,9 @@ class HeaderTestCase(TestCase):
     #: `keyword_contains()` call.
     KEYWORD_CONTAINS = {"time": 10, "DATE": 7, "abcdef": 0}
 
+    # Version info for pydicom, converted to integers.
+    PYDICOM_VERSION_INFO = tuple(map(int, pydicom.__version_info__))
+
     def setUp(self):
         self.raw = pydicom.dcmread(TEST_IMAGE_PATH)
         self.header = Header(self.raw)
@@ -271,7 +274,8 @@ class HeaderTestCase(TestCase):
         vr = [ValueRepresentation.IS, ValueRepresentation.CS]
         result = self.header.get_data_elements(value_representation=vr)
         self.assertIsInstance(result, list)
-        self.assertEqual(len(result), 20)
+        expected = 20 if self.PYDICOM_VERSION_INFO < (2, 2) else 26
+        self.assertEqual(len(result), expected)
 
     def test_get_data_elements_with_vr_tuple(self):
         vr = ValueRepresentation.DA, ValueRepresentation.TM
@@ -288,7 +292,8 @@ class HeaderTestCase(TestCase):
         ]
         result = self.header.get_data_elements(exclude=exclude)
         self.assertIsInstance(result, list)
-        self.assertEqual(len(result), 59)
+        expected = 59 if self.PYDICOM_VERSION_INFO < (2, 2) else 83
+        self.assertEqual(len(result), expected)
 
     def test_get_data_elements_with_exclude_tuple(self):
         exclude = ValueRepresentation.DA, ValueRepresentation.TM
