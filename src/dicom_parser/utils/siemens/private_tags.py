@@ -3,7 +3,7 @@ Siemens specific private tags they may not be accessible by keyword using
 `pydicom <https://github.com/pydicom/pydicom>`_.
 """
 import array
-from typing import Tuple, Union
+from typing import List, Tuple, Union
 
 import numpy as np
 from dicom_parser.utils.siemens import messages
@@ -134,6 +134,7 @@ def parse_siemens_b_matrix(value: Union[float, bytes]) -> np.ndarray:
     if isinstance(value, float):
         return value
     elif isinstance(value, bytes):
+        # pydicom < 2.2 returns the VR "UN" and the value as an array of bytes.
         raw = list(array.array("d", value))
         return np.array(raw)[B_MATRIX_INDICES].reshape(3, 3)
     else:
@@ -141,6 +142,24 @@ def parse_siemens_b_matrix(value: Union[float, bytes]) -> np.ndarray:
             name="B_matrix", valid_types=(bytes, float), value=value
         )
         raise ValueError(message)
+
+
+def parse_siemens_b_matrix_multiple(value: List[float]):
+    """
+    Parses the Siemens B matrix header field value.
+
+    Parameters
+    ----------
+    value : List[float]
+        Raw B matrix header field value
+
+    Returns
+    -------
+    np.ndarray
+        Parsed B matrix
+    """
+    # pydicom >= 2.2 returns the VR "FD" and the value as a list of floats.
+    return np.array(value)[B_MATRIX_INDICES].reshape(3, 3)
 
 
 def b_matrix_to_q_vector(
