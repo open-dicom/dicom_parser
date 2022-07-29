@@ -56,7 +56,13 @@ LONG_STRINGS = {
 
 #: Expected parsed values to test person names (PN) data elements with.
 PERSON_NAMES = {
-    "ReferringPhysicianName": {},
+    "ReferringPhysicianName": {
+        "name_prefix": "",
+        "given_name": "",
+        "middle_name": "",
+        "family_name": "",
+        "name_suffix": "",
+    },
     "OperatorsName": {
         "name_prefix": "",
         "given_name": "",

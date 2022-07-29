@@ -49,12 +49,13 @@ class DataElementTestCase(TestCase):
             self.skipTest(self.SKIP_MESSAGE)
         values = self.get_values()
         for key, expected in values.items():
-            raw = self.get_raw_element(key)
-            value = self.TEST_CLASS(raw).value
-            if isinstance(value, np.ndarray):
-                self.assertTrue(np.array_equal(value, expected))
-            else:
-                self.assertEqual(value, expected)
+            with self.subTest(key=key):
+                raw = self.get_raw_element(key)
+                value = self.TEST_CLASS(raw).value
+                if isinstance(value, np.ndarray):
+                    self.assertTrue(np.array_equal(value, expected))
+                else:
+                    self.assertEqual(value, expected)
 
     def test_repr(self):
         if not self.SAMPLE_KEY:
