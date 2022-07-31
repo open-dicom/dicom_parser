@@ -55,16 +55,11 @@ class DataElementTestCase(TestCase):
                 value = self.TEST_CLASS(raw).value
                 if isinstance(value, np.ndarray):
                     self.assertTrue(np.array_equal(value, expected))
-                elif self._is_nonempty_float_sequence(
-                    expected
-                ) and self._is_nonempty_float_sequence(value):
-                    self.assertEqual(len(value), len(expected))
-                    self.assertEqual(type(value), type(expected))
-                    self.assertTrue(
-                        all(
-                            math.isclose(a, b) for a, b in zip(value, expected)
-                        )
-                    )
+                elif all([
+                    self._is_nonempty_float_sequence(value),
+                    self._is_nonempty_float_sequence(expected),
+                ]):
+                    self.assertEqualFloatSequences(value, expected)
                 else:
                     self.assertEqual(value, expected)
 
