@@ -34,10 +34,11 @@ class PersonName(DataElement):
         dict
             Parsed person name components
         """
-
-        if isinstance(value, PydicomPersonName):
-            return {
-                component: getattr(value, component)
-                for component in self.COMPONENTS
-            }
-        return value if value else {}
+        if not value:
+            value = PydicomPersonName("")
+        elif not isinstance(value, PydicomPersonName):
+            return value
+        return {
+            component: getattr(value, component)
+            for component in self.COMPONENTS
+        }

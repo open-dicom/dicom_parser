@@ -8,6 +8,7 @@ from typing import Any
 from dicom_parser.data_element import DataElement
 from dicom_parser.utils.siemens.private_tags import (
     parse_siemens_b_matrix,
+    parse_siemens_b_matrix_multiple,
     parse_siemens_bandwith_per_pixel_phase_encode,
     parse_siemens_csa_header,
     parse_siemens_gradient_direction,
@@ -29,6 +30,9 @@ TAG_TO_PARSER = {
     ("0019", "1029"): parse_siemens_slice_timing,
     ("0029", "1010"): parse_siemens_csa_header,
     ("0029", "1020"): parse_siemens_csa_header,
+}
+TAG_TO_MULTIVALUE_PARSER = {
+    ("0019", "1027"): parse_siemens_b_matrix_multiple,
 }
 
 
@@ -76,3 +80,19 @@ class PrivateDataElement(DataElement):
 
         # Otherwise, simply return the raw value.
         return value
+
+    def parse_values(self) -> Any:
+        """
+        Tries to parse private data element values using a custom function.
+
+        Returns
+        -------
+        Any
+            This instance's parsed value or values
+        """
+        if self.value_multiplicity > 1:
+            # Try to call a custom parser function.
+            method: FunctionType = TAG_TO_MULTIVALUE_PARSER.get(self.tag)
+            if method:
+                return method(self.raw.value)
+        return super().parse_values()
