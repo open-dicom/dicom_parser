@@ -45,7 +45,7 @@ import re
 from dicom_parser.utils.siemens.csa.ascii import messages
 
 #: ASCCONV text block regular expression pattern.
-ASCCONV_PATTERN = r"^### ASCCONV BEGIN((?:\s*[^=\s]+=[^=\s]+)*) ###\n(.*?)\n### ASCCONV END ###"  # noqa: E501
+ASCCONV_PATTERN = r"### ASCCONV BEGIN((?:\s*[^=\s]+=[^=\s]+)*) ###\n(.*?)\n### ASCCONV END ###"  # noqa: E501
 
 #: Regular expression to extract ASCCONV text block.
 ASCCONV_RE = re.compile(ASCCONV_PATTERN, flags=re.M | re.S)
