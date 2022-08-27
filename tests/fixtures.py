@@ -27,6 +27,9 @@ TEST_SIEMENS_EXPLICIT_VR = os.path.join(TEST_FILES_PATH, "siemens_vr.dcm")
 TEST_SERIES_PATH = os.path.join(TEST_FILES_PATH, "series")
 TEST_UTILS_DIRECTORY = os.path.join(TESTS_DIRECTORY, "utils")
 TEST_MULTIFRAME = os.path.join(TEST_FILES_PATH, "4d_multiframe_test.dcm")
+TEST_SIEMENS_ASCCONV_VE11C = os.path.join(
+    TEST_FILES_PATH, "siemens_ascconv_ve11c.dcm"
+)
 
 
 TEST_FIELDS = {

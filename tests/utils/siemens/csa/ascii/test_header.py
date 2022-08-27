@@ -3,16 +3,22 @@ from unittest import TestCase
 import pydicom
 from dicom_parser.utils.siemens.csa.header import CsaAsciiHeader
 from dicom_parser.utils.siemens.private_tags import SIEMENS_PRIVATE_TAGS
-from tests.fixtures import TEST_RSFMRI_IMAGE_PATH
+from tests.fixtures import (
+    TEST_RSFMRI_IMAGE_PATH,
+    TEST_SIEMENS_ASCCONV_VE11C,
+)
 
 
 class CsaAsciiHeaderTestCase(TestCase):
-    @classmethod
-    def setUpClass(cls):
-        dcm = pydicom.dcmread(TEST_RSFMRI_IMAGE_PATH)
+
+    dicom_file = TEST_RSFMRI_IMAGE_PATH
+    slice_array_size = 64
+
+    def setUp(self):
+        dcm = pydicom.dcmread(self.dicom_file)
         tag = SIEMENS_PRIVATE_TAGS["CSASeriesHeaderInfo"]
-        cls.series_header_info = dcm.get(tag).value
-        cls.ascii_header = CsaAsciiHeader(cls.series_header_info)
+        self.series_header_info = dcm.get(tag).value
+        self.ascii_header = CsaAsciiHeader(self.series_header_info)
 
     def test_init_prepares_cached_variables(self):
         fresh_header = CsaAsciiHeader(self.series_header_info)
@@ -24,7 +30,7 @@ class CsaAsciiHeaderTestCase(TestCase):
 
     def test_parse_results_for_nested_dict_value(self):
         parsed = self.ascii_header.parse()
-        slice_array_size = 64
+        slice_array_size = self.slice_array_size
         value = parsed["sSliceArray"]["lSize"]
         self.assertEqual(slice_array_size, value)
         k_space_slice_resolution = 1
@@ -45,3 +51,8 @@ class CsaAsciiHeaderTestCase(TestCase):
         result = self.ascii_header.n_slices
         expected = self.ascii_header.parsed["sSliceArray"]["lSize"]
         self.assertEqual(result, expected)
+
+
+class CsaAsciiHeaderVE11CTestCase(CsaAsciiHeaderTestCase):
+    dicom_file = TEST_SIEMENS_ASCCONV_VE11C
+    slice_array_size = 3
