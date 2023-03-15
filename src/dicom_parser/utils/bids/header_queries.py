@@ -117,3 +117,25 @@ def find_phase_encoding(header: dict) -> str:
                 return pe
         except (AttributeError, IndexError):
             return
+
+
+def detect_associated_target(header: dict) -> str:
+    """
+    Detects the target associated with a given sequence.
+
+    Parameters
+    ----------
+    header : dict
+        Dictionary containing DICOM's header.
+
+    Returns
+    -------
+    str
+        The target's name.
+    """
+    description = header.get("SeriesDescription", "").lower()
+    if "spinechofieldmap" in description:
+        target = "rest"
+    elif "se_tfmri" in description:
+        target = "task"
+    return target

@@ -6,6 +6,7 @@ from dicom_parser.utils.bids.header_queries import (
     find_mprage_ce,
     find_phase_encoding,
     find_task_name,
+    detect_associated_target,
 )
 
 # Dictionaries (`Dict[str, Union[str, Callable]]``) associating MR sequences
@@ -34,7 +35,7 @@ DWI_FIELDMAP = {
 FLAIR = {"data_type": "anat", "suffix": "FLAIR"}
 FUNCTIONAL_FIELDMAP = {
     "data_type": "fmap",
-    "acq": "func",
+    "acq": detect_associated_target,
     "dir": find_phase_encoding,
     "suffix": "epi",
 }
