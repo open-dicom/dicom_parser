@@ -56,6 +56,10 @@ TERMINAL_DIGIT_PATTERN = r"^(.*)\.(\d+)(\s+=)"
 #: Regular expression to replace terminal integer identifiers.
 TERMINAL_DIGIT_RE = re.compile(TERMINAL_DIGIT_PATTERN, re.M)
 
+# Resolve legacy node types once – they fall back to ast.Constant on 3.14+
+NumNode = getattr(ast, "Num", tuple())
+StrNode = getattr(ast, "Str", tuple())
+IndexNode = getattr(ast, "Index", tuple())
 
 class AscconvParseError(Exception):
     """
@@ -68,6 +72,16 @@ class NoValue:
     Signals no value present.
     """
 
+def _slice_index(subscript):
+    slc = subscript.slice
+    if IndexNode and isinstance(slc, IndexNode):
+        slc = slc.value
+    idx = _literal_value(slc)
+    if not isinstance(idx, int):
+        raise AscconvParseError(
+            messages.UNEXPECTED_LHS.format(target=subscript)
+        )
+    return idx
 
 def assign_to_atoms(assign_ast, default_class=int):
     """
@@ -104,10 +118,7 @@ def assign_to_atoms(assign_ast, default_class=int):
             target = target.value
             prev_target_type = dict
         elif isinstance(target, ast.Subscript):
-            if isinstance(target.slice, ast.Constant):  # PY39
-                index = target.slice.n
-            else:  # PY38
-                index = target.slice.value.n
+            index = _slice_index(target)
             atoms.append((target, prev_target_type, index))
             target = target.value
             prev_target_type = list
@@ -198,18 +209,23 @@ def obj_from_atoms(atoms, namespace):
             raise AscconvParseError(message)
     return prev_root, name
 
+def _literal_value(node):
+    if isinstance(node, ast.Constant):
+        return node.value
+    if NumNode and isinstance(node, NumNode):
+        return node.n
+    if StrNode and isinstance(node, StrNode):
+        return node.s
+    return None
 
 def _get_value(assign):
-    value = assign.value
-    if isinstance(value, ast.Num):
-        return value.n
-    if isinstance(value, ast.Str):
-        return value.s
-    if isinstance(value, ast.UnaryOp) and isinstance(value.op, ast.USub):
-        return -value.operand.n
+    value = _literal_value(assign.value)
+    if value is not None:
+        return value
+    if isinstance(assign.value, ast.UnaryOp) and isinstance(assign.value.op, ast.USub):
+        return -_literal_value(assign.value.operand)
     message = messages.UNEXPECTED_RHS.format(value=value)
     raise AscconvParseError(message)
-
 
 def parse_ascconv_text(content, delimiter='"'):
     """
